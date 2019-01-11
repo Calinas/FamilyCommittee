@@ -1,0 +1,89 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container">
+    <radio-group class="radio-group" @change="radioChange" class="width60">
+      <label class="radio" wx:for="{{cashType}}">
+        <radio value="{{item.title}}" checked="{{item.checked}}" />
+        {{item.title}}
+      </label>
+    </radio-group>
+    <input type="number" placeholder="请输入您的支出金额" class="money-input width60"/>
+    <textarea class="money-desc" placeholder="请输入您支出金额的详情描述"></textarea>
+    <picker class="" mode="selector" value="{{seenIndex}}" range="{{type}}" range-key="title" @change="bindPicker" class="picker">
+      <view class="flex-wrapper between">
+        <text class="font-black">谁可以看</text>
+        <text>{{seenIndex > 0 ? type[seenIndex].title : '身份'}}</text>
+      </view>
+    </picker>
+    <view class="fixed-bottom-btn">记一笔</view>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class recordCashflow extends wepy.page {
+  config = {
+    navigationBarTitleText: '记账'
+  }
+  data = {
+    msg: '',
+    img: ['../../images/add-img.png','../../images/add-img.png','../../images/add-img.png'],
+    seenIndex: -1,
+    cashType: [
+      {
+        id: 0,
+        title:'收入',
+        checked: true
+      },
+      {
+        id: 1,
+        title:'支出',
+        checked: false
+      }
+    ],
+    type: [
+      {
+        id: 0,
+        title:'班级可见'
+      },
+      {
+        id: 1,
+        title:'全部可见'
+      }
+    ]
+  }
+  methods = {
+    bindPicker(e){
+      this.seenIndex = e.detail.value;
+      this.$apply();
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.picker {
+  margin-top: 40rpx;
+  font-size: 32rpx;
+}
+.width60 {
+  display: block;
+  width: 60%;
+  margin: 0 auto;
+}
+.radio {
+  width:50%;
+  display:inline-block;
+  text-align:center;
+}
+.money-input {
+  margin:100rpx auto;
+  border-bottom:2rpx solid #f2f2f2;
+  text-align:center;
+}
+.money-desc {
+  border:1px solid #f1f1f1;
+  padding:20rpx;
+  width: calc(100% - 40rpx);
+}
+</style>

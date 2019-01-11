@@ -1,0 +1,24 @@
+<template>
+    <view class="common-line text-center font-green">下一步</view>
+</template>
+
+<style lang="scss">
+
+</style>
+
+<script>
+import wepy from 'wepy';
+export default class nextStep extends wepy.component{
+  props = {
+    title: {
+      type: String,
+      default: Boolean
+    }
+  }
+  methods = {
+    tap(){
+      console.log('click')
+    }
+  }
+}
+</script>

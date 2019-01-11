@@ -1,0 +1,59 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container common-container-grey">
+    <view class="font-grey info">
+      恭喜，您成功创建了一个班级。您的班级为：{{info.schoolName}}{{unitName}}级{{className}}班。您是当前班级家委会的管理员，管理员可以转让给其他家长。
+    </view>
+    <text class="font-green btn-invite bg-white">马上邀请其他家长加入</text>
+    <view class="common-line line-with-btn">
+      <input type="text" placeholder="请输入验证码" />
+      <view class="weui-btn weui-btn_primary btn">确认修改</view>
+    </view>
+    </view>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class bindRelationship extends wepy.page {
+  config = {
+    navigationBarTitleText: '创建班级成功'
+  }
+  data = {
+    parentIndex: -1,
+    info: {
+      schoolName: '重庆市第三中学',
+      className: 3,
+      unitName: 2019
+    }
+  }
+  methods = {
+    bindParentPicker(e){
+      this.parentIndex = e.detail.value;
+      this.$apply();
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+@import '../styles/buttons.wxss';
+.common-line {
+  margin-top: 0;
+}
+.info {
+  line-height: 1.4rem;
+  width: 90%;
+  margin: 0 auto;
+}
+.btn-invite {
+  display:block;
+  padding:10rpx;
+  margin:40rpx auto;
+  text-align:center;
+  width:320rpx;
+  background-color:#fff;
+  width:320rpx;
+  font-size:30rpx;
+}
+</style>

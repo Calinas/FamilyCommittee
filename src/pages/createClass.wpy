@@ -1,0 +1,82 @@
+
+<template lang="wxml" minapp="wepy">
+  <view class="join-class common-container common-container-grey">
+    <picker class="">
+      <view class="common-picker">
+        <text>重庆</text>
+        <text>箭头</text>
+      </view>
+    </picker>
+    <picker class="">
+      <view class="common-picker">
+        <text>重庆市外国语大学</text>
+        <text>箭头</text>
+      </view>
+    </picker>
+    <view class="class-select-wrapper flex-wrapper">
+      <view class="item common-line {{index === 0 ? 'active' : ''}}" wx:for="{{classTypes}}" wx:key="{{index}}">{{item.title}}</view>
+    </view>
+    <picker class="">
+      <view class="common-picker">
+        <text>2019年10班</text>
+        <text>箭头</text>
+      </view>
+    </picker>
+
+    <view class="common-line text-center font-green">下一步</view>
+
+    <view class="flex-wrapper between bottom-buttons">
+      <text>邀请他人来创建班级</text>
+      <text>加入已有班级</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class joinClass extends wepy.page{
+  config = {
+    navigationBarTitleText:'申请加入班级'
+  }
+  data = {
+    classTypes: [
+      {
+        title: '幼儿园',
+        id: 0
+      },
+      {
+        title: '小学',
+        id: 1
+      },
+      {
+        title: '初中',
+        id: 2
+      },
+      {
+        title: '高中',
+        id: 3
+      }
+    ]
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '../styles/buttons.wxss';
+.class-select-wrapper {
+  .item {
+    flex: 1;
+    text-align: center;
+    &.active {
+      background-color: #2DB200;
+      color: #fff;
+    }
+  }
+}
+.create-btn {
+  padding: 40rpx 0;
+}
+.bottom-buttons > text {
+  padding: 40rpx;
+}
+</style>

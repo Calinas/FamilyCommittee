@@ -1,0 +1,206 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container common-container-grey" style="padding: 0;position:relative">
+    <view class="img-mask">
+      <image src="../../images/house.jpg" mode="scaleToFill" class="bg-img"/>
+      <view class="mask"></view>
+      <view class="btn btn-set">设置</view>
+      <view class="btn btn-publish">发布</view>
+      <view class="caption">
+        <text class="school">重庆市第一中学</text>
+        <text class="class">初2010级10班</text>
+      </view>
+    </view>
+    <view class="item-wrapper">
+      <!-- 这个是活动 -->
+      <view class="item">
+        <view class="flex-wrapper center">
+          <image src="../../images/avatar.png"  class="small-avatar"/>
+          <text>乔峰妈妈发布了财务信息</text>
+        </view>
+        <view class="font-small font-grey text-right">2018年11月23日 20:00</view>
+        <view class="item-desc">
+          这是一个或党费南非房内房内纷飞南非南非房内分
+        </view>
+        <view class="tag-wrapper item-tag">
+          <text class="tag tag-empty">真人cs</text>
+          <text class="tag tag-empty">夹气球</text>
+          <text class="tag tag-empty">你比我猜</text>
+        </view>
+        <view class="tag-wrapper">
+          <text class="tag tag-blue">选好了，报名</text>
+          <text class="tag tag-grey">已报名</text>
+        </view>
+        <!-- 报名结果 -->
+        <view class="result-wrapper">
+          <view class="title item-tag">
+            <text class="tag tag-empty">真人cs</text>
+            <text>有7人报名</text>
+          </view>
+          <view class="person-list tag-wrapper">
+            <text class="tag tag-light-grey">霍思燕</text>
+            <text class="tag tag-light-grey">乔峰</text>
+            <text class="tag tag-light-grey">李逵</text>
+            <text class="tag tag-light-grey">林黛玉</text>
+            <text class="tag tag-light-grey">曹操</text>
+          </view>
+        </view>
+        <!-- 留言结果 -->
+        <view class="comment-wrapper item-desc font-grey">
+          <view class="item">
+            <text class="font-blue">刘德华妈妈:</text>
+            <text>这里是一个回复啊啊啊啊啊啊</text>
+          </view>
+          <view class="item">
+            <text class="font-blue">刘德华妈妈:</text> @after-appear="
+            "
+            <text>这里是一个回复啊啊啊啊啊啊</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 左边侧边栏 -->
+    <view class="sidebar sidebar-set bg-white">
+      <view class="list">
+        <view>更换封面</view>
+        <view>家长绑定</view>
+        <view>手机绑定</view>
+        <view>财务流水</view>
+        <view>收款体现</view>
+        <view>帮助手册</view>
+        <view>家委会管理</view>
+        </view>
+    </view>
+    <!-- 右边侧边栏 -->
+    <view class="sidebar sidebar-publish bg-white show">
+      <view class="list">
+        <view>更换封面</view>
+        <view>家长绑定</view>
+        <view>手机绑定</view>
+        <view>财务流水</view>
+        <view>收款体现</view>
+        <view>帮助手册</view>
+        <view>家委会管理</view>
+        </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class cashflow extends wepy.page {
+  config = {
+    navigationBarTitleText: '财务记账'
+  }
+  data = {
+
+  }
+  methods = {
+
+  }
+}
+</script>
+
+<style lang="scss">
+.img-mask {
+  position: relative;
+  color: #fff;
+  height: 360rpx;
+  .bg-img {
+    width: 100%;
+    height: 360rpx;
+  }
+  .mask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background:rgba(0,0,0,.4);
+  }
+  .btn {
+    position: absolute;
+    top: 40rpx;
+    &-set {
+      left: 20rpx;
+    }
+    &-publish {
+      right: 20rpx;
+    }
+  }
+  .caption {
+    position: absolute;
+    bottom: 30rpx;
+    left: 40rpx;
+    text {
+      display: block;
+    }
+    .school {
+      font-size: 24rpx;
+    }
+    .class {
+      font-size: 30rpx;
+    }
+  }
+}
+.item-wrapper {
+  margin-top: 30rpx;
+  background-color: #fff;
+  padding: 30rpx;
+  color: #000;
+}
+.item {
+  &-desc {
+    background-color: #f1f1f1;
+    color: #000;
+    padding: 30rpx;
+    border-radius: 12rpx;
+    overflow: hidden;
+    margin: 40rpx 0;
+  }
+  &-tag {
+    color: #464646;
+  }
+  .tag {
+    margin-bottom: 20rpx;
+  }
+}
+.comment-wrapper {
+  line-height: 50rpx;
+}
+.sidebar {
+  position: fixed;
+  height: 100%;
+  top: 0;
+  width: 60%;
+  z-index: 2;
+  transition: all .3s;
+
+  &-set {
+    left: 0;
+    transform: translateX(-100%);
+  }
+  &-publish {
+    left: 100%;
+    transform: translateX(100%);
+  }
+  .list {
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    top:0;
+    margin:auto;
+    width:80%;
+    text-align:center;
+    height:60%;
+    & > view {
+      height:100rpx;
+      line-height:100rpx;
+      border-bottom:2rpx solid #f1f1f1;
+    }
+  }
+}
+.sidebar.show {
+  transform:translateX(0)
+}
+</style>

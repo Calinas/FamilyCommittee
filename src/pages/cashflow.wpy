@@ -1,0 +1,128 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container common-container-grey" style="padding: 30rpx 0;">
+    <view class="flex-wrapper font-grey info-wrapper" @tap="jumpPage">
+      <text class="font-black">本班财务：</text>
+      <text>乔峰妈妈</text>
+      <text>乔峰妈妈</text>
+    </view>
+    <view class="balance bg-white font-black">
+      <text class="title">班级财务余额</text>
+      <view>
+        <text>CNY</text>
+        <text class="price">899.00</text>
+      </view>
+    </view>
+    <scroll-view class="scroll-container">
+      <view class="msg-card font-black">
+        <view class="flex-wrapper center">
+          <image src="../../images/avatar.png"  class="small-avatar"/>
+          <text>乔峰妈妈发布了财务信息</text>
+        </view>
+        <view class="font-small font-grey text-right">2018年11月23日 20:00</view>
+        <view class="tag-wrapper">
+          <text class="tag tag-grey">支出</text>
+          <text class="tag tag-grey">1258元</text>
+          <text class="tag tag-grey">余额：3588元</text>
+        </view>
+        <view class="desc">
+          事由：购买运动会球服等等
+        </view>
+        <view class="operate-btn">
+
+        </view>
+      </view>
+      <view class="msg-card font-black">
+        <view class="flex-wrapper center">
+          <image src="../../images/avatar.png"  class="small-avatar"/>
+          <text>乔峰妈妈发布了财务信息</text>
+        </view>
+        <view class="font-small font-grey text-right">2018年11月23日 20:00</view>
+        <view class="tag-wrapper">
+          <text class="tag tag-grey">支出</text>
+          <text class="tag tag-grey">1258元</text>
+          <text class="tag tag-grey">余额：3588元</text>
+        </view>
+        <view class="desc">
+          事由：购买运动会球服等等
+        </view>
+        <view class="operate-btn">
+
+        </view>
+      </view>
+      <view class="msg-card font-black">
+        <view class="flex-wrapper center">
+          <image src="../../images/avatar.png"  class="small-avatar"/>
+          <text>乔峰妈妈发布了财务信息</text>
+        </view>
+        <view class="font-small font-grey text-right">2018年11月23日 20:00</view>
+        <view class="tag-wrapper">
+          <text class="tag tag-grey">支出</text>
+          <text class="tag tag-grey">1258元</text>
+          <text class="tag tag-grey">余额：3588元</text>
+        </view>
+        <view class="desc">
+          事由：购买运动会球服等等
+        </view>
+        <view class="operate-btn">
+
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class cashflow extends wepy.page {
+  config = {
+    navigationBarTitleText: '财务记账'
+  }
+  data = {
+
+  }
+  methods = {
+    jumpPage(){
+      console.log('222')
+      wx.navigateTo({
+        url: 'zone'
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.info-wrapper {
+  padding: 30rpx;
+  text {
+    margin-right: 20rpx;
+  }
+}
+.balance {
+  width: 70%;
+  margin: 40rpx auto;
+  padding: 40rpx;
+  .title {
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 1px solid #f2f2f2;
+    padding-bottom: 20rpx;
+    margin-bottom: 20rpx;
+    width: 100%;
+  }
+  .price {
+    font-weight: bold;
+    font-size: 60rpx;
+    margin-left: 20rpx;
+  }
+}
+.msg-card {
+  background-color: #fff;
+  margin-bottom: 30rpx;
+  padding: 30rpx;
+}
+.tag-wrapper {
+  padding: 20rpx 0;
+}
+</style>

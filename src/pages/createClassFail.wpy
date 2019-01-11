@@ -1,0 +1,48 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container common-container-grey">
+    <view class="font-grey info">
+      恭喜，您成功创建了一个班级。您的班级为：{{info.schoolName}}{{unitName}}级{{className}}班。您是当前班级家委会的管理员，管理员可以转让给其他家长。
+    </view>
+    <view class="flex-wrapper between buttons-wrapper">
+       <text class="font-green btn-invite bg-white">点此加入该班级家委会</text>
+      <text class="font-green btn-invite bg-white">申诉找回班级管理权</text>
+    </view>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class createClassFail extends wepy.page {
+  config = {
+    navigationBarTitleText: '创建班级失败'
+  }
+  data = {
+    parentIndex: -1,
+    info: {
+      schoolName: '重庆市第三中学',
+      className: 3,
+      unitName: 2019
+    }
+  }
+  methods = {
+    bindParentPicker(e){
+      this.parentIndex = e.detail.value;
+      this.$apply();
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.info {
+  line-height: 1.4rem;
+  width: 90%;
+  margin: 0 auto;
+}
+.buttons-wrapper {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 100rpx;
+}
+</style>
