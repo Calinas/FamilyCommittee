@@ -8,7 +8,7 @@ page {
   height: 100%;
 }
 .common-container-grey {
-  background-color: #f1f1f1;
+  background-color: #EBEBEB;
 }
 .common-picker {
   display:flex;
@@ -24,6 +24,7 @@ page {
   overflow:hidden;
   justify-content: space-between;
   margin-top: 40rpx;
+  align-items: center;
 }
 .common-line {
   padding: 26rpx;
@@ -79,6 +80,9 @@ page {
 .font-blue {
   color: #1F5985;
 }
+.font-bold {
+  font-weight: bold;
+}
 .fixed-bottom-btn {
   position:fixed;
   left:0;
@@ -129,3 +133,17 @@ page {
   overflow: hidden;
   margin-right: 20rpx;
 }
+.avatar {
+  border-radius: 50%;
+  overflow: hidden;
+}
+.dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.dot.dot-grey {
+  background-color: #646464;
+}
+

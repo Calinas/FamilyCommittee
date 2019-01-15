@@ -1,20 +1,22 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey">
-    <view class="common-line mb-30">
+    <view class="common-line mb-30 flex-wrapper center">
+      <text class="iconfont icon-phone"><text>
       <input type="text" placeholder="请输入您的手机号" />
     </view>
 
-    <view class="common-line line-with-btn mb-30">
+    <view class="common-line line-with-btn mb-30 flex-wrapper center">
+      <text class="iconfont icon-checked"><text>
       <input type="text" placeholder="请输入验证码" />
-      <view class="weui-btn weui-btn_primary btn">确认修改</view>
+      <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">确认修改</view>
     </view>
-    <view class="common-line text-center font-green">绑定</view>
+    <view class="common-line text-center font-green bottom-btn">绑定</view>
   </view>
 
 </template>
 
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '绑定手机'
@@ -45,16 +47,15 @@ export default class bindRelationship extends wepy.page {
     parentIndex: -1
   }
   methods = {
-    bindParentPicker(e){
-      this.parentIndex = e.detail.value;
-      this.$apply();
+    bindParentPicker(e) {
+      this.parentIndex = e.detail.value
+      this.$apply()
     }
   }
-
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/buttons.wxss';
 .common-line {
   margin-top: 0;
@@ -66,5 +67,17 @@ export default class bindRelationship extends wepy.page {
   margin-right: 0;
   margin-left: 30rpx;
 }
-
+.iconfont {
+  margin-right: 20rpx;
+}
+.common-container {
+  position: relative;
+}
+.bottom-btn {
+  position:absolute;
+  bottom:200rpx;
+  left: 30rpx;
+  right: 30rpx;
+  margin: auto;
+}
 </style>

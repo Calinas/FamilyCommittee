@@ -1,0 +1,189 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container">
+    <textarea class="msg-wrapper" placeholder="{{placeholder}}"></textarea>
+    <view class="img-list flex-wrapper" wx:if="{{activeType === 'zone' || activeType === 'activity'}}">
+      <repeat for="{{img}}" index="index" item="item">
+        <view class="img-item">
+          <image @tap='previewImage' mode="widthFix" class='img' src='{{item}}'/>
+          <image src='../../images/close-white.png' @tap="deleteFn('imgList',{{index}})" class="close-btn"/>
+        </view>
+      </repeat>
+    </view>
+    <picker class="select-common-picker" mode="selector" value="{{seenIndex}}" range="{{type}}" range-key="title" @change="bindPicker" wx:if="{{activeType === 'zone' || activeType === 'notice'}}">
+      <view class="flex-wrapper between">
+        <view>
+          <text class="iconfont icon-user font-black"></text>
+          <text class="font-black">{{activityType === 'zone' ? '谁可以看' : '谁会收到通知'}}</text>
+        </view>
+        <text>{{seenIndex > 0 ? type[seenIndex].title : '请选择'}}</text>
+      </view>
+    </picker>
+    <!-- 收款 -->
+    <block wx:if="{{activeType === 'money'}}">
+      <view class="flex-wrapper between select-common-picker">
+        <view>
+          <text class="iconfont icon-user font-black"></text>
+          <text class="font-black">向谁收款</text>
+        </view>
+        <text>全体学生</text>
+      </view>
+      <view class="flex-wrapper between select-common-picker">
+        <view>
+          <text class="iconfont icon-user font-black"></text>
+          <text class="font-black">收款金额</text>
+        </view>
+        <input type="number" placeholder="请输入收款金额" class="text-right">
+      </view>
+    </block>
+    <!-- 活动 -->
+    <block wx:if="{{activeType === 'activity'}}">
+      <view class="flex-wrapper between select-common-picker">
+        <view>
+          <text class="iconfont icon-user font-black"></text>
+          <text class="font-black">谁可以报名</text>
+        </view>
+        <text>全体学生</text>
+      </view>
+      <picker class="select-common-picker" mode="selector" value="{{seenIndex}}" range="{{type}}" range-key="title" @change="bindPicker">
+        <view class="flex-wrapper between">
+          <view>
+            <text class="iconfont icon-user font-black"></text>
+            <text class="font-black">是否能参加多项</text>
+          </view>
+          <text>{{seenIndex > 0 ? type[seenIndex].title : '请选择'}}</text>
+        </view>
+      </picker>
+      <view class="flex-wrapper between select-common-picker" @tap="addNew">
+        <view>
+          <text class="iconfont icon-user font-black"></text>
+          <text class="font-black">新增活动项目</text>
+        </view>
+        <text>点击添加</text>
+      </view>
+    </block>
+    </text>
+    <Modal
+      sureBtnText="确认添加"
+      cancelBtnText="取消"
+      placeholderText="请输入您想新增的活动项目名"
+      :flag.sync="showAdd"
+      @cancel.user="cancel"
+      @sure.user="sure"
+    ></Modal>
+    <view class="tag-wrapper activity-list flex-wrapper" wx:if="{{activityList.length}}">
+      <repeat for="{{activityList}}" index="index" item="item">
+        <view class="tag tag-light-grey" @tap="deleteFn('activityList',{{index}})">
+          <text class="iconfont icon-delete"></text>
+          <text>{{item}}</text>
+        </view>
+      </repeat>
+    </view>
+    <view class="fixed-bottom-btn">确认发布</view>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy'
+import Modal from '../components/modal'
+export default class Publish extends wepy.page {
+  config = {
+    navigationBarTitleText: '发布'
+  }
+  components = {
+    Modal
+  }
+  data = {
+    showAdd: false,
+    msg: '',
+    img: ['../../images/add-img.png', '../../images/add-img.png', '../../images/add-img.png'],
+    seenIndex: -1,
+    type: [
+      {
+        id: 0,
+        title: '班级可见'
+      },
+      {
+        id: 1,
+        title: '全部可见'
+      }
+    ],
+    typeList: {
+      zone: '家长圈',
+      notice: '通知',
+      activity: '活动',
+      money: '收款'
+    },
+    placeholder: '请在此发表您的感想',
+    activeType: 'zone',
+    activityList: []
+  }
+  onLoad = (e) => {
+    const type = e.type
+    wx.setNavigationBarTitle({
+      title: `发布${this.typeList[type]}`
+    })
+    if (type !== 'zone') {
+      this.placeholder = `请在此录入您的${this.typeList[type]}详情`
+    }
+    this.activeType = type
+    this.$apply()
+  }
+  methods = {
+    cancel() {
+      this.showAdd = false
+      this.$apply()
+    },
+    sure(value) {
+      this.activityList.push(value)
+      this.showAdd = false
+      this.$apply()
+    },
+    addNew() {
+      this.showAdd = true
+      this.$apply()
+    },
+    bindPicker (e) {
+      this.seenIndex = e.detail.value
+      this.$apply()
+    },
+    deleteFn (arr, index) {
+      this[arr].splice(index, 1)
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+@import '../styles/mixins.scss';
+@include upload-img-wrapper;
+textarea {
+ width:calc(100% - 40rpx);
+ border:2rpx solid #f1f1f1;
+ margin-bottom:40rpx;
+ padding:20rpx;
+}
+
+.select-common-picker {
+  margin-top:40rpx;
+  padding-bottom:30rpx;
+  @include border-bottom;
+}
+.icon-user {
+  margin-right: 10rpx;
+}
+.activity-list {
+  margin-top: 40rpx;
+  .tag {
+    position: relative;
+  }
+  .icon-delete {
+    font-size: 24rpx;
+    color: red;
+    position: absolute;
+    right:0rpx;
+    top:-6rpx;
+  }
+}
+</style>

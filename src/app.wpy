@@ -1,5 +1,6 @@
 <style lang="scss">
 @import './styles/common.wxss';
+@import './styles/iconfont.wxss';
 .container {
   height: 100%;
   display: flex;
@@ -8,6 +9,7 @@
   justify-content: space-between;
   box-sizing: border-box;
 }
+
 </style>
 
 <script>
@@ -17,20 +19,24 @@ import 'wepy-async-function'
 import { setStore } from 'wepy-redux'
 import configStore from './store'
 
-cosnt store = configStore()
+const store = configStore()
 setStore(store)
 
 export default class extends wepy.app {
   config = {
+    navigationBarBackgroundColor: '#000000',
+    navigationBarTextStyle: 'white',
     pages: [
       'pages/zone',
+      'pages/cashWithdraw',
+      'pages/classList',
+      'pages/publish',
+      'pages/bindPhone',
       'pages/cashflow',
       'pages/photos',
       'pages/recordCashflow',
-      'pages/editZone',
       'pages/createClassFail',
       'pages/createClassSuccess',
-      'pages/bindPhone',
       'pages/bindRelationship',
       'pages/joinClass',
       'pages/createClass',
@@ -41,6 +47,26 @@ export default class extends wepy.app {
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      backgroundColor: '#fff',
+      borderStyle: 'white',
+      position: 'bottom',
+      selectedColor: '#1F9E3C',
+      list: [
+        {
+          pagePath: 'pages/zone',
+          iconPath: 'images/tab/index.png',
+          text: '发现',
+          selectedIconPath: 'images/tab/index.png'
+        },
+        {
+          pagePath: 'pages/classList',
+          iconPath: 'images/tab/order.png',
+          text: '班级',
+          selectedIconPath: 'images/tab/order.png'
+        }
+      ]
     }
   }
 
@@ -51,6 +77,35 @@ export default class extends wepy.app {
   constructor () {
     super()
     this.use('requestfix')
+    this.use('promisify')
+    this.intercept('request', {
+      config(req) {
+        req.url = 'https://zuxia.leinpay.com/api/v1' + req.url
+        req.timestamp = +new Date()
+        wx.showLoading({
+          title: '加载中',
+          mask: true
+        })
+        return req
+      },
+      success(req) {
+        if (req.statusCode !== 200) {
+          wx.showToast({
+            title: req.data.message,
+            icon: 'none',
+            duration: 2000
+          })
+        }
+        return req
+      },
+      fail(req) {
+        console.log('request fail: ', req)
+        return req
+      },
+      complete(req) {
+        wx.hideLoading()
+      }
+    })
   }
 
   onLaunch() {

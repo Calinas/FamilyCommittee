@@ -1,11 +1,18 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container common-container-grey" style="padding: 0;position:relative">
+  <view class="common-container common-container-grey" style="padding: 0;position:relative" @tap="closeToggle">
     <view class="img-mask">
       <image src="../../images/house.jpg" mode="scaleToFill" class="bg-img"/>
       <view class="mask"></view>
-      <view class="btn btn-set">设置</view>
-      <view class="btn btn-publish">发布</view>
-      <view class="caption">
+
+      <view class="btn btn-set flex-wrapper center" catchtap="toggleMenu('setFlag')">
+        <text class="iconfont icon-menu"></text>
+        <text>设置</text>
+      </view>
+      <view class="btn btn-publish flex-wrapper center" catchtap="toggleMenu('publishFlag')">
+        <text class="iconfont icon-edit"></text>
+        <text>发布</text>
+      </view>
+      <view class="caption" @tap="bubble">
         <text class="school">重庆市第一中学</text>
         <text class="class">初2010级10班</text>
       </view>
@@ -59,43 +66,74 @@
       </view>
     </view>
     <!-- 左边侧边栏 -->
-    <view class="sidebar sidebar-set bg-white">
+    <view class="sidebar sidebar-set bg-white {{setFlag ? 'show': ''}}">
       <view class="list">
-        <view>更换封面</view>
-        <view>家长绑定</view>
-        <view>手机绑定</view>
-        <view>财务流水</view>
-        <view>收款体现</view>
-        <view>帮助手册</view>
-        <view>家委会管理</view>
+        <view class="title font-bold font-black">
+          <text class="iconfont icon-setting"></text>
+          <text>设置</text>
+        </view>
+        <view catchtap="jumpPage('bindRelationship')">家长绑定</view>
+        <view catchtap="jumpPage('bindPhone')">手机绑定</view>
+        <view catchtap="jumpPage('cashflow')">财务流水</view>
+        <view>收款提现</view>
+        <view class="">家委会管理</view>
         </view>
     </view>
     <!-- 右边侧边栏 -->
-    <view class="sidebar sidebar-publish bg-white show">
+    <view class="sidebar sidebar-publish bg-white {{publishFlag ? 'show': ''}}">
       <view class="list">
-        <view>更换封面</view>
-        <view>家长绑定</view>
-        <view>手机绑定</view>
-        <view>财务流水</view>
-        <view>收款体现</view>
-        <view>帮助手册</view>
-        <view>家委会管理</view>
+        <view class="title font-bold font-black">
+          <text class="iconfont icon-publish"></text>
+          <text>发布</text>
+        </view>
+        <view type="family" catchtap="jumpPage('publish','zone')">家长圈</view>
+        <view catchtap="jumpPage('photos')">相册</view>
+        <view catchtap="jumpPage('publish','notice')">通知</view>
+        <view catchtap="jumpPage('publish','activity')">活动</view>
+        <view catchtap="jumpPage('publish','money')">收款</view>
+        <view catchtap="jumpPage('recordCashflow')">记账</view>
         </view>
     </view>
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
 export default class cashflow extends wepy.page {
   config = {
-    navigationBarTitleText: '财务记账'
+    navigationBarTitleText: '发现'
   }
   data = {
-
+    setFlag: false,
+    publishFlag: false
   }
   methods = {
-
+    jumpPage (pageName, type) {
+      wx.navigateTo({
+        url: `${pageName}?type=${type}`,
+        complete: () => {
+          this.publishFlag = false
+        }
+      })
+    },
+    toggleMenu (type) {
+      this[type] = !this[type]
+      this.$apply()
+    },
+    bubble () {
+      console.log('是否触发')
+    },
+    check () {
+      console.log('222')
+    },
+    prevent () {
+      console.log('里面')
+    },
+    closeToggle () {
+      this.setFlag = false
+      this.publishFlag = false
+      this.$apply()
+    }
   }
 }
 </script>
@@ -105,6 +143,12 @@ export default class cashflow extends wepy.page {
   position: relative;
   color: #fff;
   height: 360rpx;
+  .iconfont {
+    margin-right: 10rpx;
+  }
+  .icon-edit {
+    transform:scaleX(0.9);
+  }
   .bg-img {
     width: 100%;
     height: 360rpx;
@@ -174,14 +218,17 @@ export default class cashflow extends wepy.page {
   width: 60%;
   z-index: 2;
   transition: all .3s;
-
+  &.show {
+    transform: translateX(0);
+  }
   &-set {
     left: 0;
     transform: translateX(-100%);
   }
   &-publish {
-    left: 100%;
-    transform: translateX(100%);
+    right: 0%;
+    transform:translateX(100%);
+
   }
   .list {
     position:absolute;
@@ -192,15 +239,20 @@ export default class cashflow extends wepy.page {
     margin:auto;
     width:80%;
     text-align:center;
-    height:60%;
+    height:70%;
     & > view {
       height:100rpx;
       line-height:100rpx;
       border-bottom:2rpx solid #f1f1f1;
+      &.title {
+        font-size: 40rpx;
+        font-weight: bold;
+        .iconfont {
+          margin-right: 20rpx;
+        }
+      }
     }
   }
 }
-.sidebar.show {
-  transform:translateX(0)
-}
+
 </style>

@@ -1,0 +1,49 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container">
+    <view class="font-black item">
+      <text>2018年12月30日，您发起了一个收款，共收到</text>
+      <view class="operate-btn flex-wrapper center">
+        <input type="number" placeholder="请输入">
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">申请提现</view>
+      </view>
+    </view>
+    <view class="font-black item">
+      <text>2018年12月30日，您发起了一个收款，共收到</text>
+      <view class="operate-btn flex-wrapper center">
+        <input type="number" placeholder="请输入">
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">申请提现</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class CashWithdrawal extends wepy.page {
+  config = {
+    navigationBarTitleText: '收款提现'
+  }
+  data = {
+    money: ''
+  }
+  methods = {
+  }
+}
+</script>
+
+<style lang="scss">
+@import '../styles/buttons.wxss';
+@import '../styles/mixins.scss';
+.item {
+  border-bottom: 2rpx solid #f2f2f2;
+  padding-bottom:40rpx;
+  margin-bottom:40rpx;
+  .operate-btn {
+    margin-top: 40rpx;
+    & > input {
+      @include border-bottom;
+      padding-left: 20rpx;
+    }
+  }
+}
+</style>

@@ -1,17 +1,29 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container">
-    <radio-group class="radio-group" @change="radioChange" class="width60">
+  <view class="common-container" style="padding-bottom: 100rpx;">
+    <radio-group class="radio-group" @change="radioChange" class="width80">
       <label class="radio" wx:for="{{cashType}}">
         <radio value="{{item.title}}" checked="{{item.checked}}" />
         {{item.title}}
       </label>
     </radio-group>
-    <input type="number" placeholder="请输入您的支出金额" class="money-input width60"/>
+    <input type="number" placeholder="请输入支出金额" class="money-input width80"/>
     <textarea class="money-desc" placeholder="请输入您支出金额的详情描述"></textarea>
+    <text class="font-black font-bold upload-text">上传凭证</text>
+    <view class="img-list flex-wrapper">
+      <repeat for="{{img}}" index="index" item="item">
+        <view class="img-item">
+          <image @tap='previewImage' mode="widthFix" class='img' src='{{item}}'/>
+          <image src='../../images/close-white.png' @tap="deleteFn('imgList',{{index}})" class="close-btn"/>
+        </view>
+      </repeat>
+    </view>
     <picker class="" mode="selector" value="{{seenIndex}}" range="{{type}}" range-key="title" @change="bindPicker" class="picker">
-      <view class="flex-wrapper between">
-        <text class="font-black">谁可以看</text>
-        <text>{{seenIndex > 0 ? type[seenIndex].title : '身份'}}</text>
+       <view class="flex-wrapper between">
+        <view>
+          <text class="iconfont icon-user font-black"></text>
+          <text class="font-black">谁可以看</text>
+        </view>
+        <text>{{seenIndex > 0 ? type[seenIndex].title : '请选择'}}</text>
       </view>
     </picker>
     <view class="fixed-bottom-btn">记一笔</view>
@@ -32,41 +44,47 @@ export default class recordCashflow extends wepy.page {
     cashType: [
       {
         id: 0,
-        title:'收入',
+        title: '收入',
         checked: true
       },
       {
         id: 1,
-        title:'支出',
+        title: '支出',
         checked: false
       }
     ],
     type: [
       {
         id: 0,
-        title:'班级可见'
+        title: '班级可见'
       },
       {
         id: 1,
-        title:'全部可见'
+        title: '全部可见'
       }
     ]
   }
   methods = {
-    bindPicker(e){
-      this.seenIndex = e.detail.value;
-      this.$apply();
+    bindPicker(e) {
+      this.seenIndex = e.detail.value
+      this.$apply()
+    },
+    deleteFn (arr, index) {
+      this[arr].splice(index, 1)
+      this.$apply()
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '../styles/mixins.scss';
+@include upload-img-wrapper;
 .picker {
   margin-top: 40rpx;
   font-size: 32rpx;
 }
-.width60 {
+.width80 {
   display: block;
   width: 60%;
   margin: 0 auto;
@@ -77,13 +95,25 @@ export default class recordCashflow extends wepy.page {
   text-align:center;
 }
 .money-input {
+  font-size: 50rpx;
   margin:100rpx auto;
-  border-bottom:2rpx solid #f2f2f2;
+  @include border-bottom;
   text-align:center;
+  padding: 20rpx;
 }
 .money-desc {
   border:1px solid #f1f1f1;
   padding:20rpx;
   width: calc(100% - 40rpx);
+}
+.img-list {
+  margin-top: 40rpx;
+}
+.icon-user {
+  margin-right: 10rpx;
+}
+.upload-text {
+  display: block;
+  margin-top: 40rpx;
 }
 </style>
