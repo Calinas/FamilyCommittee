@@ -1,0 +1,54 @@
+import wepy from 'wepy'
+import { requestGet, requestPost } from 'request'
+
+// 获取sessionKey
+export function schoolList(data) {
+  return new Promise((resolve, reject) => {
+    requestPost({
+      url: '/wxapp/onLogin',
+      data: {
+        code: data.code,
+        old_wxapp_token: data.old_wxapp_token
+      }
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 解密敏感数据
+export function decryptData(data) {
+  return new Promise((resolve, reject) => {
+    requestPost({
+      url: '/wxapp/decryptData',
+      data: {
+        encryptedData: data.encryptedData,
+        iv: data.iv,
+        wxapp_token: data.wxapp_token,
+        rawData: data.rawData,
+        signature: data.signature
+      }
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 微信登录
+export function wxLogin(data) {
+  return new Promise((resolve, reject) => {
+    requestPost({
+      url: '/auth/wxLogin',
+      data: {
+        open_id: data.open_id,
+        nickname: data.nickname,
+        head_img: data.head_img,
+        sex: data.sex,
+        auth_id: data.auth_id,
+        wxapp_token: data.wxapp_token
+      }
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

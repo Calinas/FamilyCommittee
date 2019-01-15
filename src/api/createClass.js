@@ -1,42 +1,50 @@
 import wepy from 'wepy'
-import { requestGet, requestPost } from 'request.js'
+import { requestGet, requestPost } from 'request'
 
 // 获取学校列表
-export function getSchoolList(params) {
-  params = Object.assign({}, params)
+export function schoolList() {
   return new Promise((resolve, reject) => {
-    wepy.request({
+    requestGet({
       url: '/school/index',
-      data: params,
-      method: 'get'
+      data: {
+        keywords: '',
+        pn: 1,
+        ps: 10
+      }
     }).then(res => {
       resolve(res)
     })
   })
 }
 
-export function createClass(params) {
-  params = Object.assign({}, params)
+// 创建班级
+export function addClass(data) {
   return new Promise((resolve, reject) => {
-    wepy.request({
+    requestPost({
       url: '/class/addClass',
-      data: params,
-      method: 'post'
+      data: {
+        school_id: data.school_id,
+        grade_type: data.grade,
+        year_class: data.year,
+        class: data.class
+      }
     }).then(res => {
       resolve(res)
     })
   })
 }
 
-export function addClass(params) {
+// 加入班级
+export function joinClass(data) {
   return new Promise((resolve, reject) => {
-    request({
-      url: '/class/addClass',
-      data: params,
-      method: 'post'
+    requestPost({
+      url: '/member/class/join',
+      data: {
+        member_id: data.member_id,
+        join_key: data.key
+      }
     }).then(res => {
       resolve(res)
     })
   })
 }
-
