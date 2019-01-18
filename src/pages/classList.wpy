@@ -44,12 +44,20 @@
 
 <script>
 import wepy from 'wepy'
+import { getClassList } from '../api/createClass' 
 export default class ClassList extends wepy.page {
   config = {
     navigationBarTitleText: '我的班级'
   }
   data = {
-
+    classList: []
+  }
+  getClassList() {
+    getClassList({
+      member_id: 1
+    }).then(res => {
+      console.log(res)
+    })
   }
   methods = {
   }

@@ -18,9 +18,9 @@
         </view>
       </repeat>
     </view>
-    <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-2">
-      <view class="btn-white">管理</view>
-      <view>上传</view>
+    <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
+      <!-- <view class="btn-white">管理</view> -->
+      <view class="text-center" style="width: 100%;">上传</view>
     </view>
   </view>
 
@@ -37,8 +37,8 @@ export default class bindRelationship extends wepy.page {
     img: ['../../images/add-img.png','../../images/add-img.png','../../images/add-img.png']
   }
   methods = {
-    previewImage(url,urls){
-      //这里的url不能使用相对路径
+    previewImage (url, urls) {
+      // 这里的url不能使用相对路径
       wx.previewImage({
         current: url,
         urls: urls

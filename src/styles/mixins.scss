@@ -8,7 +8,7 @@
 @mixin upload-img-wrapper {
   .img-list {
   margin-bottom: 100rpx;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   .img-item {
     position: relative;
     width: 30%;

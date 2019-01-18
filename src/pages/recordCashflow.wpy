@@ -1,59 +1,65 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container" style="padding-bottom: 100rpx;">
-    <radio-group class="radio-group" @change="radioChange" class="width80">
+  <view class="common-container">
+    <radio-group class="radio-group" @change="pickerChange" class="width80" id="type">
       <label class="radio" wx:for="{{cashType}}">
-        <radio value="{{item.title}}" checked="{{item.checked}}" />
+        <radio value="{{item.type}}" checked="{{item.checked}}" />
         {{item.title}}
       </label>
     </radio-group>
-    <input type="number" placeholder="请输入支出金额" class="money-input width80"/>
-    <textarea class="money-desc" placeholder="请输入您支出金额的详情描述"></textarea>
+    <input type="number" placeholder="请输入支出金额" class="money-input width80" @input="pickerChange" id="money"/>
+    <textarea class="money-desc" placeholder="请输入您支出金额的详情描述" @input="pickerChange" id="msg"></textarea>
     <text class="font-black font-bold upload-text">上传凭证</text>
     <view class="img-list flex-wrapper">
       <repeat for="{{img}}" index="index" item="item">
         <view class="img-item">
           <image @tap='previewImage' mode="widthFix" class='img' src='{{item}}'/>
-          <image src='../../images/close-white.png' @tap="deleteFn('imgList',{{index}})" class="close-btn"/>
+          <image src='../../images/close-white.png' @tap="deleteFn('img',{{index}})" class="close-btn"/>
         </view>
       </repeat>
     </view>
-    <picker class="" mode="selector" value="{{seenIndex}}" range="{{type}}" range-key="title" @change="bindPicker" class="picker">
+    <picker class="" mode="selector" value="{{seenIndex}}" range="{{seeTypes}}" range-key="title" @change="pickerChange" class="picker" id="seenIndex">
        <view class="flex-wrapper between">
         <view>
           <text class="iconfont icon-user font-black"></text>
           <text class="font-black">谁可以看</text>
         </view>
-        <text>{{seenIndex > 0 ? type[seenIndex].title : '请选择'}}</text>
+        <text>{{seeTypes[seenIndex].title}}</text>
       </view>
     </picker>
-    <view class="fixed-bottom-btn">记一笔</view>
+    <view class="fixed-bottom-btn" @tap="submit">记一笔</view>
   </view>
 
 </template>
 
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
+import { addAccount } from '../api/zone'
+import { showMsg } from '../utils/common'
 export default class recordCashflow extends wepy.page {
   config = {
     navigationBarTitleText: '记账'
   }
   data = {
     msg: '',
-    img: ['../../images/add-img.png','../../images/add-img.png','../../images/add-img.png'],
-    seenIndex: -1,
+    img: ['../../images/add-img.png', '../../images/add-img.png', '../../images/add-img.png'],
+    seenIndex: 0,
+    money: 0,
     cashType: [
       {
         id: 0,
         title: '收入',
-        checked: true
+        checked: true,
+        type: 'in'
       },
       {
         id: 1,
         title: '支出',
-        checked: false
+        checked: false,
+        type: 'out'
       }
     ],
-    type: [
+    type: 'in',
+    seeTypes: [
       {
         id: 0,
         title: '班级可见'
@@ -65,13 +71,26 @@ export default class recordCashflow extends wepy.page {
     ]
   }
   methods = {
-    bindPicker(e) {
-      this.seenIndex = e.detail.value
-      this.$apply()
-    },
     deleteFn (arr, index) {
       this[arr].splice(index, 1)
       this.$apply()
+    },
+    pickerChange(e) {
+      this[e.currentTarget.id] = e.detail.value
+    },
+    submit() {
+      if (this.money <= 0) {
+        showMsg('请输入支出金额')
+        return
+      }
+      addAccount({
+        member_id: 1,
+        class_id: 2,
+        type: this.type,
+        desc: this.msg,
+        money: this.money,
+        imgList: this.img
+      }).then(res => {console.log(res)})
     }
   }
 }
@@ -80,6 +99,9 @@ export default class recordCashflow extends wepy.page {
 <style lang="scss">
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
+.common-container {
+  padding-bottom: 160rpx;
+}
 .picker {
   margin-top: 40rpx;
   font-size: 32rpx;
@@ -100,6 +122,7 @@ export default class recordCashflow extends wepy.page {
   @include border-bottom;
   text-align:center;
   padding: 20rpx;
+  height: 2rem;
 }
 .money-desc {
   border:1px solid #f1f1f1;

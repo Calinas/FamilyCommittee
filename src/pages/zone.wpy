@@ -17,17 +17,37 @@
         <text class="class">初2010级10班</text>
       </view>
     </view>
+    <!-- 筛选框 -->
+    <view class="menu-wrapper flex-wrapper">
+      <view>
+        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+        <text>家长圈</text>
+      </view>
+      <view>
+        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+        <text>收款</text>
+      </view>
+      <view>
+        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+        <text>通知</text>
+      </view>
+      <view>
+        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+        <text>活动</text>
+      </view>
+      <view>
+        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+        <text>记账</text>
+      </view>
+    </view>
     <view class="item-wrapper">
-      <!-- 这个是活动 -->
-      <view class="item">
+      <view class="item" wx:for="{{list}}">
         <view class="flex-wrapper center">
           <image src="../../images/avatar.png"  class="small-avatar"/>
-          <text>乔峰妈妈发布了财务信息</text>
+          <text>{{item.info.member.member_name}}发布了财务信息</text>
         </view>
-        <view class="font-small font-grey text-right">2018年11月23日 20:00</view>
-        <view class="item-desc">
-          这是一个或党费南非房内房内纷飞南非南非房内分
-        </view>
+        <view class="font-small font-grey text-right">{{item.info.member.created_at}}</view>
+        <view class="item-desc">{{item.info.member.description}}</view>
         <view class="tag-wrapper item-tag">
           <text class="tag tag-empty">真人cs</text>
           <text class="tag tag-empty">夹气球</text>
@@ -72,11 +92,11 @@
           <text class="iconfont icon-setting"></text>
           <text>设置</text>
         </view>
-        <view catchtap="jumpPage('bindRelationship')">家长绑定</view>
-        <view catchtap="jumpPage('bindPhone')">手机绑定</view>
+        <view catchtap="jumpPage('bindRelationship')">身份绑定</view>
+        <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
         <view catchtap="jumpPage('cashflow')">财务流水</view>
-        <view>收款提现</view>
-        <view class="">家委会管理</view>
+        <view catchtap="jumpPage('cashWithdraw')">收款提现</view>
+        <view catchtap="jumpPage('authorize')">家委会管理</view>
         </view>
     </view>
     <!-- 右边侧边栏 -->
@@ -99,21 +119,48 @@
 
 <script>
 import wepy from 'wepy'
+import { getCircleList } from '../api/zone'
 export default class cashflow extends wepy.page {
   config = {
     navigationBarTitleText: '发现'
   }
   data = {
+    activeType: 'all',
     setFlag: false,
-    publishFlag: false
+    publishFlag: false,
+    type: {
+      circle: '家长圈',
+      collection: '收款',
+      notify: '通知',
+      activity: '活动',
+      account: '记账'
+    },
+    pn: 1,
+    ps: 10,
+    list: []
+  }
+  onLoad() {
+    this.getZoneList()
+  }
+  getZoneList() {
+    getCircleList({
+      member_id: 1,
+      class_id: 2,
+      see_type: 'all',
+      type: this.activeType,
+      pn: this.pn,
+      ps: this.ps
+    }).then(res => {
+      this.list = res.data.list
+      this.$apply()
+    })
   }
   methods = {
     jumpPage (pageName, type) {
+      this.publishFlag = false
+      this.setFlag = false
       wx.navigateTo({
-        url: `${pageName}?type=${type}`,
-        complete: () => {
-          this.publishFlag = false
-        }
+        url: `${pageName}?type=${type}`
       })
     },
     toggleMenu (type) {
@@ -139,6 +186,26 @@ export default class cashflow extends wepy.page {
 </script>
 
 <style lang="scss">
+.menu-wrapper {
+  background-color: #fff;
+  padding: 40rpx;
+  color: #000;
+  & > view {
+    width: 20%;
+    text-align: center;
+    .icon-menu {
+      width: 60rpx;
+      height: 60rpx;
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 20rpx;
+    }
+    & > text {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}
 .img-mask {
   position: relative;
   color: #fff;

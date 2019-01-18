@@ -9,7 +9,7 @@
       <text class="title">班级财务余额</text>
       <view>
         <text>CNY</text>
-        <text class="price">899.00</text>
+        <text class="price">{{balance}}</text>
       </view>
     </view>
     <scroll-view class="scroll-container">
@@ -74,20 +74,44 @@
 
 <script>
 import wepy from 'wepy'
+import { getFinanceList, getFinanceInfo } from '../api/finance'
 export default class cashflow extends wepy.page {
   config = {
     navigationBarTitleText: '财务记账'
   }
   data = {
-
+    pn: 1,
+    ps: 10,
+    balance: 0
   }
   methods = {
-    jumpPage(){
-      console.log('222')
+    jumpPage() {
       wx.navigateTo({
         url: 'zone'
       })
     }
+  }
+  getList() {
+    getFinanceList({
+      member_id: 1,
+      class_id: 2,
+      ps: this.ps,
+      pn: this.pn
+    }).then(res => console.log(res))
+  }
+  getInfo() {
+    getFinanceInfo({
+      member_id: 1,
+      class_id: 2
+    }).then(res => {
+      let data = res.data
+      this.balance = data.balance
+      this.$apply()
+    })
+  }
+  onLoad() {
+    this.getList()
+    this.getInfo()
   }
 }
 </script>

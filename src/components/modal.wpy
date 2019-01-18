@@ -2,7 +2,7 @@
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="wx-popup-con">
-        <input type="text" placeholder={{placeholderText}} @input="bindInput">
+        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}">
       </view>
       <view class="wx-popup-btn">
         <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>
@@ -14,6 +14,7 @@
 
 <script>
 import wepy from 'wepy'
+import { showMsg, isEmptyString } from '../utils/common'
 export default class Modal extends wepy.component {
   config = {
     navigationBarTitleText: '财务记账'
@@ -39,7 +40,13 @@ export default class Modal extends wepy.component {
       this.$emit('cancel')
     },
     sureFn () {
+      if (isEmptyString(this.input)) {
+        showMsg('请输入活动项目名称')
+        return
+      }
       this.$emit('sure', this.input)
+      this.input = ''
+      this.$apply()
     }
   }
 }

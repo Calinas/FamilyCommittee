@@ -1,0 +1,224 @@
+<template>
+<view class="page" style="background-color:#fff;margin-top: 400rpx;">
+  <view class="login-title flex">
+    <text class="line-title"></text>
+    <text class="font-grey line-text">使用微信绑定的手机号登录</text>
+    <text class="line-title"></text>
+  </view>
+  <button wx:if="{{!show_lay}}" bindgetuserinfo="getUserInfo" open-type="getUserInfo" class="weixin-login-btn">授权登录</button>
+  <view class='bind-phone-lay' wx:if="{{show_lay}}">
+    <view>您好，我们需要绑定您的手机号就可以完成注册啦</view>
+    <button plain="true" bindgetphonenumber="getPhoneNumber" openType="getPhoneNumber" style="font" type="themeBg" class="weixin-login-btn">点击授权</button>
+  </view>
+  <view class='overlay' wx:if="{{show_lay}}"></view>
+</view>
+</template>
+
+<script>
+// 如果直接拿到了union_id,那 nickname,这些是什么时候拿到的？
+//报错信息好像没处理
+import wepy from 'wepy'
+import { getSessionKey, decryptData, wxLogin } from '../api/login'
+export default class login extends wepy.page {
+  config = {
+    navigationBarTitleText: '登录'
+  };
+  data = {
+    unionid: '',
+    wxtoken: '',
+    openid: '',
+    show_lay: false,
+    nickname: '用户',
+    sex: '',
+    head_img: '',
+    phone: ''
+  };
+  methods = {
+    getUserInfo(e) {
+      const detail = e.detail
+      decryptData({
+        encryptedData: detail.encryptedData,
+        iv: detail.iv,
+        wxapp_token: this.wxtoken
+      }).then(res => {
+        let data = res.data.decryptedData
+        this.unionid = data.unionId
+        this.nickname = data.nickName
+        this.sex = data.gender
+        this.head_img = data.avatarUrl
+        this.show_lay = true
+        this.$apply()
+      })
+    },
+    getPhoneNumber(e) {
+      const detail = e.detail
+      decryptData({
+        encryptedData: detail.encryptedData,
+        iv: detail.iv,
+        wxapp_token: this.wxtoken
+      }).then(res => {
+        this.phone = res.data.decryptedData.phoneNumber
+        this.$apply()
+        this.loginByWeixin()
+      })
+    }
+  };
+  loginByWeixin() {
+    wxLogin({
+      open_id: this.open_id,
+      nickname: this.nickname,
+      head_img: this.head_img,
+      sex: this.sex,
+      auth_id: this.unionid,
+      wxapp_token: this.wxapp_token
+    }).then(res => {
+      let data = res.data
+      let memberInfo = {
+        member_id: data.member_id,
+        member_token: data.member_token,
+        phone: this.phone,
+        nickname: this.nickname,
+        avatar: this.head_img
+      }
+      wx.setStorage({
+        key: 'memberInfo',
+        data: memberInfo,
+        success: res => {
+          wx.reLaunch({
+            url: 'classList'
+          })
+        }
+      })
+    })
+  }
+  onShow() {
+    wx.login({
+      success: res => {
+        let old_wxapp_token = wx.getStorageSync('wxtoken')
+        getSessionKey({
+          code: res.code,
+          old_wxapp_token: old_wxapp_token
+        }).then(res => {
+          let data = res.data
+          this.unionid = data.unionid ? data.unionid : ''
+          this.wxtoken = data.wxapp_token
+          this.openid = data.openid
+          this.$apply()
+          wx.setStorageSync('wxtoken', this.wxtoken)
+        })
+      }
+    })
+  }
+}
+</script>
+
+
+<style>
+
+.icon-wechat {
+  width: 100rpx;
+  padding: 40rpx 0;
+}
+.hover {
+  background: gray;
+}
+
+.small-title {
+  font-size: 28rpx;
+}
+
+.inner {
+  padding: 58rpx;
+  font-size: 30rpx;
+}
+
+.line {
+  margin-top: 40rpx;
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+.weixin-login {
+  margin-top: 150rpx;
+}
+
+.login-title {
+  display: flex;
+  font-size: 28rpx;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40rpx;
+}
+
+.weixin-login .line-title {
+  display: inline-block;
+  vertical-align: middle;
+  width: 86rpx;
+  height: 2rpx;
+  background-color: #808080;
+}
+
+.weixin-login .line-text {
+  padding: 0 24rpx;
+}
+
+.weixin-login-btn {
+  font-size: 30rpx;
+  color: #fff;
+  width: 400rpx;
+  border-radius: 40rpx;
+  letter-spacing: 2rpx;
+  background-color: #fd8238;
+}
+.bind-phone-lay {
+  position: fixed;
+  top: 30%;
+  height: 240rpx;
+  width: 70%;
+  left: 15%;
+  background-color: white;
+  z-index: 6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bind-phone-lay > view {
+  font-size: 28rpx;
+  color: #888;
+  padding: 20rpx 40rpx;
+}
+
+.bind-phone-lay .weixin-login-btn {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  border-radius: 0;
+  line-height: 90rpx;
+  height: 90rpx;
+  border: 0;
+  /* border-top: 1px solid #dfdfdf; */
+  color: #0bb20c;
+}
+
+.bind-phone-lay .weixin-login-btn:after {
+  position: absolute;
+  content: ' ';
+  height: 1px;
+  border-top: 1px solid #ededed;
+  color: #d9d9d9;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5); /*缩放*/
+}
+.overlay {
+  position: fixed;
+  z-index: 5;
+  opacity: 0.5;
+  background-color: #000;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+</style>

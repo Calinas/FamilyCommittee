@@ -1,11 +1,11 @@
 import wepy from 'wepy'
-import { requestGet, requestPost } from 'request'
 
 // 获取sessionKey
-export function schoolList(data) {
+export function getSessionKey(data) {
   return new Promise((resolve, reject) => {
-    requestPost({
+    wepy.request({
       url: '/wxapp/onLogin',
+      method: 'get',
       data: {
         code: data.code,
         old_wxapp_token: data.old_wxapp_token
@@ -19,14 +19,13 @@ export function schoolList(data) {
 // 解密敏感数据
 export function decryptData(data) {
   return new Promise((resolve, reject) => {
-    requestPost({
+    wepy.request({
       url: '/wxapp/decryptData',
+      method: 'post',
       data: {
         encryptedData: data.encryptedData,
         iv: data.iv,
-        wxapp_token: data.wxapp_token,
-        rawData: data.rawData,
-        signature: data.signature
+        wxapp_token: data.wxapp_token
       }
     }).then(res => {
       resolve(res)
@@ -37,8 +36,9 @@ export function decryptData(data) {
 // 微信登录
 export function wxLogin(data) {
   return new Promise((resolve, reject) => {
-    requestPost({
+    wepy.request({
       url: '/auth/wxLogin',
+      method: 'post',
       data: {
         open_id: data.open_id,
         nickname: data.nickname,

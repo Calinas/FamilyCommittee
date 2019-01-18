@@ -1,0 +1,106 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container">
+    <view class="font-black font-bold title">
+      <text>权限管理</text>
+    </view>
+    <!-- 会长权限 -->
+    <view class="flex-wrapper item" wx:for="{{list}}">
+      <view class="font-bold font-black sub-title">{{item.role.name}}</view>
+      <view class="tag tag-light-grey" wx:for="{{item.role.member}}" wx:for-item="member">
+        <text class="iconfont icon-delete"></text>
+        <text>{{member.member_name}}</text>
+      </view>
+      <view class="tag-wrapper">
+        <text class="tag tag-blue" @tap="addNew({{true}},{{item.role.role_id}})">添加</text>
+      </view>
+    </view>
+  </view>
+  <Modal
+      sureBtnText="确认添加"
+      cancelBtnText="取消"
+      placeholderText="请输入姓名"
+      :flag.sync="showAdd"
+      @cancel.user="cancel"
+      @sure.user="sure"
+    ></Modal>
+</template>
+
+<script>
+import wepy from 'wepy'
+import Modal from '../components/modal'
+import { authList, addAuth } from '../api/authorize'
+export default class bindRelationship extends wepy.page {
+  config = {
+    navigationBarTitleText: '家委会管理'
+  }
+  components = {
+    Modal
+  }
+  data = {
+    showAdd: false,
+    list: [],
+    currentRoleId: -1
+  }
+  getAuthList() {
+    authList({
+      member_id: 2,
+      class_id: 1
+    }).then(res => {
+      this.list = res.data.list
+      this.$apply()
+    })
+  }
+  onLoad() {
+    this.getAuthList()
+  }
+  methods = {
+    cancel() {
+      this.showAdd = false
+      this.$apply()
+    },
+    addNew(booleanValue, id) {
+      this.showAdd = booleanValue
+      this.currentRoleId = id
+      this.$apply()
+    },
+    sure(value) {
+      this.showAdd = false
+      addAuth({
+        member_id: 1,
+        class_id: 2,
+        role_id: this.currentRoleId,
+        join_member_id: 2
+      }).then(res => {
+        console.log(res)
+        this.currentRoleId = -1
+      })
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+@import '../styles/mixins.scss';
+.sub-title {
+  margin-right: 20rpx;
+}
+.title {
+  font-size: 36rpx;
+}
+.item {
+  flex-wrap: wrap;
+  margin-top: 40rpx;
+  .tag {
+    position: relative;
+    margin-bottom: 20rpx;
+  }
+  .icon-delete {
+    font-size: 24rpx;
+    color: red;
+    position: absolute;
+    right:0rpx;
+    top:-6rpx;
+  }
+}
+</style>

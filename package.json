@@ -18,6 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "redux-actions": "^2.6.4",
+    "tough-cookie": "^3.0.0",
     "wepy": "^1.6.0",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.2",

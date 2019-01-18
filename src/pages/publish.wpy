@@ -1,6 +1,6 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
-    <textarea class="msg-wrapper" placeholder="{{placeholder}}"></textarea>
+    <textarea class="msg-wrapper" placeholder="{{placeholder}}" @input="bindChange" id="msg"></textarea>
     <view class="img-list flex-wrapper" wx:if="{{activeType === 'zone' || activeType === 'activity'}}">
       <repeat for="{{img}}" index="index" item="item">
         <view class="img-item">
@@ -8,14 +8,17 @@
           <image src='../../images/close-white.png' @tap="deleteFn('imgList',{{index}})" class="close-btn"/>
         </view>
       </repeat>
+      <view class="img-item" @tap="chooseImage">
+        <image mode="widthFix" class='img' src='../../images/add-img.png'/>
+      </view>
     </view>
-    <picker class="select-common-picker" mode="selector" value="{{seenIndex}}" range="{{type}}" range-key="title" @change="bindPicker" wx:if="{{activeType === 'zone' || activeType === 'notice'}}">
+    <picker class="select-common-picker" mode="selector" value="{{seeType}}" range="{{type}}" range-key="title" id="seeType" @change="bindChange" wx:if="{{activeType === 'zone' || activeType === 'notice'}}">
       <view class="flex-wrapper between">
         <view>
           <text class="iconfont icon-user font-black"></text>
-          <text class="font-black">{{activityType === 'zone' ? '谁可以看' : '谁会收到通知'}}</text>
+          <text class="font-black">{{activeType === 'zone' ? '谁可以看' : '谁会收到通知'}}</text>
         </view>
-        <text>{{seenIndex > 0 ? type[seenIndex].title : '请选择'}}</text>
+        <text>{{type[seeType].title}}</text>
       </view>
     </picker>
     <!-- 收款 -->
@@ -32,7 +35,7 @@
           <text class="iconfont icon-user font-black"></text>
           <text class="font-black">收款金额</text>
         </view>
-        <input type="number" placeholder="请输入收款金额" class="text-right">
+        <input type="number" placeholder="请输入收款金额" class="text-right" id="money" @input="bindChange">
       </view>
     </block>
     <!-- 活动 -->
@@ -42,15 +45,20 @@
           <text class="iconfont icon-user font-black"></text>
           <text class="font-black">谁可以报名</text>
         </view>
-        <text>全体学生</text>
+        <view>
+          <text>全体学生</text>
+        </view>
       </view>
-      <picker class="select-common-picker" mode="selector" value="{{seenIndex}}" range="{{type}}" range-key="title" @change="bindPicker">
+      <picker class="select-common-picker" mode="selector" value="{{activityType}}" range="{{activityJoinType}}" range-key="title" @change="bindChange" id="activityType">
         <view class="flex-wrapper between">
           <view>
             <text class="iconfont icon-user font-black"></text>
             <text class="font-black">是否能参加多项</text>
           </view>
-          <text>{{seenIndex > 0 ? type[seenIndex].title : '请选择'}}</text>
+          <view>
+            <text>{{activityJoinType[activityType].title}}</text>
+            <text class="iconfont icon-arrow-right"></text>
+          </view>
         </view>
       </picker>
       <view class="flex-wrapper between select-common-picker" @tap="addNew">
@@ -78,7 +86,7 @@
         </view>
       </repeat>
     </view>
-    <view class="fixed-bottom-btn">确认发布</view>
+    <view class="fixed-bottom-btn" @tap="submit">确认发布</view>
   </view>
 
 </template>
@@ -86,6 +94,8 @@
 <script>
 import wepy from 'wepy'
 import Modal from '../components/modal'
+import { showMsg, isEmptyString } from '../utils/common'
+import { addCircles, addCollection, addActivity, addNotice } from '../api/zone'
 export default class Publish extends wepy.page {
   config = {
     navigationBarTitleText: '发布'
@@ -96,16 +106,31 @@ export default class Publish extends wepy.page {
   data = {
     showAdd: false,
     msg: '',
-    img: ['../../images/add-img.png', '../../images/add-img.png', '../../images/add-img.png'],
-    seenIndex: -1,
-    type: [
+    img: [],
+    seeType: 0,
+    activityType: 0,
+    activityJoinType: [
       {
         id: 0,
-        title: '班级可见'
+        title: '单项',
+        type: 'radio'
       },
       {
         id: 1,
-        title: '全部可见'
+        title: '多项',
+        type: 'select'
+      }
+    ],
+    type: [
+      {
+        id: 0,
+        title: '全部可见',
+        type: 'all'
+      },
+      {
+        id: 1,
+        title: '班级可见',
+        type: 'class'
       }
     ],
     typeList: {
@@ -116,9 +141,13 @@ export default class Publish extends wepy.page {
     },
     placeholder: '请在此发表您的感想',
     activeType: 'zone',
-    activityList: []
+    activityList: [],
+    canSubmit: false,
+    memberInfo: {},
+    money: ''
   }
   onLoad = (e) => {
+    this.memberInfo = wx.getStorageSync('memberInfo')
     const type = e.type
     wx.setNavigationBarTitle({
       title: `发布${this.typeList[type]}`
@@ -129,7 +158,75 @@ export default class Publish extends wepy.page {
     this.activeType = type
     this.$apply()
   }
+  checkCanSubmit() {
+    const msg = `请填写您的${this.typeList[this.activeType]}描述详情`
+    if (!isEmptyString(this.msg)) {
+      showMsg(msg)
+      return false
+    }
+    return true
+  }
+  saveCircles(commonParams, type) {
+    const params = Object.assign({}, commonParams, {
+      img_url: this.imgList
+    })
+    if (type === 'money') {
+      addCollection(params).then(res => {})
+    } else {
+      addCircles(params).then(res => {
+      })
+    }
+  }
+  saveActivity(commonParams) {
+    const params = Object.assign({}, commonParams, {
+      selectType: this.selectType
+    })
+    addActivity(params).then(res => {
+
+    })
+  }
+  saveNotice(commonParams) {
+    const params = Object.assign({}, commonParams, {
+      remind: this.remind
+    })
+    addNotice(params).then(res => {})
+  }
+  uploadPicQiniu() {}
   methods = {
+    chooseImage() {
+      wx.chooseImage({
+        count: 1,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album', 'camera'],
+        success(res) {
+          // tempFilePath可以作为img标签的src属性显示图片
+          const tempFilePaths = res.tempFilePaths
+          // TODO
+        }
+      })
+    },
+    // bindTextarea(e) {
+    //   this.msg = e.detail.value
+    //   this.$apply()
+    // },
+    submit() {
+      !this.canSubmit && showMsg('请检查提交内容!')
+      this.checkCanSubmit()
+      const commonParams = Object.assign({}, {
+         // TODO,class_id是写死的
+        member_id: this.memberInfo.member_id,
+        class_id: 1,
+        type: this.seenIndex,
+        desc: this.msg
+      })
+      if (this.activeType === 'zone' || this.activeType === 'money') {
+        this.saveCircles(commonParams, this.activeType)
+      } else if (this.activeType === 'activity') {
+        this.saveActivity(commonParams)
+      } else if (this.activeType === 'notice') {
+        this.saveNotice(commonParams)
+      }
+    },
     cancel() {
       this.showAdd = false
       this.$apply()
@@ -143,12 +240,12 @@ export default class Publish extends wepy.page {
       this.showAdd = true
       this.$apply()
     },
-    bindPicker (e) {
-      this.seenIndex = e.detail.value
-      this.$apply()
-    },
     deleteFn (arr, index) {
       this[arr].splice(index, 1)
+      this.$apply()
+    },
+    bindChange(e) {
+      this[e.currentTarget.id] = e.detail.value
       this.$apply()
     }
   }
@@ -158,6 +255,14 @@ export default class Publish extends wepy.page {
 <style lang="scss">
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
+.common-container {
+  padding-bottom: 100rpx;
+}
+.icon-arrow-right {
+  color: #808080;
+  font-size: 24rpx;
+  margin-left: 20rpx;
+}
 textarea {
  width:calc(100% - 40rpx);
  border:2rpx solid #f1f1f1;
@@ -174,9 +279,11 @@ textarea {
   margin-right: 10rpx;
 }
 .activity-list {
+  flex-wrap: wrap;
   margin-top: 40rpx;
   .tag {
     position: relative;
+    margin-bottom: 20rpx;
   }
   .icon-delete {
     font-size: 24rpx;
