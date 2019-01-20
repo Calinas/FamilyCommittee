@@ -33,6 +33,7 @@
 <script>
 import wepy from 'wepy'
 import { getIdentityList, bindIDentity } from '../api/user'
+import { addClass } from '../api/createClass'
 import { showMsg, isEmptyString } from '../utils/common'
 export default class bindRelationship extends wepy.page {
   config = {
@@ -40,17 +41,25 @@ export default class bindRelationship extends wepy.page {
   }
   data = {
     relationship: [],
-    parentIndex: 1,
+    parentIndex: 0,
     isTeacher: false,
     teacherName: '',
     canSubmit: false,
     studentName: '',
-    list: []
+    list: [],
+    memberInfo: null,
+    classId: -1
   }
   watch = {
     studentName (newValue, oldValue) {
       this.canSubmit = !isEmptyString(newValue)
     }
+  }
+  onLoad() {
+    const globalData = this.$parent.globalData
+    this.memberInfo = globalData.memberInfo
+    this.classInfo = globalData.classInfo
+    this.$apply()
   }
   methods = {
     bindForm(e) {
@@ -80,12 +89,26 @@ export default class bindRelationship extends wepy.page {
           }
           this.list.push(teacherArr)
         }
+        this.$apply()
         bindIDentity({
-          class_id: 1,
-          item: this.list
+          class_id: this.classId,
+          list: this.list
         }).then(res => {})
       }
     }
+  }
+  getClassId() {
+    let data = this.$parent.globalData.createClass
+    addClass({
+      school_id: data.school_id,
+      grade: data.grade,
+      year: data.year,
+      class: data.class
+    }).then(res => {
+
+      this.classId = res.data.data.id
+      this.$apply()
+    })
   }
   checkCanSubmit() {
     if (this.isTeacher && isEmptyString(this.teacherName)) {
@@ -101,6 +124,7 @@ export default class bindRelationship extends wepy.page {
     })
   }
   onLoad() {
+    this.getClassId()
     this.getRelationShip()
   }
 }

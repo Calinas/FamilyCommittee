@@ -91,7 +91,7 @@ export default class login extends wepy.page {
       })
     })
   }
-  onShow() {
+  onLoad() {
     wx.login({
       success: res => {
         let old_wxapp_token = wx.getStorageSync('wxtoken')

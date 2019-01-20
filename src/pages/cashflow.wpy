@@ -82,7 +82,14 @@ export default class cashflow extends wepy.page {
   data = {
     pn: 1,
     ps: 10,
-    balance: 0
+    balance: 0,
+    memberInfo: null
+  }
+  onLoad() {
+    const globalData = this.$parent.globalData
+    this.memberInfo = globalData.memberInfo
+    this.classInfo = globalData.classInfo
+    this.$apply()
   }
   methods = {
     jumpPage() {

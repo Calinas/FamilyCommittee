@@ -44,7 +44,14 @@ export default class bindRelationship extends wepy.page {
         title: '亲戚'
       }
     ],
-    parentIndex: -1
+    parentIndex: -1,
+    memberInfo: null
+  }
+  onLoad() {
+    const globalData = this.$parent.globalData
+    this.memberInfo = globalData.memberInfo
+    this.classInfo = globalData.classInfo
+    this.$apply()
   }
   methods = {
     bindParentPicker(e) {

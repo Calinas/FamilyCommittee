@@ -55,7 +55,7 @@ export function joinClass(data) {
 export function getClassList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
-      url: '/api/v1/member/class/index',
+      url: '/member/class/index',
       data: {
         member_id: data.member_id
       }

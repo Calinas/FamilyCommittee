@@ -25,7 +25,13 @@ export default class bindRelationship extends wepy.page {
       schoolName: '重庆市第三中学',
       className: 3,
       unitName: 2019
-    }
+    },
+    memberInfo: null
+  }
+  onLoad() {
+    const globalData = this.$parent.globalData
+    this.memberInfo = globalData.memberInfo
+    this.$apply()
   }
   methods = {
     bindParentPicker(e){

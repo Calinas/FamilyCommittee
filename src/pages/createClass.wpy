@@ -1,29 +1,37 @@
 
 <template lang="wxml" minapp="wepy">
   <view class="join-class common-container common-container-grey">
-    <picker class="">
+    <picker class="" style="display: none;">
       <view class="common-picker">
         <text>重庆</text>
         <text class="iconfont icon-arrow-right"></text>
       </view>
     </picker>
-    <picker class="">
+    <picker class="" mode="selector" value="{{schoolIndex}}" range="{{schoolList}}" range-key="name" @change="bindPicker" id="schoolIndex" >
       <view class="common-picker">
-        <text>重庆市外国语大学</text>
+        <text>{{schoolList[schoolIndex].name}}</text>
         <text class="iconfont icon-arrow-right"></text>
       </view>
     </picker>
     <view class="class-select-wrapper flex-wrapper">
-      <view class="item common-line {{index === 0 ? 'active' : ''}}" wx:for="{{classTypes}}" wx:key="{{index}}">{{item.title}}</view>
+      <view class="item common-line {{index === activeClassType ? 'active' : ''}}" wx:for="{{classTypes}}" wx:key="{{index}}" @tap="select({{index}})">{{item.title}}</view>
     </view>
-    <picker class="">
-      <view class="common-picker">
-        <text>2019年10班</text>
-        <text class="iconfont icon-arrow-right"></text>
-      </view>
-    </picker>
 
-    <view class="common-line text-center font-green submit-btn">下一步</view>
+    <view class="common-picker" style="background-color: transparent;padding: 0;">
+      <!-- <text>2019年10班</text>
+      <text class="iconfont icon-arrow-right"></text> -->
+      <view class="flex-wrapper center" style="padding: 30rpx;background-color: #fff;margin-right: 20rpx">
+        <input type="number" placeholder="比如2016" id="gradeNumber" @input="bindInput">
+        <text>级</text>
+      </view>
+      <view class="flex-wrapper center" style="padding: 30rpx;background-color: #fff;">
+        <input type="number" placeholder="输入班级号" id="classNumber" @input="bindInput">
+        <text>班</text>
+      </view>
+      <view></view>
+    </view>
+
+    <view class="common-line text-center font-green submit-btn" @tap="submit">下一步</view>
 
     <view class="flex-wrapper between bottom-buttons">
       <text class="link">邀请他人来创建班级</text>
@@ -33,30 +41,90 @@
 </template>
 
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
+import { showMsg } from '../utils/common'
+import { schoolList, addClass } from '../api/createClass'
 export default class joinClass extends wepy.page{
   config = {
     navigationBarTitleText:'申请加入班级'
   }
   data = {
+    classNumber: 0,
+    gradeNumber: 0,
+    activeClassType: 0,
     classTypes: [
       {
-        title: '幼儿园',
-        id: 0
-      },
-      {
         title: '小学',
-        id: 1
+        id: 0,
+        value: 'primary'
       },
       {
         title: '初中',
-        id: 2
+        id: 1,
+        value: 'middle'
       },
       {
         title: '高中',
-        id: 3
+        id: 2,
+        value: 'high'
+      },
+      {
+        title: '大学',
+        id: 3,
+        value: 'university'
       }
-    ]
+    ],
+    memberInfo: null,
+    schoolList: [],
+    schoolIndex: 0
+  }
+  // 绑定身份的时候调两个接口,先从本地读取创建班级时缓存的数据，调用addClass接口, 然后bindIdentity ?
+  methods = {
+    bindInput(e) {
+      this[e.currentTarget.id] = e.detail.value
+      this.$apply()
+    },
+    select(index) {
+      this.activeClassType = index
+      this.$apply()
+    },
+    bindPicker(e) {
+      this[e.currentTarget.id] = e.detail.value
+      this.$apply()
+    },
+    submit() {
+      if(!this.gradeNumber) {
+        showMsg('请输入级别号')
+        return
+      }
+      if(!this.classNumber) {
+        showMsg('请输入班级号')
+        return
+      }
+      let data = {
+        school_id: this.schoolList[this.schoolIndex].id,
+        grade: this.classTypes[this.activeClassType].value,
+        year: Number(this.gradeNumber),
+        class: Number(this.classNumber)
+      }
+      this.$parent.globalData.createClass = data
+      console.log(this.$parent.globalData.createClass)
+      wepy.navigateTo({
+        url: 'bindRelationship'
+      })
+    }
+  }
+  onLoad() {
+    const globalData = this.$parent.globalData
+    this.memberInfo = globalData.memberInfo
+    this.getSchoolList()
+    this.$apply()
+  }
+  getSchoolList() {
+    schoolList().then(res => {
+      this.schoolList = res.data.list
+      this.$apply()
+    })
   }
 }
 </script>

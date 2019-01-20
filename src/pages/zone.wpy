@@ -3,45 +3,46 @@
     <view class="img-mask">
       <image src="../../images/house.jpg" mode="scaleToFill" class="bg-img"/>
       <view class="mask"></view>
-
-      <view class="btn btn-set flex-wrapper center" catchtap="toggleMenu('setFlag')">
-        <text class="iconfont icon-menu"></text>
-        <text>设置</text>
-      </view>
-      <view class="btn btn-publish flex-wrapper center" catchtap="toggleMenu('publishFlag')">
-        <text class="iconfont icon-edit"></text>
-        <text>发布</text>
-      </view>
-      <view class="caption" @tap="bubble">
-        <text class="school">重庆市第一中学</text>
-        <text class="class">初2010级10班</text>
+      <block>
+        <view class="btn btn-set flex-wrapper center" catchtap="toggleMenu('setFlag')">
+          <text class="iconfont icon-menu"></text>
+          <text>设置</text>
+        </view>
+        <view class="btn btn-publish flex-wrapper center" catchtap="toggleMenu('publishFlag')">
+          <text class="iconfont icon-edit"></text>
+          <text>发布</text>
+        </view>
+      </block>
+      <view class="caption" wx:if="{{classInfo}}">
+        <text class="school">{{schoolInfo.name}}</text>
+        <text class="class">{{classInfo.year_class}}级{{classInfo.class}}{{classInfo.name}}</text>
       </view>
     </view>
     <!-- 筛选框 -->
     <view class="menu-wrapper flex-wrapper">
-      <view>
-        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+      <view data-type="circles" @tap="filter('circles')">
+        <image src="../../images/icon/2.jpg" mode="scaleToFill" />
         <text>家长圈</text>
       </view>
-      <view>
-        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+      <view type="collection" @tap="filter('collection')">
+        <image src="../../images/icon/money.jpg" mode="scaleToFill" />
         <text>收款</text>
       </view>
-      <view>
-        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+      <view type="notify" @tap="filter('notify')">
+        <image src="../../images/icon/4.jpg" mode="scaleToFill" />
         <text>通知</text>
       </view>
-      <view>
-        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+      <view type="activity" @tap="filter('activity')">
+        <image src="../../images/icon/5.jpg" mode="scaleToFill" />
         <text>活动</text>
       </view>
-      <view>
-        <image src="../../images/avatar.png" mode="scaleToFill" class="icon-menu"/>
+      <view type="account" @tap="filter('account')">
+        <image src="../../images/icon/photos.jpg" mode="scaleToFill" />
         <text>记账</text>
       </view>
     </view>
     <view class="item-wrapper">
-      <view class="item" wx:for="{{list}}">
+      <view class="item" wx:for="{{list}}" wx:key="{{key}}">
         <view class="flex-wrapper center">
           <image src="../../images/avatar.png"  class="small-avatar"/>
           <text>{{item.info.member.member_name}}发布了财务信息</text>
@@ -119,6 +120,7 @@
 
 <script>
 import wepy from 'wepy'
+import { showMsg } from '../utils/common'
 import { getCircleList } from '../api/zone'
 export default class cashflow extends wepy.page {
   config = {
@@ -137,25 +139,79 @@ export default class cashflow extends wepy.page {
     },
     pn: 1,
     ps: 10,
-    list: []
+    list: [],
+    classInfo: null,
+    memberInfo: null,
+    schoolInfo: null,
+    loading: false,
+    loadFinished: false
   }
-  onLoad() {
+  watch = {
+    classInfo(newVal, oldVal) {
+      //切换了班级之后数据要更新
+      oldVal && this.getZoneList()
+    }
+  }
+  resetData() {
+    this.pn = 1
+    this.list = []
+    this.$apply()
+  }
+  onReachBottom() {
+    if(this.loading || this.loadFinished) return
     this.getZoneList()
   }
+  onShow() {
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.$apply()
+  }
+  onLoad() {
+    if(!this.checkDataExist('memberInfo')) {
+      wx.reLaunch({
+        url: 'login'
+      })
+    } else {
+      this.classInfo = wx.getStorageSync('classInfo')
+      this.schoolInfo = this.classInfo.school
+      this.memberInfo = wx.getStorageSync('memberInfo')
+      this.$apply()
+      this.getZoneList()
+    }
+  }
+  checkDataExist(key) {
+    if(wx.getStorageSync(key)) {
+      return true
+    }
+    return false
+  }
   getZoneList() {
+    this.loading = true
+    this.$apply()
     getCircleList({
-      member_id: 1,
-      class_id: 2,
+      member_id: this.memberInfo.member_id,
+      class_id: this.classInfo.class_id,
       see_type: 'all',
       type: this.activeType,
       pn: this.pn,
       ps: this.ps
     }).then(res => {
-      this.list = res.data.list
+      let list = res.data.list
+      this.loading = false
+      this.pn++
+      this.list = this.list.concat(list)
+      if(list.length < this.ps) {
+        this.loadFinished = true
+      }
       this.$apply()
     })
   }
   methods = {
+    filter(type) {
+      this.resetData()
+      this.activeType = type
+      this.$apply()
+      this.getZoneList()
+    },
     jumpPage (pageName, type) {
       this.publishFlag = false
       this.setFlag = false
@@ -164,17 +220,12 @@ export default class cashflow extends wepy.page {
       })
     },
     toggleMenu (type) {
+      if(!this.classInfo) {
+        showMsg('请选绑定班级',3000)
+        return
+      }
       this[type] = !this[type]
       this.$apply()
-    },
-    bubble () {
-      console.log('是否触发')
-    },
-    check () {
-      console.log('222')
-    },
-    prevent () {
-      console.log('里面')
     },
     closeToggle () {
       this.setFlag = false
@@ -193,7 +244,7 @@ export default class cashflow extends wepy.page {
   & > view {
     width: 20%;
     text-align: center;
-    .icon-menu {
+    & > image {
       width: 60rpx;
       height: 60rpx;
       display: block;

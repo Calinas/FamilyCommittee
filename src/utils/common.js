@@ -7,11 +7,11 @@ export function checkMobile(phone) {
 }
 
 // 2秒钟的弹窗
-export function showMsg(msg) {
+export function showMsg(msg, timer = 2000) {
   wx.showToast({
     title: msg,
     icon: 'none',
-    duration: 1000
+    duration: timer
   })
 }
 

@@ -2,27 +2,24 @@
   <view class="index">
     <!-- 顶部区域 -->
     <view class="img-mask">
-      <image src="../../images/house.jpg" mode="scaleToFill" class="bg-img"/>
+      <image src="../../images/banner.jpg" mode="scaleToFill" class="bg-img"/>
       <view class="caption">
-        <text class="class">寂寞的微笑</text>
-        <text class="school">共加入3个班级</text>
+        <text class="class">{{memberInfo.nickname}}</text>
+        <!-- <text class="school">共加入3个班级</text> -->
       </view>
     </view>
-    <image src="../../images/house.jpg" mode="scaleToFill" class="avatar"/>
+    <image src="{{memberInfo.avatar}}" mode="scaleToFill" class="avatar"/>
     <!-- 班级列表展示 -->
     <view class="class-list font-grey">
-      <view class="flex-wrapper center">
-        <text class="dot dot-grey"></text>
-        <text>重庆市第三中学校区2019级10班</text>
-      </view>
-      <view class="flex-wrapper center">
-        <text class="dot dot-grey"></text>
-        <text>重庆市第三中学校区2019级10班</text>
-      </view>
-      <view class="flex-wrapper center">
-        <text class="dot dot-grey"></text>
-        <text>重庆市第三中学校区2019级10班</text>
-      </view>
+      <block wx:if="{{list.length}}">
+        <view class="flex-wrapper center" wx:for="{{list}}" wx:key="{{key}}" @tap="setClass({{item}})">
+          <text class="dot dot-grey"></text>
+          <text>{{item.school.name}}{{item.year_class}}级{{item.class}}{{item.name}}</text>
+        </view>
+      </block>
+      <block wx:else>
+        <text class="no-remind">您还没有绑定班级</text>
+      </block>
     </view>
     <!-- 底部按钮 -->
     <view class="fixed-bottom flex-wrapper between">
@@ -44,22 +41,43 @@
 
 <script>
 import wepy from 'wepy'
-import { getClassList } from '../api/createClass' 
+import { getClassList } from '../api/createClass'
 export default class ClassList extends wepy.page {
   config = {
     navigationBarTitleText: '我的班级'
   }
   data = {
-    classList: []
+    classList: [],
+    memberInfo: {},
+    list: []
   }
   getClassList() {
     getClassList({
-      member_id: 1
+      member_id: this.memberInfo.member_id
     }).then(res => {
-      console.log(res)
+      this.list = res.data.list
+      this.$apply()
     })
   }
   methods = {
+    setClass(item) {
+      wx.setStorage({
+        key:'classInfo',
+        data: item,
+        success: res => {
+          wx.switchTab({
+            url: 'zone'
+          })
+        }
+      })
+
+    }
+  }
+
+  onShow() {
+    this.memberInfo = wx.getStorageSync('memberInfo');
+    this.getClassList()
+    this.$apply()
   }
 }
 </script>
@@ -67,6 +85,12 @@ export default class ClassList extends wepy.page {
 <style lang="scss">
 @import '../styles/buttons.wxss';
 @import '../styles/mixins.scss';
+.no-remind {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
 .img-mask {
   position: relative;
   color: #fff;

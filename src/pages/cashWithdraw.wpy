@@ -24,7 +24,14 @@ export default class CashWithdrawal extends wepy.page {
     navigationBarTitleText: '收款提现'
   }
   data = {
-    money: ''
+    money: '',
+    memberInfo: null
+  }
+  onLoad() {
+    const globalData = this.$parent.globalData
+    this.memberInfo = globalData.memberInfo
+    this.classInfo = globalData.classInfo
+    this.$apply()
   }
   methods = {
   }

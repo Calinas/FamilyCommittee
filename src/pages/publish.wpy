@@ -143,10 +143,20 @@ export default class Publish extends wepy.page {
     activeType: 'zone',
     activityList: [],
     canSubmit: false,
-    memberInfo: {},
+    memberInfo: null,
+    classInfo: null,
     money: ''
   }
+  commonFn(res) {
+    if(res.data.success){
+      showMsg('提交成功',2000)
+      setTimeout(() => {
+          wx.navigateBack()
+      },2000)
+    }
+  }
   onLoad = (e) => {
+    this.classInfo = wx.getStorageSync('classInfo')
     this.memberInfo = wx.getStorageSync('memberInfo')
     const type = e.type
     wx.setNavigationBarTitle({
@@ -171,25 +181,22 @@ export default class Publish extends wepy.page {
       img_url: this.imgList
     })
     if (type === 'money') {
-      addCollection(params).then(res => {})
+      addCollection(params).then(res => {this.commonFn(res)})
     } else {
-      addCircles(params).then(res => {
-      })
+      addCircles(params).then(res => {this.commonFn(res)})
     }
   }
   saveActivity(commonParams) {
     const params = Object.assign({}, commonParams, {
       selectType: this.selectType
     })
-    addActivity(params).then(res => {
-
-    })
+    addActivity(params).then(res => {this.commonFn(res)})
   }
   saveNotice(commonParams) {
     const params = Object.assign({}, commonParams, {
       remind: this.remind
     })
-    addNotice(params).then(res => {})
+    addNotice(params).then(res => {this.commonFn(res)})
   }
   uploadPicQiniu() {}
   methods = {
@@ -205,17 +212,13 @@ export default class Publish extends wepy.page {
         }
       })
     },
-    // bindTextarea(e) {
-    //   this.msg = e.detail.value
-    //   this.$apply()
-    // },
     submit() {
       !this.canSubmit && showMsg('请检查提交内容!')
       this.checkCanSubmit()
       const commonParams = Object.assign({}, {
          // TODO,class_id是写死的
         member_id: this.memberInfo.member_id,
-        class_id: 1,
+        class_id: this.classInfo.class_id,
         type: this.seenIndex,
         desc: this.msg
       })

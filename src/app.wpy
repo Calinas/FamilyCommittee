@@ -21,14 +21,13 @@ export default class extends wepy.app {
     navigationBarBackgroundColor: '#000000',
     navigationBarTextStyle: 'white',
     pages: [
-      'pages/authorize',
       'pages/zone',
-      'pages/publish',
-      'pages/login',
-
-      'pages/cashWithdraw',
       'pages/classList',
+      'pages/login',
+      'pages/authorize',
 
+      'pages/publish',
+      'pages/cashWithdraw',
       'pages/bindPhone',
       'pages/cashflow',
       'pages/photos',
@@ -68,7 +67,7 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    memberInfo: null
   }
 
   constructor () {

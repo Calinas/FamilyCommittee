@@ -34,7 +34,15 @@ export default class bindRelationship extends wepy.page {
   }
   data = {
     msg: '',
-    img: ['../../images/add-img.png','../../images/add-img.png','../../images/add-img.png']
+    img: ['../../images/add-img.png','../../images/add-img.png','../../images/add-img.png'],
+    memberInfo: null,
+    classInfo: null
+  }
+  onLoad() {
+    const globalData = this.$parent.globalData
+    this.memberInfo = globalData.memberInfo
+    this.classInfo = globalData.classInfo
+    this.$apply()
   }
   methods = {
     previewImage (url, urls) {

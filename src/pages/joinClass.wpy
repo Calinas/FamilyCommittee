@@ -36,7 +36,15 @@ export default class joinClass extends wepy.page{
         title: '高中',
         id: 3
       }
-    ]
+    ],
+    memberInfo: {},
+    classInfo: {}
+  }
+  onLoad() {
+    const globalData = this.$parent.globalData
+    this.memberInfo = globalData.memberInfo
+    this.classInfo = globalData.classInfo
+    this.$apply()
   }
 }
 </script>
