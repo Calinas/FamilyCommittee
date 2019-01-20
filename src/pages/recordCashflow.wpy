@@ -69,11 +69,12 @@ export default class recordCashflow extends wepy.page {
         title: '全部可见'
       }
     ],
-    memberInfo: null
+    memberInfo: null,
+    classInfo: null
   }
   onLoad() {
-    const globalData = this.$parent.globalData
-    this.memberInfo = globalData.memberInfo
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.memberInfo = wx.getStorageSync('memberInfo')
     this.$apply()
   }
   methods = {
@@ -90,8 +91,8 @@ export default class recordCashflow extends wepy.page {
         return
       }
       addAccount({
-        member_id: 1,
-        class_id: 2,
+        member_id: this.memberInfo.member_id,
+        class_id: this.classInfo.class_id,
         type: this.type,
         desc: this.msg,
         money: this.money,

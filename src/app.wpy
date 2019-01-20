@@ -67,7 +67,9 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    memberInfo: null
+    memberInfo: null,
+    classInfo: null,
+    createClass: {}
   }
 
   constructor () {
