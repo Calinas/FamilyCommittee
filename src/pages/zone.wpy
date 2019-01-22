@@ -55,10 +55,10 @@
         <view class="font-grey iconfont icon-message text-right" @tap="addComment({{item.id}})"></view>
         <block wx:if="{{item.app_type === 'activity'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}">{{item.name}}</text>
+            <text class="tag tag-empty" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}})">{{item.name}}</text>
           </view>
           <view class="tag-wrapper">
-            <text class="tag tag-blue">选好了，报名</text>
+            <text class="tag tag-blue" @tap="submitJoinActivity">选好了，报名</text>
             <text class="tag tag-grey">已报名</text>
           </view>
           <!-- 报名结果 -->
@@ -137,7 +137,7 @@
 import wepy from 'wepy'
 import CurrentModal from '../components/commentModal'
 import { showMsg, previewImage } from '../utils/common'
-import { getCircleList, addComment } from '../api/zone'
+import { getCircleList, addComment, joinActivity } from '../api/zone'
 export default class Zone extends wepy.page {
   config = {
     navigationBarTitleText: '发现'
@@ -168,12 +168,20 @@ export default class Zone extends wepy.page {
     commentInput: '',
     currentReplyId: -1,
     currentReplyRootId: -1,
-    currentReplyToCommentId: -1
+    currentReplyToCommentId: -1,
+    currerntJoinAcitivytId: -1,
+    currerntSubActivityId: []
   }
   watch = {
     classInfo(newVal, oldVal) {
       // 切换了班级之后数据要更新
       oldVal && this.getZoneList()
+    },
+    currentJoinActivityId(newVal, oldVal) {
+      if(newVal > 0) {
+        this.currerntSubActivityId = []
+        this.$apply()
+      }
     }
   }
   resetData() {
@@ -229,6 +237,28 @@ export default class Zone extends wepy.page {
     })
   }
   methods = {
+    submitJoinActivity() {
+      joinActivity({
+        class_id: this.classInfo.id,
+        activity_item_id: this.currerntSubActivityId,
+        activity_id: this.currerntJoinAcitivytId
+      }).then(res => {
+        if(res.data.success) {
+          showMsg('提交成功')
+        }
+      })
+    },
+    joinActivity(id, subId) {
+      this.currerntJoinAcitivytId = id
+      const index = this.currerntSubActivityId.indexOf(subId)
+      if(index > -1) {
+        this.currerntSubActivityId.splice(index, 1)
+      } else {
+        this.currerntSubActivityId.push(subId)
+      }
+      // TODO这里交互要发生变化
+      this.$apply()
+    },
     addComment(id, rootId, toCommentId, name) {
       this.commentFlag = true
       this.currentReplyId = id

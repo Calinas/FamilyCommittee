@@ -94,33 +94,16 @@ export function addNotify(data) {
   })
 }
 
-// 上传图片
-export function uploadPic(data) {
-  return new Promise((resolve, reject) => {
-    wx.uploadFile({
-      url: '/file/uploadPic',
-      filePath: data.file,
-      name: 'file',
-      formData: {
-        'member_id': data.member_id
-      },
-      success: res => {
-        resolve(res)
-      }
-    })
-  })
-}
-
 // 上传相册
 export function addPhoto(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/photo/add',
-      data: {
-        member_id: data.member_id,
+      data: Object.assign({}, commonParams, {
         class_id: data.class_id,
-        img_url: data.imgList
-      }
+        img_url: data.img_url
+      }),
+      method: 'post'
     }).then(res => {
       resolve(res)
     })
@@ -172,6 +155,23 @@ export function addComment(data) {
         content: data.content,
         root_id: data.root_id,
         to_comment_id: data.to_comment_id
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 参加圈子活动
+export function joinActivity(data) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/moment/activity/addApply',
+      data: Object.assign({}, commonParams, {
+        class_id: data.class_id,
+        activity_id: data.activity_id,
+        activity_item_id: data.activity_item_id
       }),
       method: 'post'
     }).then(res => {

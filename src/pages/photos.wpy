@@ -1,11 +1,11 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
     <block wx:for="{{list}}" wx:key="{{key}}">
-      <view class="photo-title font-black">{{item.created_at}}{{item.member.class_nickname}}上传</view>
+      <view class="photo-title font-black">{{item.upload_date}}{{item.upload_member.class_nickname}}上传</view>
       <view class="img-list flex-wrapper">
-        <repeat for="{{item.image}}" index="index" item="imgSrc">
+        <repeat for="{{item.img_list}}" index="index" item="imgSrc">
           <view class="img-item">
-            <image @tap='preview({{imgSrc}},{{item.image}})' mode="widthFix" class='img' src='{{imgSrc}}' />
+            <image @tap='preview({{imgSrc.img_url}},{{item.img_list}})' mode="widthFix" class='img' src='{{imgSrc.img_url}}' />
             <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/>
           </view>
         </repeat>
@@ -20,8 +20,8 @@
 
 <script>
 import wepy from 'wepy'
-import { uploadImage, previewImage } from '../utils/common'
-import { photoIndex } from '../api/zone'
+import { uploadImage, previewImage, showMsg } from '../utils/common'
+import { photoIndex, addPhoto } from '../api/zone'
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '相册'
@@ -32,7 +32,10 @@ export default class bindRelationship extends wepy.page {
     memberInfo: null,
     classInfo: null,
     ps: 10,
-    pn: 1
+    pn: 1,
+    maxCount: 6,
+    imgList: [],
+    uploads: []
   }
   onLoad() {
     this.classInfo = wx.getStorageSync('classInfo')
@@ -50,13 +53,61 @@ export default class bindRelationship extends wepy.page {
       this.$apply()
     })
   }
+  addPhotozs () {
+    addPhoto({
+      class_id: this.classInfo.id,
+      img_url: this.imgList
+    }).then(res => {
+      if(res.data.success) {
+        showMsg('提交成功')
+      }
+    })
+  }
   methods = {
     preview(url, urls) {
       previewImage(url, urls)
     },
     upload() {
-      uploadImage().then(res => {
-        console.log(res)
+      wx.chooseImage({
+        count: this.maxCount,
+        success: res => {
+          if ( res.tempFilePaths.length > this.maxCount ) {
+            wx.showToast({
+              title: '最多只能选择' + this.maxUpload + '张图片',
+              icon: 'none'
+            });
+            return;
+          }
+          res.tempFilePaths.forEach(path => {
+            let upload = {};
+            upload.path = path;
+            upload.error = false;
+
+            upload.uploadProgress = wx.uploadFile({
+              url: 'http://www.patriarch.cm:8080/api/v1/file/uploadPic',
+              filePath: path,
+              name: 'file',
+              formData: {
+                'member_id': this.memberInfo.member_id,
+                'member_token': this.memberInfo.member_token,
+                'folder': 'committee'
+              },
+              success: res => {
+                res = JSON.parse(res.data);
+                this.imgList.push(res.data.file_url);
+                this.addPhotos()
+                this.$apply()
+              }
+            });
+
+            let _this = this;
+            upload.uploadProgress.onProgressUpdate(function(res) {
+              upload.progress = res.progress;
+              _this.$apply();
+            });
+            this.uploads.push(upload);
+          })
+        }
       })
     }
   }
