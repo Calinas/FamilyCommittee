@@ -5,7 +5,7 @@ export function getSessionKey(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/wxapp/onLogin',
-      method: 'get',
+      method: 'post',
       data: {
         code: data.code,
         old_wxapp_token: data.old_wxapp_token

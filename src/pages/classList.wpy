@@ -12,9 +12,9 @@
     <!-- 班级列表展示 -->
     <view class="class-list font-grey">
       <block wx:if="{{list.length}}">
-        <view class="flex-wrapper center" wx:for="{{list}}" wx:key="{{key}}" @tap="setClass({{item}})">
+        <view class="flex-wrapper center" wx:for="{{list}}" wx:key="key" wx:for-index="idx" @tap="setClass({{idx}})">
           <text class="dot dot-grey"></text>
-          <text>{{item.school.name}}{{item.year_class}}级{{item.class}}{{item.name}}</text>
+          <text>{{item.class.name}}</text>
         </view>
       </block>
       <block wx:else>
@@ -52,18 +52,16 @@ export default class ClassList extends wepy.page {
     list: []
   }
   getClassList() {
-    getClassList({
-      member_id: this.memberInfo.member_id
-    }).then(res => {
+    getClassList().then(res => {
       this.list = res.data.list
       this.$apply()
     })
   }
   methods = {
-    setClass(item) {
+    setClass(index) {
       wx.setStorage({
-        key:'classInfo',
-        data: item,
+        key: 'classInfo',
+        data: this.list[index].class,
         success: res => {
           wx.switchTab({
             url: 'zone'
@@ -75,7 +73,7 @@ export default class ClassList extends wepy.page {
   }
 
   onShow() {
-    this.memberInfo = wx.getStorageSync('memberInfo');
+    this.memberInfo = wx.getStorageSync('memberInfo')
     this.getClassList()
     this.$apply()
   }

@@ -1,9 +1,8 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey" style="padding: 30rpx 0;">
     <view class="flex-wrapper font-grey info-wrapper" @tap="jumpPage">
-      <text class="font-black">本班财务：</text>
-      <text>乔峰妈妈</text>
-      <text>乔峰妈妈</text>
+      <text class="font-black" wx:if="{{memberList.length}}">本班财务：</text>
+      <text wx:for="{{memberList}}">{{item.member.class_nickname}}</text>
     </view>
     <view class="balance bg-white font-black">
       <text class="title">班级财务余额</text>
@@ -83,12 +82,15 @@ export default class cashflow extends wepy.page {
     pn: 1,
     ps: 10,
     balance: 0,
-    memberInfo: null
+    memberInfo: null,
+    financialData: {},
+    memberList: []
   }
   onLoad() {
-    const globalData = this.$parent.globalData
-    this.memberInfo = globalData.memberInfo
-    this.classInfo = globalData.classInfo
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.memberInfo = wx.getStorageSync('memberInfo')
+    this.getList()
+    this.getInfo()
     this.$apply()
   }
   methods = {
@@ -100,25 +102,22 @@ export default class cashflow extends wepy.page {
   }
   getList() {
     getFinanceList({
-      member_id: 1,
-      class_id: 2,
+      member_id: this.memberInfo.member_id,
+      class_id: this.classInfo.id,
       ps: this.ps,
       pn: this.pn
     }).then(res => console.log(res))
   }
   getInfo() {
     getFinanceInfo({
-      member_id: 1,
-      class_id: 2
+      member_id: this.memberInfo.member_id,
+      class_id: this.classInfo.id
     }).then(res => {
       let data = res.data
       this.balance = data.balance
+      this.memberList = data.financial_member
       this.$apply()
     })
-  }
-  onLoad() {
-    this.getList()
-    this.getInfo()
   }
 }
 </script>

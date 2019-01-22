@@ -5,7 +5,7 @@
       <repeat for="{{img}}" index="index" item="item">
         <view class="img-item">
           <image @tap='previewImage' mode="widthFix" class='img' src='{{item}}'/>
-          <image src='../../images/close-white.png' @tap="deleteFn('imgList',{{index}})" class="close-btn"/>
+          <image src='../../images/close-white.png' @tap="deleteFn('img',{{index}})" class="close-btn"/>
         </view>
       </repeat>
       <view class="img-item" @tap="chooseImage">
@@ -21,6 +21,17 @@
         <text>{{type[seeType].title}}</text>
       </view>
     </picker>
+    <block wx:if="{{activeType === 'notice'}}">
+      <picker class="select-common-picker" mode="selector" value="{{isRemind}}" range="{{remindType}}" range-key="title" id="isRemind" @change="bindChange">
+        <view class="flex-wrapper between">
+          <view>
+            <text class="iconfont icon-user font-black"></text>
+            <text class="font-black">是否发推送消息提醒</text>
+          </view>
+          <text>{{remindType[isRemind].title}}</text>
+        </view>
+      </picker>
+    </block>
     <!-- 收款 -->
     <block wx:if="{{activeType === 'money'}}">
       <view class="flex-wrapper between select-common-picker">
@@ -30,12 +41,12 @@
         </view>
         <text>全体学生</text>
       </view>
-      <view class="flex-wrapper between select-common-picker">
+      <view class="flex-wrapper between select-common-picker" @tap="addNew('showAddMoney')">
         <view>
           <text class="iconfont icon-user font-black"></text>
           <text class="font-black">收款金额</text>
         </view>
-        <input type="number" placeholder="请输入收款金额" class="text-right" id="money" @input="bindChange">
+        <text class="font-black">新增收款项目</text>
       </view>
     </block>
     <!-- 活动 -->
@@ -61,7 +72,7 @@
           </view>
         </view>
       </picker>
-      <view class="flex-wrapper between select-common-picker" @tap="addNew">
+      <view class="flex-wrapper between select-common-picker" @tap="addNew('showAddActivity')">
         <view>
           <text class="iconfont icon-user font-black"></text>
           <text class="font-black">新增活动项目</text>
@@ -74,37 +85,56 @@
       sureBtnText="确认添加"
       cancelBtnText="取消"
       placeholderText="请输入您想新增的活动项目名"
-      :flag.sync="showAdd"
+      :flag.sync="showAddActivity"
       @cancel.user="cancel"
       @sure.user="sure"
     ></Modal>
+    <Modal2
+      sureBtnText="确认"
+      cancelBtnText="取消"
+      placeholderText="请输入您新增收款的名目"
+      placeholderText2="请输入您新增收款的金额"
+      :flag.sync="showAddMoney"
+      @cancel.user="cancel"
+      @sure.user="moneySureFn"
+    ></Modal2>
     <view class="tag-wrapper activity-list flex-wrapper" wx:if="{{activityList.length}}">
       <repeat for="{{activityList}}" index="index" item="item">
         <view class="tag tag-light-grey" @tap="deleteFn('activityList',{{index}})">
           <text class="iconfont icon-delete"></text>
-          <text>{{item}}</text>
+          <text>{{item.name}}</text>
+        </view>
+      </repeat>
+    </view>
+    <view class="tag-wrapper activity-list flex-wrapper" wx:if="{{moneyList.length}}">
+      <repeat for="{{moneyList}}" index="index" item="item">
+        <view class="tag tag-light-grey" @tap="deleteFn('moneyList',{{index}})">
+          <text class="iconfont icon-delete"></text>
+          <text>{{item.name}}--{{item.money}}元</text>
         </view>
       </repeat>
     </view>
     <view class="fixed-bottom-btn" @tap="submit">确认发布</view>
   </view>
-
 </template>
 
 <script>
 import wepy from 'wepy'
 import Modal from '../components/modal'
-import { showMsg, isEmptyString } from '../utils/common'
-import { addCircles, addCollection, addActivity, addNotice } from '../api/zone'
+import Modal2 from '../components/modal2'
+import { showMsg, isEmptyString, uploadImage } from '../utils/common'
+import { addCircles, addCollection, addActivity, addNotify } from '../api/zone'
 export default class Publish extends wepy.page {
   config = {
     navigationBarTitleText: '发布'
   }
   components = {
-    Modal
+    Modal,
+    Modal2
   }
   data = {
-    showAdd: false,
+    showAddActivity: false,
+    showAddMoney: false,
     msg: '',
     img: [],
     seeType: 0,
@@ -119,6 +149,16 @@ export default class Publish extends wepy.page {
         id: 1,
         title: '多项',
         type: 'select'
+      }
+    ],
+    remindType: [
+      {
+        id: 0,
+        title: '否',
+      },
+      {
+        id: 1,
+        title: '是'
       }
     ],
     type: [
@@ -145,14 +185,16 @@ export default class Publish extends wepy.page {
     canSubmit: false,
     memberInfo: null,
     classInfo: null,
-    money: ''
+    money: '',
+    isRemind: 0,
+    moneyList: []
   }
   commonFn(res) {
-    if(res.data.success){
-      showMsg('提交成功',2000)
+    if (res.data.success) {
+      showMsg('发布成功', 2000)
       setTimeout(() => {
-          wx.navigateBack()
-      },2000)
+        wx.navigateBack()
+      }, 2000)
     }
   }
   onLoad = (e) => {
@@ -170,7 +212,7 @@ export default class Publish extends wepy.page {
   }
   checkCanSubmit() {
     const msg = `请填写您的${this.typeList[this.activeType]}描述详情`
-    if (!isEmptyString(this.msg)) {
+    if (isEmptyString(this.msg)) {
       showMsg(msg)
       return false
     }
@@ -178,47 +220,56 @@ export default class Publish extends wepy.page {
   }
   saveCircles(commonParams, type) {
     const params = Object.assign({}, commonParams, {
-      img_url: this.imgList
+      img_url: this.img
     })
     if (type === 'money') {
-      addCollection(params).then(res => {this.commonFn(res)})
+      addCollection(params).then(res => { this.commonFn(res)} )
     } else {
-      addCircles(params).then(res => {this.commonFn(res)})
+      addCircles(params).then(res => { this.commonFn(res)} )
     }
   }
   saveActivity(commonParams) {
+    if (!this.activityList.length) {
+      showMsg('请至少添加一个活动选项')
+      return
+    }
     const params = Object.assign({}, commonParams, {
-      selectType: this.selectType
+      selectType: this.activityJoinType[this.activityType].type,
+      sign_type: 'all',
+      item: this.activityList,
+      img_url: this.img
     })
-    addActivity(params).then(res => {this.commonFn(res)})
+    addActivity(params).then(res => { this.commonFn(res)})
   }
   saveNotice(commonParams) {
     const params = Object.assign({}, commonParams, {
-      remind: this.remind
+      remind: Number(this.isRemind)
     })
-    addNotice(params).then(res => {this.commonFn(res)})
+    addNotify(params).then(res => { this.commonFn(res) })
   }
-  uploadPicQiniu() {}
+  watch = {
+    msg (newVal, oldVal) {
+      if (!isEmptyString(newVal)) {
+        this.canSubmit = true
+      }
+      this.$apply()
+    }
+  }
   methods = {
     chooseImage() {
-      wx.chooseImage({
-        count: 1,
-        sizeType: ['original', 'compressed'],
-        sourceType: ['album', 'camera'],
-        success(res) {
-          // tempFilePath可以作为img标签的src属性显示图片
-          const tempFilePaths = res.tempFilePaths
-          // TODO
-        }
+      uploadImage().then(res => {
+        this.img.push(res)
+        this.$apply()
       })
     },
     submit() {
-      !this.canSubmit && showMsg('请检查提交内容!')
+      if (!this.canSubmit) {
+        showMsg('请检查发布内容!')
+        return
+      }
       this.checkCanSubmit()
       const commonParams = Object.assign({}, {
-         // TODO,class_id是写死的
-        member_id: this.memberInfo.member_id,
-        class_id: this.classInfo.class_id,
+        class_id: this.classInfo.id,
         type: this.seenIndex,
         desc: this.msg
       })
@@ -231,16 +282,29 @@ export default class Publish extends wepy.page {
       }
     },
     cancel() {
-      this.showAdd = false
+      this.showAddActivity = false
+      this.showAddMoney = false
       this.$apply()
     },
     sure(value) {
-      this.activityList.push(value)
-      this.showAdd = false
+      const obj = {
+        name: value
+      }
+      this.activityList.push(obj)
+      this.showAddActivity = false
       this.$apply()
     },
-    addNew() {
-      this.showAdd = true
+    moneySureFn(value1, value2) {
+      const obj = {
+        name: value1,
+        money: value2
+      }
+      this.moneyList.push(obj)
+      this.showAddMoney = false
+      this.$apply()
+    },
+    addNew(flag) {
+      this[flag] = true
       this.$apply()
     },
     deleteFn (arr, index) {

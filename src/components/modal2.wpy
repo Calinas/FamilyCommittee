@@ -1,0 +1,102 @@
+<template lang="wxml" minapp="wepy">
+  <view class="wx-popup" wx:if="{{flag}}">
+    <view class='popup-container'>
+      <view class="wx-popup-con">
+        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}" id="input">
+        <input type="number" placeholder={{placeholderText2}} @input="bindInput" value="{{money}}" id="money">
+      </view>
+      <view class="wx-popup-btn">
+        <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>
+        <text class="btn-ok" @tap='sureFn'>{{sureBtnText}}</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { showMsg, isEmptyString } from '../utils/common'
+export default class Modal2 extends wepy.component {
+  props = {
+    cancelBtnText: String,
+    sureBtnText: String,
+    placeholderText: String,
+    placeholderText2: String,
+    flag: Boolean
+  }
+  onLoad() {
+
+  }
+  data = {
+    input: '',
+    money: ''
+  }
+  methods = {
+    bindInput (e) {
+      this[e.currentTarget.id] = e.detail.value
+      this.$apply()
+    },
+    cancelFn () {
+      this.$emit('cancel')
+    },
+    sureFn () {
+      if (isEmptyString(this.input)) {
+        showMsg('请输入项目名称')
+        return
+      }
+      this.$emit('sure', this.input, this.money)
+      this.input = ''
+      this.money = ''
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.wx-popup {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .5);
+  z-index: 3;
+}
+.popup-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+  max-width: 600rpx;
+  border: 2rpx solid #ccc;
+  border-radius: 10rpx;
+  box-sizing: bordre-box;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  background: #fff;
+  input {
+    padding-bottom:40rpx;
+    border-bottom:2rpx solid #f2f2f2;
+  }
+}
+.wx-popup-con {
+  margin: 60rpx;
+  text-align:center;
+}
+.wx-popup-btn {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 40rpx;
+}
+.wx-popup-btn text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  height: 80rpx;
+  border: 2rpx solid #ccc;
+  border-radius: 10rpx;
+}
+
+</style>

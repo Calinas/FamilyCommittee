@@ -1,14 +1,15 @@
 import wepy from 'wepy'
+import commonParams from './commonData'
 
 // 绑定身份
 export function bindIDentity(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/class/bindIDentity',
-      data: {
+      data: Object.assign({}, commonParams, {
         class_id: data.class_id,
         item: data.list
-      },
+      }),
       method: 'post'
     }).then(res => {
       resolve(res)
@@ -69,7 +70,8 @@ export function replaceMobile(data) {
 export function getIdentityList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
-      url: '/class/getIdentityList'
+      url: '/class/getIdentityList',
+      data: Object.assign({}, commonParams)
     }).then(res => {
       resolve(res)
     })

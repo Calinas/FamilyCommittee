@@ -31,7 +31,8 @@ export default class login extends wepy.page {
     nickname: '用户',
     sex: '',
     head_img: '',
-    phone: ''
+    phone: '',
+    open_id: ''
   };
   methods = {
     getUserInfo(e) {
@@ -47,6 +48,7 @@ export default class login extends wepy.page {
         this.sex = data.gender
         this.head_img = data.avatarUrl
         this.show_lay = true
+        this.open_id = data.openId
         this.$apply()
       })
     },
@@ -70,9 +72,9 @@ export default class login extends wepy.page {
       head_img: this.head_img,
       sex: this.sex,
       auth_id: this.unionid,
-      wxapp_token: this.wxapp_token
+      wxapp_token: this.wxtoken
     }).then(res => {
-      let data = res.data
+      let data = res.data.data
       let memberInfo = {
         member_id: data.member_id,
         member_token: data.member_token,

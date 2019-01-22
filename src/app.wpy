@@ -23,10 +23,10 @@ export default class extends wepy.app {
     pages: [
       'pages/zone',
       'pages/classList',
-      'pages/login',
+      'pages/bindRelationship',
       'pages/authorize',
-
       'pages/publish',
+      'pages/login',
       'pages/cashWithdraw',
       'pages/bindPhone',
       'pages/cashflow',
@@ -34,7 +34,6 @@ export default class extends wepy.app {
       'pages/recordCashflow',
       'pages/createClassFail',
       'pages/createClassSuccess',
-      'pages/bindRelationship',
       'pages/joinClass',
       'pages/createClass'
     ],
@@ -67,9 +66,8 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    memberInfo: null,
-    classInfo: null,
-    createClass: {}
+    userInfo: null,
+    apiUrl: 'http://www.patriarch.cm:8080/api/v1'
   }
 
   constructor () {
@@ -78,7 +76,8 @@ export default class extends wepy.app {
     this.use('promisify')
     this.intercept('request', {
       config(req) {
-        req.url = 'http://127.0.0.1:3000/mock/11/api/v1' + req.url
+        // req.url = 'http://127.0.0.1:3000/mock/11/api/v1' + req.url
+        req.url = 'http://www.patriarch.cm:8080/api/v1' + req.url
         req.timestamp = +new Date()
         wx.showLoading({
           title: '加载中',
@@ -86,15 +85,15 @@ export default class extends wepy.app {
         })
         return req
       },
-      success(req) {
-        if (req.statusCode !== 200) {
+      success(res) {
+        if (!res.data.success) {
           wx.showToast({
-            title: req.data.message,
+            title: res.data.error_msg,
             icon: 'none',
             duration: 2000
           })
         }
-        return req
+        return res
       },
       fail(req) {
         console.log('request fail: ', req)

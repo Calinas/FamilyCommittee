@@ -1,55 +1,62 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
-    <view class="photo-title font-black">2018年11月23日 刘德华妈妈，张学友爸爸等上传</view>
-    <view class="img-list flex-wrapper">
-      <repeat for="{{img}}" index="index" item="item">
-        <view class="img-item">
-          <image @tap='previewImage({{item}},{{img}})' mode="widthFix" class='img' src='{{item}}'/>
-          <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/>
-        </view>
-      </repeat>
-    </view>
-    <view class="photo-title font-black">2018年11月23日 刘德华妈妈，张学友爸爸等上传</view>
-    <view class="img-list flex-wrapper">
-      <repeat for="{{img}}" index="index" item="item">
-        <view class="img-item">
-          <image @tap='previewImage' mode="widthFix" class='img' src='{{item}}'/>
-          <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/>
-        </view>
-      </repeat>
-    </view>
+    <block wx:for="{{list}}" wx:key="{{key}}">
+      <view class="photo-title font-black">{{item.created_at}}{{item.member.class_nickname}}上传</view>
+      <view class="img-list flex-wrapper">
+        <repeat for="{{item.image}}" index="index" item="imgSrc">
+          <view class="img-item">
+            <image @tap='preview({{imgSrc}},{{item.image}})' mode="widthFix" class='img' src='{{imgSrc}}' />
+            <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/>
+          </view>
+        </repeat>
+      </view>
+    </block>
     <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
-      <!-- <view class="btn-white">管理</view> -->
-      <view class="text-center" style="width: 100%;">上传</view>
+      <view class="text-center" style="width: 100%;" @tap="upload">上传</view>
     </view>
   </view>
 
 </template>
 
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
+import { uploadImage, previewImage } from '../utils/common'
+import { photoIndex } from '../api/zone'
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '相册'
   }
   data = {
     msg: '',
-    img: ['../../images/add-img.png','../../images/add-img.png','../../images/add-img.png'],
+    list: [],
     memberInfo: null,
-    classInfo: null
+    classInfo: null,
+    ps: 10,
+    pn: 1
   }
   onLoad() {
-    const globalData = this.$parent.globalData
-    this.memberInfo = globalData.memberInfo
-    this.classInfo = globalData.classInfo
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.memberInfo = wx.getStorageSync('memberInfo')
+    this.getPhotoList()
     this.$apply()
   }
+  getPhotoList() {
+    photoIndex({
+      ps: this.ps,
+      pn: this.pn,
+      class_id: this.classInfo.id
+    }).then(res => {
+      this.list = res.data.list
+      this.$apply()
+    })
+  }
   methods = {
-    previewImage (url, urls) {
-      // 这里的url不能使用相对路径
-      wx.previewImage({
-        current: url,
-        urls: urls
+    preview(url, urls) {
+      previewImage(url, urls)
+    },
+    upload() {
+      uploadImage().then(res => {
+        console.log(res)
       })
     }
   }
@@ -57,6 +64,8 @@ export default class bindRelationship extends wepy.page {
 </script>
 
 <style lang="scss">
+@import '../styles/mixins.scss';
+@include upload-img-wrapper;
 .picker {
   margin-top: 40rpx;
   font-size: 32rpx;

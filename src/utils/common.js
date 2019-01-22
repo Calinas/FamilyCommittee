@@ -70,3 +70,42 @@ export function friendlyDate(stime) {
     return time + '秒前'
   }
 }
+
+export function uploadImage() {
+  const memberInfo = wx.getStorageSync('memberInfo')
+  return new Promise((resolve, reject) => {
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success: res => {
+        const tempFilePaths = res.tempFilePaths
+        wx.showLoading()
+        wx.uploadFile({
+          url: 'http://www.patriarch.cm:8080/api/v1/file/uploadPic',
+          filePath: tempFilePaths[0],
+          formData: {
+            'member_id': memberInfo.member_id,
+            'member_token': memberInfo.member_token,
+            'folder': 'committee'
+          },
+          name: 'file',
+          success: res => {
+            const data = JSON.parse(res.data)
+            const url = data.data.file_url
+            wx.hideLoading()
+            resolve(url)
+          }
+        })
+      }
+    })
+  })
+}
+
+// 图片放大功能
+export function previewImage(src, imgList) {
+  wx.previewImage({
+    current: src,
+    urls: imgList
+  })
+}

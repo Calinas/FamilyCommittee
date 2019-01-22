@@ -1,15 +1,16 @@
 import wepy from 'wepy'
+import commonParams from './commonData'
 
 // 获取学校列表
 export function schoolList() {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/school/index',
-      data: {
+      data: Object.assign({}, commonParams, {
         keywords: '',
         pn: 1,
         ps: 10
-      }
+      })
     }).then(res => {
       resolve(res)
     })
@@ -21,12 +22,13 @@ export function addClass(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/addClass',
-      data: {
+      data: Object.assign({}, commonParams, {
         school_id: data.school_id,
-        grade_type: data.grade,
-        year_class: data.year,
-        class: data.class
-      },
+        grade_type: data.grade_type,
+        year_class: data.year_class,
+        class: data.class,
+        item: data.item
+      }),
       method: 'post'
     }).then(res => {
       resolve(res)
@@ -39,10 +41,9 @@ export function joinClass(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/class/join',
-      data: {
-        member_id: data.member_id,
+      data: Object.assign({}, commonParams, {
         join_key: data.key
-      },
+      }),
       method: 'post'
     }).then(res => {
       resolve(res)
@@ -56,9 +57,7 @@ export function getClassList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/class/index',
-      data: {
-        member_id: data.member_id
-      }
+      data: commonParams
     }).then(res => {
       resolve(res)
     })

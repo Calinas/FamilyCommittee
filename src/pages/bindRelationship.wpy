@@ -1,33 +1,19 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey">
-    <view class="remind-text">
-      <text class="red">*</text>
-      <text>必填项</text>
-    </view>
-    <view class="flex-wrapper center choose-item">
-      <view class="choose-tag">
-        <!-- 这里是个必选项，不可能让用户补选中 -->
-        <view class="choose-tag-inner"></view>
-      </view>
-      <input type="text" placeholder="请输入孩子姓名" id="studentName" @input="bindForm"/>
-      <picker class="picker" mode="selector" value="{{parentIndex}}" range="{{relationship}}" range-key="name" @change="bindForm" id="parentIndex">
-        <text>的{{relationship[parentIndex].name}}</text>
+    <view class="flex-wrapper center choose-item" wx:for="{{list}}" wx:key="key" wx:for-index="idx">
+      <input type="text" placeholder="请输入孩子姓名" id="studentName" @input="bindForm" id="value" data-idx="{{idx}}"/>
+      <picker class="picker" mode="selector" value="{{item.activeIndex}}" range="{{item.relationship}}" range-key="name" @change="bindForm" data-idx="{{idx}}" id="activeIndex">
+      <text>的{{item.relationship[item.activeIndex].name}}</text>
       </picker>
-    </view>
-    <view class="remind-text">
-      <text class="red">*</text>
-      <text>选填项(如果您不是老师身份，请勿勾选)</text>
-    </view>
-    <view class="flex-wrapper center choose-item">
-      <view class="choose-tag" @tap="selectTeacher">
-        <view class="choose-tag-inner" wx:if="{{isTeacher}}"></view>
+      <view class="icon-wrapper" @tap="delete({{idx}})">
+        <text class="iconfont icon-delete" wx:if="{{idx > 0}}"></view>
       </view>
-      <input type="text" placeholder="请输入您的姓名" @input="bindForm" id="teacherName"/>
-      <text class="picker">老师</text>
     </view>
-    <view class="common-line text-center font-green" style="margin-top: 600rpx;" @tap="submit">确认提交</view>
+    <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
+      <view class="btn-white" @tap="addNew">新增一项</view>
+      <view @tap="submit">确认提交</view>
+    </view>
   </view>
-
 </template>
 
 <script>
@@ -59,11 +45,27 @@ export default class bindRelationship extends wepy.page {
     const globalData = this.$parent.globalData
     this.memberInfo = globalData.memberInfo
     this.classInfo = globalData.classInfo
+    this.getRelationShip()
     this.$apply()
   }
   methods = {
+    delete(idx) {
+      this.list.splice(idx, 1)
+      this.$apply()
+    },
+    addNew() {
+      const item = {
+        relationship: this.relationship,
+        value: '',
+        activeIndex: 0
+      }
+      this.list.push(item)
+      this.$apply()
+    },
     bindForm(e) {
-      this[e.currentTarget.id] = e.detail.value
+      const target = e.currentTarget
+      const idx = target.dataset.idx
+      this.list[idx][target.id] = e.detail.value
       this.$apply()
     },
     selectTeacher() {
@@ -71,44 +73,37 @@ export default class bindRelationship extends wepy.page {
       this.$apply()
     },
     submit() {
-      if (!this.canSubmit) {
+      if (!this.checkData()) {
         showMsg('请填写您孩子姓名')
         return
       }
-      if (this.checkCanSubmit()) {
-        const obj = {
-          identity_id: this.parentIndex,
-          student_name: this.studentName
-        }
-        this.list.push(obj)
-        // TODO 老师的身份是多少
-        if (this.isTeacher) {
-          const teacherArr = {
-            identity_id: 2,
-            student_name: this.teacherName
-          }
-          this.list.push(teacherArr)
-        }
-        this.$apply()
-        bindIDentity({
-          class_id: this.classId,
-          list: this.list
-        }).then(res => {})
+      let createClassData = this.$parent.globalData.createClass
+      console.log(createClassData)
+      let data = {
+        school_id: createClassData.school_id,
+        grade_type: createClassData.grade,
+        year_class: createClassData.year,
+        class: createClassData.class
       }
+      const filterList = this.list.map(item => {
+        return {
+          identity_id: item.relationship[item.activeIndex].id,
+          student_name: item.value
+        }
+      })
+      addClass(Object.assign({}, data, {
+        item: filterList
+      })).then(res => {
+        if (res.data.success) {
+          showMsg('添加成功', 2000)
+          setTimeout(() => {
+            wx.switchTab({
+              url: 'classList'
+            })
+          }, 2000)
+        }
+      })
     }
-  }
-  getClassId() {
-    let data = this.$parent.globalData.createClass
-    addClass({
-      school_id: data.school_id,
-      grade: data.grade,
-      year: data.year,
-      class: data.class
-    }).then(res => {
-
-      this.classId = res.data.data.id
-      this.$apply()
-    })
   }
   checkCanSubmit() {
     if (this.isTeacher && isEmptyString(this.teacherName)) {
@@ -117,21 +112,49 @@ export default class bindRelationship extends wepy.page {
     }
     return true
   }
+  checkData() {
+    let canSubmit = true
+    for (let i = 0, len = this.list.length; i < len; i++) {
+      if (isEmptyString(this.list[i].value)) {
+        canSubmit = false
+        break
+      } else {
+        canSubmit = true
+      }
+    }
+    return canSubmit
+  }
   getRelationShip() {
     getIdentityList().then(res => {
       this.relationship = res.data.list
+      const item = {
+        relationship: this.relationship,
+        value: '',
+        activeIndex: 0
+      }
+      this.list.push(item)
       this.$apply()
     })
-  }
-  onLoad() {
-    this.getClassId()
-    this.getRelationShip()
   }
 }
 </script>
 
 <style lang="scss">
 @import '../styles/buttons.wxss';
+.icon-wrapper {
+  width: 10%;
+}
+.icon-delete {
+  padding-left: 20rpx;
+}
+.fixed-bottom-btn {
+  & > view {
+    flex: 1;
+    &.btn-white {
+      background-color: #fff;
+    }
+  }
+}
 .remind-text {
   padding-bottom: 20rpx;
   .red {

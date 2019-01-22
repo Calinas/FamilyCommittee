@@ -14,8 +14,8 @@
         </view>
       </block>
       <view class="caption" wx:if="{{classInfo}}">
-        <text class="school">{{schoolInfo.name}}</text>
-        <text class="class">{{classInfo.year_class}}级{{classInfo.class}}{{classInfo.name}}</text>
+        <!-- <text class="school"></text> -->
+        <text class="class">{{classInfo.name}}</text>
       </view>
     </view>
     <!-- 筛选框 -->
@@ -44,44 +44,49 @@
     <view class="item-wrapper">
       <view class="item" wx:for="{{list}}" wx:key="{{key}}">
         <view class="flex-wrapper center">
-          <image src="../../images/avatar.png"  class="small-avatar"/>
-          <text>{{item.info.member.member_name}}发布了财务信息</text>
+          <image src="../../images/avatar.png"  class="small-avatar" />
+          <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
         </view>
-        <view class="font-small font-grey text-right">{{item.info.member.created_at}}</view>
-        <view class="item-desc">{{item.info.member.description}}</view>
-        <view class="tag-wrapper item-tag">
-          <text class="tag tag-empty">真人cs</text>
-          <text class="tag tag-empty">夹气球</text>
-          <text class="tag tag-empty">你比我猜</text>
+        <view class="font-small font-grey text-right">{{item.created_at}}</view>
+        <view class="item-desc">{{item.info.description}}</view>
+        <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
+          <image src="{{img}}" wx:key="{{keyIndex}}" wx:for-item="img" wx:for="{{item.image}}" mode="widthFix" class="img-item" @tap="preview({{img}},{{item.image}})" />
         </view>
-        <view class="tag-wrapper">
-          <text class="tag tag-blue">选好了，报名</text>
-          <text class="tag tag-grey">已报名</text>
-        </view>
-        <!-- 报名结果 -->
-        <view class="result-wrapper">
-          <view class="title item-tag">
-            <text class="tag tag-empty">真人cs</text>
-            <text>有7人报名</text>
+        <view class="font-grey iconfont icon-message text-right" @tap="addComment({{item.id}})"></view>
+        <block wx:if="{{item.app_type === 'activity'}}">
+          <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
+            <text class="tag tag-empty" wx:for="{{item.info.item}}">{{item.name}}</text>
           </view>
-          <view class="person-list tag-wrapper">
-            <text class="tag tag-light-grey">霍思燕</text>
-            <text class="tag tag-light-grey">乔峰</text>
-            <text class="tag tag-light-grey">李逵</text>
-            <text class="tag tag-light-grey">林黛玉</text>
-            <text class="tag tag-light-grey">曹操</text>
+          <view class="tag-wrapper">
+            <text class="tag tag-blue">选好了，报名</text>
+            <text class="tag tag-grey">已报名</text>
           </view>
-        </view>
+          <!-- 报名结果 -->
+          <view class="result-wrapper">
+            <view class="title item-tag">
+              <text class="tag tag-empty">真人cs</text>
+              <text>有7人报名</text>
+            </view>
+            <view class="person-list tag-wrapper">
+              <text class="tag tag-light-grey">霍思燕</text>
+              <text class="tag tag-light-grey">乔峰</text>
+              <text class="tag tag-light-grey">李逵</text>
+              <text class="tag tag-light-grey">林黛玉</text>
+              <text class="tag tag-light-grey">曹操</text>
+            </view>
+          </view>
+        </block>
+        <!-- 收款 -->
+        <block wx:if="{{item.app_type === 'collection'}}">
+          <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
+            <text class="tag tag-empty" wx:for="{{item.info.item}}">{{item.name}}</text>
+          </view>
+        </block>
         <!-- 留言结果 -->
-        <view class="comment-wrapper item-desc font-grey">
-          <view class="item">
-            <text class="font-blue">刘德华妈妈:</text>
-            <text>这里是一个回复啊啊啊啊啊啊</text>
-          </view>
-          <view class="item">
-            <text class="font-blue">刘德华妈妈:</text> @after-appear="
-            "
-            <text>这里是一个回复啊啊啊啊啊啊</text>
+        <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">
+          <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment">
+            <text class="font-blue" @tap="addComment({{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
+            <text>{{comment.content}}</text>
           </view>
         </view>
       </view>
@@ -115,23 +120,38 @@
         <view catchtap="jumpPage('recordCashflow')">记账</view>
         </view>
     </view>
+    <CurrentModal
+      sureBtnText="确认"
+      cancelBtnText="取消"
+      placeholderText="请输入评论内容"
+      :flag.sync="commentFlag"
+      :commentInput.sync="commentInput"
+      @cancel.user="commentCancel"
+      @sure.user="commentSure"
+      @input.user="bindCommentInput"
+    ></CurrentModal>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import { showMsg } from '../utils/common'
-import { getCircleList } from '../api/zone'
-export default class cashflow extends wepy.page {
+import CurrentModal from '../components/commentModal'
+import { showMsg, previewImage } from '../utils/common'
+import { getCircleList, addComment } from '../api/zone'
+export default class Zone extends wepy.page {
   config = {
     navigationBarTitleText: '发现'
   }
+  components = {
+    CurrentModal
+  }
   data = {
-    activeType: 'all',
+    commentFlag: false,
+    activeType: 'circles',
     setFlag: false,
     publishFlag: false,
     type: {
-      circle: '家长圈',
+      circles: '家长圈',
       collection: '收款',
       notify: '通知',
       activity: '活动',
@@ -144,11 +164,15 @@ export default class cashflow extends wepy.page {
     memberInfo: null,
     schoolInfo: null,
     loading: false,
-    loadFinished: false
+    loadFinished: false,
+    commentInput: '',
+    currentReplyId: -1,
+    currentReplyRootId: -1,
+    currentReplyToCommentId: -1
   }
   watch = {
     classInfo(newVal, oldVal) {
-      //切换了班级之后数据要更新
+      // 切换了班级之后数据要更新
       oldVal && this.getZoneList()
     }
   }
@@ -158,7 +182,7 @@ export default class cashflow extends wepy.page {
     this.$apply()
   }
   onReachBottom() {
-    if(this.loading || this.loadFinished) return
+    if (this.loading || this.loadFinished) return
     this.getZoneList()
   }
   onShow() {
@@ -166,20 +190,19 @@ export default class cashflow extends wepy.page {
     this.$apply()
   }
   onLoad() {
-    if(!this.checkDataExist('memberInfo')) {
+    if (!this.checkDataExist('memberInfo')) {
       wx.reLaunch({
         url: 'login'
       })
     } else {
       this.classInfo = wx.getStorageSync('classInfo')
-      this.schoolInfo = this.classInfo.school
       this.memberInfo = wx.getStorageSync('memberInfo')
       this.$apply()
       this.getZoneList()
     }
   }
   checkDataExist(key) {
-    if(wx.getStorageSync(key)) {
+    if (wx.getStorageSync(key)) {
       return true
     }
     return false
@@ -188,24 +211,64 @@ export default class cashflow extends wepy.page {
     this.loading = true
     this.$apply()
     getCircleList({
-      member_id: this.memberInfo.member_id,
-      class_id: this.classInfo.class_id,
+      class_id: this.classInfo.id,
       see_type: 'all',
       type: this.activeType,
       pn: this.pn,
-      ps: this.ps
+      ps: this.ps,
+      comment_count: 3
     }).then(res => {
       let list = res.data.list
       this.loading = false
       this.pn++
       this.list = this.list.concat(list)
-      if(list.length < this.ps) {
+      if (list.length < this.ps) {
         this.loadFinished = true
       }
       this.$apply()
     })
   }
   methods = {
+    addComment(id, rootId, toCommentId, name) {
+      this.commentFlag = true
+      this.currentReplyId = id
+      this.currentReplyRootId = rootId
+      this.currentReplyToCommentId = toCommentId
+      console.log(name)
+      if (name !== undefined) {
+        console.log(1)
+        this.commentInput = `@${name}:`
+      } else {
+        console.log(2)
+        this.commentInput = ''
+      }
+      this.$apply()
+    },
+    bindCommentInput(value) {
+      this.commentInput = value
+      this.$apply()
+    },
+    commentSure() {
+      this.commentFlag = false
+      addComment({
+        class_id: this.classInfo.id,
+        moment_id: this.currentReplyId,
+        content: this.commentInput,
+        root_id: this.currentReplyRootId,
+        to_comment_id: this.currentReplyToCommentId
+      }).then(res => {
+        console.log(res)
+      })
+      this.commentInput = ''
+      this.resetData()
+      this.getZoneList()
+      this.$apply()
+    },
+    commentCancel() {
+      this.commentFlag = false
+      this.commentInput = ''
+      this.$apply()
+    },
     filter(type) {
       this.resetData()
       this.activeType = type
@@ -220,8 +283,8 @@ export default class cashflow extends wepy.page {
       })
     },
     toggleMenu (type) {
-      if(!this.classInfo) {
-        showMsg('请选绑定班级',3000)
+      if (!this.classInfo) {
+        showMsg('请选绑定班级', 3000)
         return
       }
       this[type] = !this[type]
@@ -231,12 +294,24 @@ export default class cashflow extends wepy.page {
       this.setFlag = false
       this.publishFlag = false
       this.$apply()
+    },
+    preview(img, imgList) {
+      previewImage(img, imgList)
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '../styles/mixins.scss';
+@include upload-img-wrapper;
+.img-list {
+  margin-bottom: 0;
+}
+.icon-message {
+  display: block;
+  padding: 20rpx 0;
+}
 .menu-wrapper {
   background-color: #fff;
   padding: 40rpx;
@@ -309,6 +384,10 @@ export default class cashflow extends wepy.page {
   background-color: #fff;
   padding: 30rpx;
   color: #000;
+  & > .item {
+    margin-bottom:30rpx;
+    @include border-bottom;
+  }
 }
 .item {
   &-desc {
@@ -318,6 +397,9 @@ export default class cashflow extends wepy.page {
     border-radius: 12rpx;
     overflow: hidden;
     margin: 40rpx 0;
+    &.comment-wrapper {
+      margin-top: 0;
+    }
   }
   &-tag {
     color: #464646;
