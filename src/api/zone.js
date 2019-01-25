@@ -1,5 +1,5 @@
 import wepy from 'wepy'
-import commonParams from './commonData';
+import commonParams from './commonData'
 
 // 发布圈子
 export function addCircles(data) {

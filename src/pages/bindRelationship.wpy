@@ -18,7 +18,7 @@
 
 <script>
 import wepy from 'wepy'
-import { getIdentityList, bindIDentity } from '../api/user'
+import { getIdentityList } from '../api/user'
 import { addClass } from '../api/createClass'
 import { showMsg, isEmptyString } from '../utils/common'
 export default class bindRelationship extends wepy.page {
@@ -78,7 +78,6 @@ export default class bindRelationship extends wepy.page {
         return
       }
       let createClassData = this.$parent.globalData.createClass
-      console.log(createClassData)
       let data = {
         school_id: createClassData.school_id,
         grade_type: createClassData.grade,
@@ -95,7 +94,7 @@ export default class bindRelationship extends wepy.page {
         item: filterList
       })).then(res => {
         if (res.data.success) {
-          showMsg('添加成功', 2000)
+          showMsg('班级创建成功，可前往家委会管理界面查看班级详情', 2000)
           setTimeout(() => {
             wx.switchTab({
               url: 'classList'

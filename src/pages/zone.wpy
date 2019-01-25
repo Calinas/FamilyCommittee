@@ -42,7 +42,7 @@
       </view>
     </view>
     <view class="item-wrapper">
-      <view class="item" wx:for="{{list}}" wx:key="{{key}}">
+      <view class="item" wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
         <view class="flex-wrapper center">
           <image src="../../images/avatar.png"  class="small-avatar" />
           <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
@@ -50,41 +50,39 @@
         <view class="font-small font-grey text-right">{{item.created_at}}</view>
         <view class="item-desc">{{item.info.description}}</view>
         <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
-          <image src="{{img}}" wx:key="{{keyIndex}}" wx:for-item="img" wx:for="{{item.image}}" mode="widthFix" class="img-item" @tap="preview({{img}},{{item.image}})" />
+          <image src="{{img}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" mode="widthFix" class="img-item" @tap="preview({{img}},{{item.image}})" />
         </view>
         <view class="font-grey iconfont icon-message text-right" @tap="addComment({{item.id}})"></view>
         <block wx:if="{{item.app_type === 'activity'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}})">{{item.name}}</text>
+            <text class="tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
           </view>
           <view class="tag-wrapper">
             <text class="tag tag-blue" @tap="submitJoinActivity">选好了，报名</text>
             <text class="tag tag-grey">已报名</text>
           </view>
           <!-- 报名结果 -->
-          <view class="result-wrapper">
-            <view class="title item-tag">
-              <text class="tag tag-empty">真人cs</text>
-              <text>有7人报名</text>
+          <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key">
+            <view class="result-wrapper">
+              <view class="title item-tag">
+                <text class="tag tag-empty">{{activity.name}}</text>
+                <text>有{{activity.student_list.length}}人报名</text>
+              </view>
+              <view class="person-list tag-wrapper" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">
+                <text class="tag tag-light-grey">{{student.name}}</text>
+              </view>
             </view>
-            <view class="person-list tag-wrapper">
-              <text class="tag tag-light-grey">霍思燕</text>
-              <text class="tag tag-light-grey">乔峰</text>
-              <text class="tag tag-light-grey">李逵</text>
-              <text class="tag tag-light-grey">林黛玉</text>
-              <text class="tag tag-light-grey">曹操</text>
-            </view>
-          </view>
+          </block>
         </block>
         <!-- 收款 -->
         <block wx:if="{{item.app_type === 'collection'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}">{{item.name}}</text>
+            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:key="key">{{item.name}}</text>
           </view>
         </block>
         <!-- 留言结果 -->
         <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">
-          <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment">
+          <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
             <text class="font-blue" @tap="addComment({{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
             <text>{{comment.content}}</text>
           </view>
@@ -100,9 +98,9 @@
         </view>
         <view catchtap="jumpPage('bindRelationship')">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
-        <view catchtap="jumpPage('cashflow')">财务流水</view>
-        <view catchtap="jumpPage('cashWithdraw')">收款提现</view>
-        <view catchtap="jumpPage('authorize')">家委会管理</view>
+        <view catchtap="jumpPage('cashflow')" wx:if="{{auth.finance}}">财务流水</view>
+        <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view>
+        <view catchtap="jumpPage('authorize')" wx:if="{{auth.president}}">家委会管理</view>
         </view>
     </view>
     <!-- 右边侧边栏 -->
@@ -112,12 +110,12 @@
           <text class="iconfont icon-publish"></text>
           <text>发布</text>
         </view>
-        <view type="family" catchtap="jumpPage('publish','zone')">家长圈</view>
-        <view catchtap="jumpPage('photos')">相册</view>
-        <view catchtap="jumpPage('publish','notice')">通知</view>
-        <view catchtap="jumpPage('publish','activity')">活动</view>
-        <view catchtap="jumpPage('publish','money')">收款</view>
-        <view catchtap="jumpPage('recordCashflow')">记账</view>
+        <view type="family" catchtap="jumpPage('publish','zone')" wx:if="{{auth.circles}}">家长圈</view>
+        <view catchtap="jumpPage('photos')" wx:if="{{auth.photos}}">相册</view>
+        <view catchtap="jumpPage('publish','notice')" wx:if="{{auth.notify}}">通知</view>
+        <view catchtap="jumpPage('publish','activity')" wx:if="{{auth.activity}}">活动</view>
+        <view catchtap="jumpPage('publish','money')" wx:if="{{auth.finance}}">收款</view>
+        <view catchtap="jumpPage('recordCashflow')" wx:if="{{auth.finance}}">记账</view>
         </view>
     </view>
     <CurrentModal
@@ -138,9 +136,11 @@ import wepy from 'wepy'
 import CurrentModal from '../components/commentModal'
 import { showMsg, previewImage } from '../utils/common'
 import { getCircleList, addComment, joinActivity } from '../api/zone'
+import { getAuth } from '../api/authorize'
 export default class Zone extends wepy.page {
   config = {
-    navigationBarTitleText: '发现'
+    navigationBarTitleText: '发现',
+    enablePullDownRefresh: true
   }
   components = {
     CurrentModal
@@ -170,15 +170,24 @@ export default class Zone extends wepy.page {
     currentReplyRootId: -1,
     currentReplyToCommentId: -1,
     currerntJoinAcitivytId: -1,
-    currerntSubActivityId: []
+    currerntSubActivityId: [],
+    auth: {
+      president: false,
+      finance: false,
+      activity: false,
+      notify: false,
+      photos: false,
+      circles: false
+    }
   }
   watch = {
     classInfo(newVal, oldVal) {
       // 切换了班级之后数据要更新
       oldVal && this.getZoneList()
+      oldVal && this.getAuthList()
     },
     currentJoinActivityId(newVal, oldVal) {
-      if(newVal > 0) {
+      if (newVal > 0) {
         this.currerntSubActivityId = []
         this.$apply()
       }
@@ -189,11 +198,17 @@ export default class Zone extends wepy.page {
     this.list = []
     this.$apply()
   }
+  onPullDownRefresh() {
+    this.resetData()
+    this.getZoneList()
+  }
   onReachBottom() {
     if (this.loading || this.loadFinished) return
     this.getZoneList()
   }
   onShow() {
+    this.currerntJoinAcitivytId = -1
+    this.currerntSubActivityId = []
     this.classInfo = wx.getStorageSync('classInfo')
     this.$apply()
   }
@@ -204,9 +219,38 @@ export default class Zone extends wepy.page {
       })
     } else {
       this.classInfo = wx.getStorageSync('classInfo')
+      this.classInfo && this.getAuthList()
       this.memberInfo = wx.getStorageSync('memberInfo')
       this.$apply()
       this.getZoneList()
+    }
+  }
+  getAuthList() {
+    getAuth({
+      class_id: this.classInfo.id
+    }).then(res => {
+      this.checkAuth(res.data.data)
+    })
+  }
+  formatAllAuth(obj) {
+    Object.keys(obj).forEach(key => {
+      obj[key] = true
+    })
+    this.$apply()
+  }
+  formatSingleAuth(name) {
+    this.auth[name] = true
+    this.$apply()
+  }
+  checkAuth(list) {
+    for (let i = 0, len = list.length; i < len; i++) {
+      let {code, is_auth: isAuth} = list[i]
+      if (code === 'president' && isAuth) {
+        this.formatAllAuth(this.auth)
+        break
+      } else {
+        isAuth && this.formatSingleAuth(code)
+      }
     }
   }
   checkDataExist(key) {
@@ -226,10 +270,10 @@ export default class Zone extends wepy.page {
       ps: this.ps,
       comment_count: 3
     }).then(res => {
-      let list = res.data.list
+      let { list } = res.data
       this.loading = false
       this.pn++
-      this.list = this.list.concat(list)
+      this.list = [...this.list, ...list]
       if (list.length < this.ps) {
         this.loadFinished = true
       }
@@ -243,20 +287,23 @@ export default class Zone extends wepy.page {
         activity_item_id: this.currerntSubActivityId,
         activity_id: this.currerntJoinAcitivytId
       }).then(res => {
-        if(res.data.success) {
+        if (res.data.success) {
           showMsg('提交成功')
+          this.currerntSubActivityId = []
+          this.$apply()
         }
       })
     },
-    joinActivity(id, subId) {
+    joinActivity(id, subId, listIndex, activityIndex) {
       this.currerntJoinAcitivytId = id
       const index = this.currerntSubActivityId.indexOf(subId)
-      if(index > -1) {
+      if (index > -1) {
         this.currerntSubActivityId.splice(index, 1)
+        this.list[listIndex].info.item[activityIndex].checked = false
       } else {
         this.currerntSubActivityId.push(subId)
+        this.list[listIndex].info.item[activityIndex].checked = true
       }
-      // TODO这里交互要发生变化
       this.$apply()
     },
     addComment(id, rootId, toCommentId, name) {
@@ -436,6 +483,10 @@ export default class Zone extends wepy.page {
   }
   .tag {
     margin-bottom: 20rpx;
+    &.active {
+      border: 2rpx solid #000;
+      color: #000;
+    }
   }
 }
 .comment-wrapper {

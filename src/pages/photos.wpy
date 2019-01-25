@@ -53,13 +53,14 @@ export default class bindRelationship extends wepy.page {
       this.$apply()
     })
   }
-  addPhotozs () {
+  addPhotos () {
     addPhoto({
       class_id: this.classInfo.id,
       img_url: this.imgList
     }).then(res => {
-      if(res.data.success) {
+      if (res.data.success) {
         showMsg('提交成功')
+        this.getPhotoList()
       }
     })
   }
@@ -68,46 +69,9 @@ export default class bindRelationship extends wepy.page {
       previewImage(url, urls)
     },
     upload() {
-      wx.chooseImage({
-        count: this.maxCount,
-        success: res => {
-          if ( res.tempFilePaths.length > this.maxCount ) {
-            wx.showToast({
-              title: '最多只能选择' + this.maxUpload + '张图片',
-              icon: 'none'
-            });
-            return;
-          }
-          res.tempFilePaths.forEach(path => {
-            let upload = {};
-            upload.path = path;
-            upload.error = false;
-
-            upload.uploadProgress = wx.uploadFile({
-              url: 'http://www.patriarch.cm:8080/api/v1/file/uploadPic',
-              filePath: path,
-              name: 'file',
-              formData: {
-                'member_id': this.memberInfo.member_id,
-                'member_token': this.memberInfo.member_token,
-                'folder': 'committee'
-              },
-              success: res => {
-                res = JSON.parse(res.data);
-                this.imgList.push(res.data.file_url);
-                this.addPhotos()
-                this.$apply()
-              }
-            });
-
-            let _this = this;
-            upload.uploadProgress.onProgressUpdate(function(res) {
-              upload.progress = res.progress;
-              _this.$apply();
-            });
-            this.uploads.push(upload);
-          })
-        }
+      uploadImage().then(res => {
+        this.imgList.push(res)
+        this.addPhotos()
       })
     }
   }

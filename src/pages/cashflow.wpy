@@ -12,59 +12,24 @@
       </view>
     </view>
     <scroll-view class="scroll-container">
-      <view class="msg-card font-black">
+      <view class="msg-card font-black" wx:for="{{list}}" wx:key="key">
         <view class="flex-wrapper center">
-          <image src="../../images/avatar.png"  class="small-avatar"/>
-          <text>乔峰妈妈发布了财务信息</text>
+          <image src="{{item.member.head_img}}"  class="small-avatar"/>
+          <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
         </view>
-        <view class="font-small font-grey text-right">2018年11月23日 20:00</view>
+        <view class="font-small font-grey text-right">{{item.created_at}}</view>
         <view class="tag-wrapper">
-          <text class="tag tag-grey">支出</text>
-          <text class="tag tag-grey">1258元</text>
-          <text class="tag tag-grey">余额：3588元</text>
+          <text class="tag tag-grey">{{item.info.type === 'in' ? '收入': '支出'}}</text>
+          <text class="tag tag-light-grey">{{item.info.money}}</text>
+          <!-- <text class="tag tag-grey">余额：3588元</text> -->
         </view>
         <view class="desc">
-          事由：购买运动会球服等等
+          事由：{{item.info.description}}
         </view>
-        <view class="operate-btn">
-
+        <view class="operate-btn" @tap="preview({{item.image}})">
+          <view class="font-small font-grey text-right">点击查看凭证</view>
         </view>
       </view>
-      <view class="msg-card font-black">
-        <view class="flex-wrapper center">
-          <image src="../../images/avatar.png"  class="small-avatar"/>
-          <text>乔峰妈妈发布了财务信息</text>
-        </view>
-        <view class="font-small font-grey text-right">2018年11月23日 20:00</view>
-        <view class="tag-wrapper">
-          <text class="tag tag-grey">支出</text>
-          <text class="tag tag-grey">1258元</text>
-          <text class="tag tag-grey">余额：3588元</text>
-        </view>
-        <view class="desc">
-          事由：购买运动会球服等等
-        </view>
-        <view class="operate-btn">
-
-        </view>
-      </view>
-      <view class="msg-card font-black">
-        <view class="flex-wrapper center">
-          <image src="../../images/avatar.png"  class="small-avatar"/>
-          <text>乔峰妈妈发布了财务信息</text>
-        </view>
-        <view class="font-small font-grey text-right">2018年11月23日 20:00</view>
-        <view class="tag-wrapper">
-          <text class="tag tag-grey">支出</text>
-          <text class="tag tag-grey">1258元</text>
-          <text class="tag tag-grey">余额：3588元</text>
-        </view>
-        <view class="desc">
-          事由：购买运动会球服等等
-        </view>
-        <view class="operate-btn">
-
-        </view>
       </view>
     </scroll-view>
   </view>
@@ -73,7 +38,9 @@
 
 <script>
 import wepy from 'wepy'
-import { getFinanceList, getFinanceInfo } from '../api/finance'
+import { getFinanceInfo } from '../api/finance'
+import { getCircleList } from '../api/zone'
+import { previewImage } from '../utils/common'
 export default class cashflow extends wepy.page {
   config = {
     navigationBarTitleText: '财务记账'
@@ -84,7 +51,15 @@ export default class cashflow extends wepy.page {
     balance: 0,
     memberInfo: null,
     financialData: {},
-    memberList: []
+    memberList: [],
+    list: [],
+    type: {
+      circles: '家长圈',
+      collection: '收款',
+      notify: '通知',
+      activity: '活动',
+      account: '记账'
+    }
   }
   onLoad() {
     this.classInfo = wx.getStorageSync('classInfo')
@@ -94,6 +69,9 @@ export default class cashflow extends wepy.page {
     this.$apply()
   }
   methods = {
+    preview(urls) {
+      previewImage(urls[0], urls)
+    },
     jumpPage() {
       wx.navigateTo({
         url: 'zone'
@@ -101,19 +79,24 @@ export default class cashflow extends wepy.page {
     }
   }
   getList() {
-    getFinanceList({
-      member_id: this.memberInfo.member_id,
+    getCircleList({
+      see_type: 'class',
       class_id: this.classInfo.id,
+      type: 'account',
       ps: this.ps,
       pn: this.pn
-    }).then(res => console.log(res))
+    }).then(res => {
+      this.list = res.data.list
+      this.$apply()
+    })
   }
   getInfo() {
     getFinanceInfo({
       member_id: this.memberInfo.member_id,
       class_id: this.classInfo.id
     }).then(res => {
-      let data = res.data
+      console.log(res)
+      let data = res.data.data
       this.balance = data.balance
       this.memberList = data.financial_member
       this.$apply()

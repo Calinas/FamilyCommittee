@@ -1,12 +1,12 @@
 <template lang="wxml" minapp="wepy">
-  <view class="wx-popup" wx:if="{{flag}}">
+  <view class="wx-popup">
     <view class='popup-container'>
-      <view class="wx-popup-con">
-        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}">
+      <view class="flex-wrapper">
+        <input type="text" placeholder="请输入姓名" class="input" id="input" value="{{input}}">
+        <view class="search-btn" @tap="sureFn"></view>
       </view>
-      <view class="wx-popup-btn">
-        <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>
-        <text class="btn-ok" @tap='sureFn'>{{sureBtnText}}</text>
+      <view class="list">
+        <view class="item"></view>
       </view>
     </view>
   </view>
@@ -15,33 +15,25 @@
 <script>
 import wepy from 'wepy'
 import { showMsg, isEmptyString } from '../utils/common'
-export default class Modal extends wepy.component {
-  config = {
-    navigationBarTitleText: '财务记账'
-  }
+export default class Search extends wepy.component {
   props = {
-    cancelBtnText: String,
-    sureBtnText: String,
-    placeholderText: String,
-    flag: Boolean
+    list: []
   }
   onLoad() {
 
   }
   data = {
-    input: ''
+    input: '',
+    money: ''
   }
   methods = {
     bindInput (e) {
-      this.input = e.detail.value
+      this[e.currentTarget.id] = e.detail.value
       this.$apply()
-    },
-    cancelFn () {
-      this.$emit('cancel')
     },
     sureFn () {
       if (isEmptyString(this.input)) {
-        showMsg('请输入活动项目名称')
+        showMsg('请输入搜索内容')
         return
       }
       this.$emit('sure', this.input)
@@ -53,6 +45,29 @@ export default class Modal extends wepy.component {
 </script>
 
 <style lang="scss" scoped>
+.flex-wrapper {
+  height:100rpx;
+  line-height:100rpx;
+  align-items: center;
+  .input {
+    height: 100rpx;
+    padding-bottom: 0;
+    border-bottom:2rpx solid #f2f2f2;
+    padding-left: 20rpx;
+  }
+  .search-btn {
+    flex: 1;
+    text-align: center;
+  }
+}
+.list {
+  height:400rpx;
+  overflow-y:scroll;
+  .item {
+    margin: 0;
+    padding: 20rpx;
+  }
+}
 .wx-popup {
   position: fixed;
   left: 0;
@@ -74,13 +89,8 @@ export default class Modal extends wepy.component {
   transform: translate(-50%, -50%);
   overflow: hidden;
   background: #fff;
-  input {
-    padding-bottom:40rpx;
-    border-bottom:2rpx solid #f2f2f2;
-  }
 }
 .wx-popup-con {
-  margin: 60rpx;
   text-align:center;
 }
 .wx-popup-btn {
@@ -97,5 +107,4 @@ export default class Modal extends wepy.component {
   border: 2rpx solid #ccc;
   border-radius: 10rpx;
 }
-
 </style>

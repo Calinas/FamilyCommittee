@@ -223,9 +223,17 @@ export default class Publish extends wepy.page {
       img_url: this.img
     })
     if (type === 'money') {
-      addCollection(params).then(res => { this.commonFn(res)} )
+      if (!this.moneyList.length) {
+        showMsg('请至少添加一个收款条目')
+        return
+      }
+      const moneyParams = Object.assign({}, params, {
+        item: this.moneyList,
+        type: 'student'
+      })
+      addCollection(moneyParams).then(res => { this.commonFn(res) })
     } else {
-      addCircles(params).then(res => { this.commonFn(res)} )
+      addCircles(params).then(res => { this.commonFn(res) })
     }
   }
   saveActivity(commonParams) {

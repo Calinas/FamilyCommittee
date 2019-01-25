@@ -52,7 +52,6 @@ export function joinClass(data) {
 }
 
 // 获取班级列表
-
 export function getClassList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({

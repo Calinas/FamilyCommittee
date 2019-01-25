@@ -1,64 +1,81 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
     <view class="font-black font-bold title">
+      <text>班级信息</text>
+    </view>
+    <view class="flex-wrapper item">
+      <text class="font-bold font-black sub-title">班级：</text>
+      <text>{{classInfo.name}}</text>
+    </view>
+    <view class="flex-wrapper item">
+      <text class="font-bold font-black sub-title">班委会验证码：</text>
+      <text>{{classInfo.join_key}}</text>
+    </view>
+    <view class="flex-wrapper item last-one">
+      <text class="font-bold font-black sub-title">班委会二维码：</text>
+      <image src="{{classInfo.qr_code}}" class="qr-code"/>
+    </view>
+    <view class="font-black font-bold title">
       <text>权限管理</text>
     </view>
     <!-- 会长权限 -->
     <view class="flex-wrapper item" wx:for="{{list}}">
-      <view class="font-bold font-black sub-title">{{item.role.name}}</view>
-      <view class="tag tag-light-grey" wx:for="{{item.role.member}}" wx:for-item="member">
+      <view class="font-bold font-black sub-title">{{item.name}}</view>
+      <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member">
         <text class="iconfont icon-delete"></text>
-        <text>{{member.member_name}}</text>
+        <text>{{member.member.class_nickname}}</text>
       </view>
       <view class="tag-wrapper">
-        <text class="tag tag-blue" @tap="addNew({{true}},{{item.role.role_id}})">添加</text>
+        <text class="tag tag-blue" @tap="addNew({{true}},{{item.id}})">添加</text>
       </view>
     </view>
   </view>
   <Modal
-      sureBtnText="确认添加"
-      cancelBtnText="取消"
-      placeholderText="请输入姓名"
-      :flag.sync="showAdd"
-      @cancel.user="cancel"
-      @sure.user="sure"
-    ></Modal>
+    sureBtnText="确认添加"
+    cancelBtnText="取消"
+    placeholderText="请输入姓名"
+    :flag.sync="showAdd"
+    @cancel.user="cancel"
+    @sure.user="sure"
+  ></Modal>
+  <Search></Search>
 </template>
-
 <script>
 import wepy from 'wepy'
 import Modal from '../components/modal'
-import { authList, addAuth } from '../api/authorize'
+import Search from '../components/searchResult'
+import { authList, addAuth, searchMember } from '../api/authorize'
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '家委会管理'
   }
   components = {
-    Modal
+    Modal,
+    Search
   }
   data = {
     showAdd: false,
     list: [],
     currentRoleId: -1,
-    memberInfo: null
+    memberInfo: null,
+    classInfo: {}
   }
   onLoad() {
-    const globalData = this.$parent.globalData
-    this.memberInfo = globalData.memberInfo
-    this.classInfo = globalData.classInfo
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.memberInfo = wx.getStorageSync('memberInfo')
+    this.getAuthList()
     this.$apply()
+  }
+  getClassInfo() {
+
   }
   getAuthList() {
     authList({
-      member_id: 2,
-      class_id: 1
+      class_id: this.classInfo.id
     }).then(res => {
       this.list = res.data.list
       this.$apply()
     })
-  }
-  onLoad() {
-    this.getAuthList()
   }
   methods = {
     cancel() {
@@ -72,16 +89,24 @@ export default class bindRelationship extends wepy.page {
     },
     sure(value) {
       this.showAdd = false
+      searchMember({
+        class_id: this.classInfo.id,
+        keywords: value
+      }).then(res => {
+        if(res.data.list.length) {
+
+        }
+      })
+    },
+    addRequest() {
       addAuth({
-        member_id: 1,
-        class_id: 2,
+        class_id: this.classInfo.id,
         role_id: this.currentRoleId,
         join_member_id: 2
       }).then(res => {
-        console.log(res)
         this.currentRoleId = -1
+        this.$apply()
       })
-      this.$apply()
     }
   }
 }
@@ -89,6 +114,15 @@ export default class bindRelationship extends wepy.page {
 
 <style lang="scss">
 @import '../styles/mixins.scss';
+.last-one {
+  @include border-bottom;
+  padding-bottom: 40rpx;
+  margin-bottom: 40rpx;
+}
+.qr-code {
+  width:200rpx;
+  height:200rpx;
+}
 .sub-title {
   margin-right: 20rpx;
 }
