@@ -95,8 +95,7 @@ export default class cashflow extends wepy.page {
       member_id: this.memberInfo.member_id,
       class_id: this.classInfo.id
     }).then(res => {
-      console.log(res)
-      let data = res.data.data
+      let { data } = res.data
       this.balance = data.balance
       this.memberList = data.financial_member
       this.$apply()

@@ -21,7 +21,7 @@
     <!-- 会长权限 -->
     <view class="flex-wrapper item" wx:for="{{list}}">
       <view class="font-bold font-black sub-title">{{item.name}}</view>
-      <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member">
+      <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member" @tap="del({{member.class_auth_id}})">
         <text class="iconfont icon-delete"></text>
         <text>{{member.member.class_nickname}}</text>
       </view>
@@ -38,13 +38,19 @@
     @cancel.user="cancel"
     @sure.user="sure"
   ></Modal>
-  <Search></Search>
+  <Search
+    :flag.sync="showAdd"
+    :studentList.sync="studentList"
+    @sure.user="sure"
+    @selectStudent.user="selectStudent"
+  ></Search>
 </template>
 <script>
 import wepy from 'wepy'
+import { showMsg } from '../utils/common'
 import Modal from '../components/modal'
 import Search from '../components/searchResult'
-import { authList, addAuth, searchMember } from '../api/authorize'
+import * as authorizeReq from '../api/authorize'
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '家委会管理'
@@ -58,7 +64,8 @@ export default class bindRelationship extends wepy.page {
     list: [],
     currentRoleId: -1,
     memberInfo: null,
-    classInfo: {}
+    classInfo: {},
+    studentList: []
   }
   onLoad() {
     this.classInfo = wx.getStorageSync('classInfo')
@@ -66,11 +73,8 @@ export default class bindRelationship extends wepy.page {
     this.getAuthList()
     this.$apply()
   }
-  getClassInfo() {
-
-  }
   getAuthList() {
-    authList({
+    authorizeReq.authList({
       class_id: this.classInfo.id
     }).then(res => {
       this.list = res.data.list
@@ -78,6 +82,32 @@ export default class bindRelationship extends wepy.page {
     })
   }
   methods = {
+    del(authId) {
+      authorizeReq.deleteAuth({
+        class_id: this.classInfo.id,
+        class_auth_id: authId
+      }).then(res => {
+        if (res.data.success) {
+          showMsg('删除成功')
+          this.getAuthList()
+          this.$apply()
+        }
+      })
+    },
+    selectStudent(studentId) {
+      authorizeReq.addAuth({
+        class_id: this.classInfo.id,
+        role_id: this.currentRoleId,
+        join_member_id: studentId
+      }).then(res => {
+        if (res.data.success) {
+          showMsg('添加成功')
+          this.getAuthList()
+          this.showAdd = false
+          this.$apply()
+        }
+      })
+    },
     cancel() {
       this.showAdd = false
       this.$apply()
@@ -88,24 +118,15 @@ export default class bindRelationship extends wepy.page {
       this.$apply()
     },
     sure(value) {
-      this.showAdd = false
-      searchMember({
+      authorizeReq.searchMember({
         class_id: this.classInfo.id,
         keywords: value
       }).then(res => {
-        if(res.data.list.length) {
-
+        let list = res.data.list
+        if (list.length) {
+          this.studentList = list
+          this.$apply()
         }
-      })
-    },
-    addRequest() {
-      addAuth({
-        class_id: this.classInfo.id,
-        role_id: this.currentRoleId,
-        join_member_id: 2
-      }).then(res => {
-        this.currentRoleId = -1
-        this.$apply()
       })
     }
   }

@@ -1,12 +1,17 @@
 <template lang="wxml" minapp="wepy">
-  <view class="wx-popup">
+  <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="flex-wrapper">
-        <input type="text" placeholder="请输入姓名" class="input" id="input" value="{{input}}">
-        <view class="search-btn" @tap="sureFn"></view>
+        <input type="text" placeholder="请输入姓名" class="input" id="input" value="{{input}}" @input="bindInput">
+        <view class="search-btn" @tap="sureFn">搜索</view>
       </view>
       <view class="list">
-        <view class="item"></view>
+        <block wx:if="{{!studentList.length}}">
+          <text class="text-center no-remind">暂无内容</text>
+        </block>
+        <block wx:else>
+          <view class="item" wx:for="{{studentList}}" @tap="select({{item.id}})">{{item.class_nickname}}</view>
+        </block>
       </view>
     </view>
   </view>
@@ -17,7 +22,8 @@ import wepy from 'wepy'
 import { showMsg, isEmptyString } from '../utils/common'
 export default class Search extends wepy.component {
   props = {
-    list: []
+    studentList: [],
+    flag: false
   }
   onLoad() {
 
@@ -37,6 +43,9 @@ export default class Search extends wepy.component {
         return
       }
       this.$emit('sure', this.input)
+    },
+    select (value) {
+      this.$emit('selectStudent', value)
       this.input = ''
       this.$apply()
     }
@@ -45,6 +54,12 @@ export default class Search extends wepy.component {
 </script>
 
 <style lang="scss" scoped>
+.no-remind {
+  display: block;
+  margin: 0 auto;
+  width:calc(100% - 40rpx);
+  padding: 20rpx;
+}
 .flex-wrapper {
   height:100rpx;
   line-height:100rpx;

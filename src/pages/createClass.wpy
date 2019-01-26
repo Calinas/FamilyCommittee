@@ -93,11 +93,11 @@ export default class joinClass extends wepy.page{
       this.$apply()
     },
     submit() {
-      if(!this.gradeNumber) {
+      if (!this.gradeNumber) {
         showMsg('请输入级别号')
         return
       }
-      if(!this.classNumber) {
+      if (!this.classNumber) {
         showMsg('请输入班级号')
         return
       }

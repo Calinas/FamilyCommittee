@@ -68,12 +68,12 @@ export default class ClassList extends wepy.page {
           })
         }
       })
-
     }
   }
 
-  onShow() {
+  onLoad() {
     this.memberInfo = wx.getStorageSync('memberInfo')
+    console.log(this.memberInfo)
     this.getClassList()
     this.$apply()
   }

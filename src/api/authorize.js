@@ -60,3 +60,19 @@ export function searchMember(data) {
     })
   })
 }
+
+// 删除班级角色权限
+export function deleteAuth(data) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/class/auth/delete',
+      data: Object.assign({}, commonParams, {
+        class_id: data.class_id,
+        class_auth_id: data.class_auth_id
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
