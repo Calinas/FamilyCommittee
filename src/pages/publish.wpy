@@ -154,7 +154,7 @@ export default class Publish extends wepy.page {
     remindType: [
       {
         id: 0,
-        title: '否',
+        title: '否'
       },
       {
         id: 1,
@@ -162,11 +162,11 @@ export default class Publish extends wepy.page {
       }
     ],
     type: [
-      {
-        id: 0,
-        title: '全部可见',
-        type: 'all'
-      },
+      // {
+      //   id: 0,
+      //   title: '全部可见',
+      //   type: 'all'
+      // },
       {
         id: 1,
         title: '班级可见',

@@ -6,7 +6,7 @@ export function addAuth(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/auth/add',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         role_id: data.role_id,
         join_member_id: data.join_member_id
@@ -23,7 +23,7 @@ export function getAuth(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/auth',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id
       })
     }).then(res => {
@@ -37,7 +37,7 @@ export function authList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/auth/index',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id
       })
     }).then(res => {
@@ -51,7 +51,7 @@ export function searchMember(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/searchMember',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         keywords: data.keywords
       })
@@ -66,7 +66,7 @@ export function deleteAuth(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/auth/delete',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         class_auth_id: data.class_auth_id
       }),

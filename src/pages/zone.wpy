@@ -44,7 +44,7 @@
     <view class="item-wrapper">
       <view class="item" wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
         <view class="flex-wrapper center">
-          <image src="../../images/avatar.png"  class="small-avatar" />
+          <image src="{{item.member.head_img}}"  class="small-avatar" />
           <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
         </view>
         <view class="font-small font-grey text-right">{{item.created_at}}</view>
@@ -52,7 +52,7 @@
         <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
           <image src="{{img}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" mode="widthFix" class="img-item" @tap="preview({{img}},{{item.image}})" />
         </view>
-        <view class="font-grey iconfont icon-message text-right" @tap="addComment({{item.id}})"></view>
+        <view class="font-grey iconfont icon-message text-right" @tap="addComment('add', {{item.id}})"></view>
         <block wx:if="{{item.app_type === 'activity'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
             <text class="tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
@@ -63,7 +63,7 @@
           </view>
           <!-- 报名结果 -->
           <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key">
-            <view class="result-wrapper">
+            <view class="result-wrapper" wx:if="{{activity.student_list.length}}">
               <view class="title item-tag">
                 <text class="tag tag-empty">{{activity.name}}</text>
                 <text>有{{activity.student_list.length}}人报名</text>
@@ -72,18 +72,27 @@
                 <text class="tag tag-light-grey">{{student.name}}</text>
               </view>
             </view>
+            <!-- 没有参加报名的 -->
+            <view class="result-wrapper" wx:if="{{item.info.not_join_student_list.length}}">
+              <view class="title item-tag">
+                <text>有{{item.info.not_join_student_list.length}}人未报名</text>
+              </view>
+              <view class="person-list tag-wrapper" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">
+                <text class="tag tag-light-grey">{{nostudent.name}}</text>
+              </view>
+            </view>
           </block>
         </block>
         <!-- 收款 -->
         <block wx:if="{{item.app_type === 'collection'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:key="key">{{item.name}}</text>
+            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:key="key" @tap="pay({{item.id}})">{{item.name}}</text>
           </view>
         </block>
         <!-- 留言结果 -->
         <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">
           <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
-            <text class="font-blue" @tap="addComment({{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
+            <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
             <text>{{comment.content}}</text>
           </view>
         </view>
@@ -96,7 +105,7 @@
           <text class="iconfont icon-setting"></text>
           <text>设置</text>
         </view>
-        <view catchtap="jumpPage('bindRelationship')">身份绑定</view>
+        <!-- <view catchtap="jumpPage('bindRelationship')">身份绑定</view> -->
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
         <view catchtap="jumpPage('cashflow')" wx:if="{{auth.finance}}">财务流水</view>
         <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view>
@@ -136,7 +145,9 @@ import wepy from 'wepy'
 import CurrentModal from '../components/commentModal'
 import { showMsg, previewImage } from '../utils/common'
 import { getCircleList, addComment, joinActivity } from '../api/zone'
+import { addOrder, getPaymentParams } from '../api/finance'
 import { getAuth } from '../api/authorize'
+import { checkStudent } from '../api/user'
 export default class Zone extends wepy.page {
   config = {
     navigationBarTitleText: '发现',
@@ -178,13 +189,18 @@ export default class Zone extends wepy.page {
       notify: false,
       photos: false,
       circles: false
-    }
+    },
+    memberList: [],
+    studentIds: []
   }
   watch = {
     classInfo(newVal, oldVal) {
       // 切换了班级之后数据要更新
-      oldVal && this.getZoneList()
-      oldVal && this.getAuthList()
+      if (oldVal !== null) {
+        this.resetData()
+        this.getAuthList()
+        this.checkMember()
+      }
     },
     currentJoinActivityId(newVal, oldVal) {
       if (newVal > 0) {
@@ -221,8 +237,10 @@ export default class Zone extends wepy.page {
       this.classInfo = wx.getStorageSync('classInfo')
       this.classInfo && this.getAuthList()
       this.memberInfo = wx.getStorageSync('memberInfo')
+      this.$parent.globalData.userData = this.memberInfo
       this.$apply()
       this.getZoneList()
+      this.checkMember()
     }
   }
   getAuthList() {
@@ -262,9 +280,10 @@ export default class Zone extends wepy.page {
   getZoneList() {
     this.loading = true
     this.$apply()
+    const id = this.classInfo.id
     getCircleList({
-      class_id: this.classInfo.id,
-      see_type: 'all',
+      class_id: id,
+      see_type: id ? '' : 'all',
       type: this.activeType,
       pn: this.pn,
       ps: this.ps,
@@ -280,7 +299,36 @@ export default class Zone extends wepy.page {
       this.$apply()
     })
   }
+  checkMember() {
+    checkStudent({
+      class_id: this.classInfo.id
+    }).then(res => {
+      this.memberList = res.data.list
+      this.$apply()
+    })
+  }
+  paymentParams(id) {
+    console.log(id)
+    getPaymentParams({
+      order_id: id
+    }).then(res => {
+      console.log(res)
+    })
+  }
   methods = {
+    pay(id) {
+      if (this.memberList.length > 1) {
+
+      } else {
+        addOrder({
+          class_id: this.classInfo.id,
+          student_ids: [20],
+          collection_item_id: id
+        }).then(res => {
+          this.paymentParams(res.data.data.id)
+        })
+      }
+    },
     submitJoinActivity() {
       joinActivity({
         class_id: this.classInfo.id,
@@ -295,6 +343,10 @@ export default class Zone extends wepy.page {
       })
     },
     joinActivity(id, subId, listIndex, activityIndex) {
+      if (!this.classInfo) {
+        showMsg('请先选择班级')
+        return
+      }
       this.currerntJoinAcitivytId = id
       const index = this.currerntSubActivityId.indexOf(subId)
       if (index > -1) {
@@ -306,17 +358,17 @@ export default class Zone extends wepy.page {
       }
       this.$apply()
     },
-    addComment(id, rootId, toCommentId, name) {
+    addComment(type, id, rootId, toCommentId, name) {
+      if (!this.classInfo) {
+        showMsg('请先选择班级')
+        return
+      }
       this.commentFlag = true
       this.currentReplyId = id
-      this.currentReplyRootId = rootId
-      this.currentReplyToCommentId = toCommentId
-      console.log(name)
+      this.currentReplyRootId = type === 'add' ? 0 : rootId
       if (name !== undefined) {
-        console.log(1)
         this.commentInput = `@${name}:`
       } else {
-        console.log(2)
         this.commentInput = ''
       }
       this.$apply()
@@ -330,16 +382,15 @@ export default class Zone extends wepy.page {
       addComment({
         class_id: this.classInfo.id,
         moment_id: this.currentReplyId,
-        content: this.commentInput,
+        content: this.currentReplyId > 0 ? this.commentInput.replace(/^@.+:/, '') : this.commentInput,
         root_id: this.currentReplyRootId,
-        to_comment_id: this.currentReplyToCommentId
+        to_comment_id: this.currentReplyRootId
       }).then(res => {
-        console.log(res)
+        this.commentInput = ''
+        this.resetData()
+        this.getZoneList()
+        this.$apply()
       })
-      this.commentInput = ''
-      this.resetData()
-      this.getZoneList()
-      this.$apply()
     },
     commentCancel() {
       this.commentFlag = false

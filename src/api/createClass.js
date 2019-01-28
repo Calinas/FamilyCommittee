@@ -6,7 +6,7 @@ export function schoolList() {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/school/index',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         keywords: '',
         pn: 1,
         ps: 10
@@ -22,7 +22,7 @@ export function addClass(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/addClass',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         school_id: data.school_id,
         grade_type: data.grade_type,
         year_class: data.year_class,
@@ -56,7 +56,7 @@ export function getClassList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/class/index',
-      data: commonParams
+      data: commonParams()
     }).then(res => {
       resolve(res)
     })

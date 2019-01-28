@@ -5,7 +5,7 @@
       <view class="img-list flex-wrapper">
         <repeat for="{{item.img_list}}" index="index" item="imgSrc">
           <view class="img-item">
-            <image @tap='preview({{imgSrc.img_url}},{{item.img_list}})' mode="widthFix" class='img' src='{{imgSrc.img_url}}' />
+            <image @tap='preview({{imgSrc.img_url}})' mode="widthFix" class='img' src='{{imgSrc.img_url}}' />
             <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/>
           </view>
         </repeat>
@@ -66,6 +66,7 @@ export default class bindRelationship extends wepy.page {
   }
   methods = {
     preview(url, urls) {
+      console.log(url, urls)
       previewImage(url, urls)
     },
     upload() {

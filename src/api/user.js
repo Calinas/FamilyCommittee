@@ -6,7 +6,7 @@ export function bindIDentity(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/class/bindIDentity',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         item: data.list
       }),
@@ -71,7 +71,21 @@ export function getIdentityList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/getIdentityList',
-      data: Object.assign({}, commonParams)
+      data: Object.assign({}, commonParams())
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 检查用户是否有多个学生
+export function checkStudent(data) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/member/class/bindStudent',
+      data: Object.assign({}, commonParams(), {
+        class_id: data.class_id
+      })
     }).then(res => {
       resolve(res)
     })

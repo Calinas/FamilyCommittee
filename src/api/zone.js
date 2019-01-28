@@ -6,7 +6,7 @@ export function addCircles(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/moment/addCircles',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         see_type: data.type,
         description: data.desc,
@@ -24,7 +24,7 @@ export function addCollection(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/moment/addCollection',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         type: data.type,
         description: data.desc,
@@ -42,7 +42,7 @@ export function addActivity(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/moment/addActivity',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         sign_type: data.sign_type,
         description: data.desc,
@@ -62,7 +62,7 @@ export function addAccount(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/moment/addAccount',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         type: data.type,
         description: data.desc,
@@ -81,7 +81,7 @@ export function addNotify(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/moment/addNotify',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         see_type: data.type,
         description: data.desc,
@@ -99,7 +99,7 @@ export function addPhoto(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/photo/add',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         img_url: data.img_url
       }),
@@ -115,7 +115,7 @@ export function photoIndex(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/photo/index',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         pn: data.pn,
         ps: data.ps
@@ -131,7 +131,7 @@ export function getCircleList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/moment/list',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         see_type: data.see_type,
         type: data.type,
@@ -149,7 +149,7 @@ export function addComment(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/moment/addComment',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         moment_id: data.moment_id,
         content: data.content,
@@ -168,7 +168,7 @@ export function joinActivity(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/moment/activity/addApply',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
         activity_id: data.activity_id,
         activity_item_id: data.activity_item_id

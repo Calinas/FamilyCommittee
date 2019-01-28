@@ -83,14 +83,10 @@ export default class login extends wepy.page {
         nickname: this.nickname,
         avatar: this.head_img
       }
-      wx.setStorage({
-        key: 'memberInfo',
-        data: memberInfo,
-        success: res => {
-          wx.reLaunch({
-            url: 'classList'
-          })
-        }
+      wx.setStorageSync('memberInfo', memberInfo)
+      console.log(wx.getStorageSync('memberInfo'), 1)
+      wx.reLaunch({
+        url: 'classList'
       })
     })
   }

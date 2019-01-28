@@ -82,7 +82,7 @@ export function uploadImage() {
         const tempFilePaths = res.tempFilePaths
         wx.showLoading()
         wx.uploadFile({
-          url: 'http://www.patriarch.cm:8080/api/v1/file/uploadPic',
+          url: 'http://www.patriarch.cm/api/v1/file/uploadPic',
           filePath: tempFilePaths[0],
           formData: {
             'member_id': memberInfo.member_id,
