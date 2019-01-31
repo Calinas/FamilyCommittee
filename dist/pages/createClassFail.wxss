@@ -1,0 +1,9 @@
+.info {
+  line-height: 1.4rem;
+  width: 90%;
+  margin: 0 auto; }
+
+.buttons-wrapper {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 100rpx; }

@@ -1,0 +1,27 @@
+.weui-btn._5990213 {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  padding: 30rpx;
+  box-sizing: border-box;
+  font-size: 30rpx;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #fff;
+  border-radius: 4rpx;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow: hidden; }
+
+.weui-btn_primary._5990213 {
+  background-color: #2DB200; }
+
+.class-select-wrapper .item._5990213 {
+  flex: 1;
+  text-align: center; }
+  .class-select-wrapper .item.active._5990213 {
+    background-color: #2DB200;
+    color: #fff; }
+
+.create-btn._5990213 {
+  padding: 40rpx 0; }

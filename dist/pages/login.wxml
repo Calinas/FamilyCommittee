@@ -1,0 +1,14 @@
+
+<view class="page" style="background-color:#fff;margin-top: 400rpx;">
+  <view class="login-title flex">
+    <text class="line-title"/>
+    <text class="font-grey line-text">使用微信绑定的手机号登录</text>
+    <text class="line-title"/>
+  </view>
+  <button  wx:if="{{!show_lay}}" bindgetuserinfo="getUserInfo" open-type="getUserInfo" class="weixin-login-btn">授权登录</button>
+  <view class="bind-phone-lay"  wx:if="{{show_lay}}">
+    <view>您好，我们需要绑定您的手机号就可以完成注册啦</view>
+    <button plain="true" bindgetphonenumber="getPhoneNumber" openType="getPhoneNumber" style="font" type="themeBg" class="weixin-login-btn">点击授权</button>
+  </view>
+  <view class="overlay" wx:if="{{show_lay}}"/>
+</view>

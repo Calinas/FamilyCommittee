@@ -2,13 +2,13 @@ import wepy from 'wepy'
 import commonParams from './commonData'
 
 // 绑定身份
-export function bindIDentity(data) {
+export function bindIdentity(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
-      url: '/member/class/bindIDentity',
+      url: '/member/class/bindIdentity',
       data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
-        item: data.list
+        item: data.item
       }),
       method: 'post'
     }).then(res => {
@@ -83,6 +83,22 @@ export function checkStudent(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/class/bindStudent',
+      data: Object.assign({}, commonParams(), {
+        class_id: data.class_id,
+        moment_id: data.moment_id,
+        is_pay: data.is_pay
+      })
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 获取班级绑定得身份列表
+export function identityList(data) {
+  return new Promise(resolve => {
+    wepy.request({
+      url: '/member/class/identityList',
       data: Object.assign({}, commonParams(), {
         class_id: data.class_id
       })

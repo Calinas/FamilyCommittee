@@ -1,0 +1,73 @@
+.weui-btn {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  padding: 30rpx;
+  box-sizing: border-box;
+  font-size: 30rpx;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #fff;
+  border-radius: 4rpx;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow: hidden; }
+
+.weui-btn_primary {
+  background-color: #2DB200; }
+
+.icon-wrapper {
+  width: 10%; }
+
+.icon-delete {
+  padding-left: 20rpx; }
+
+.fixed-bottom-btn > view {
+  flex: 1; }
+  .fixed-bottom-btn > view.btn-white {
+    background-color: #fff; }
+
+.remind-text {
+  padding-bottom: 20rpx; }
+  .remind-text .red {
+    color: #982424;
+    margin-right: 20rpx; }
+
+.choose-tag {
+  position: relative;
+  width: 30rpx;
+  height: 30rpx;
+  border: 6rpx solid #2DB200;
+  margin-right: 30rpx;
+  border-radius: 50%; }
+
+.choose-tag-inner {
+  position: absolute;
+  width: 15rpx;
+  height: 15rpx;
+  background-color: #2DB200;
+  opacity: .8;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  margin: auto;
+  border-radius: 50%; }
+
+.choose-item {
+  margin-bottom: 30rpx; }
+
+.choose-item input {
+  padding: 20rpx 0;
+  background-color: #fff;
+  flex: 1;
+  padding-left: 30rpx; }
+
+.choose-item .picker {
+  padding: 20rpx 0;
+  width: 140rpx;
+  margin-left: 30rpx;
+  background-color: #fff;
+  min-height: 1.4rem;
+  line-height: 1.4rem;
+  text-align: center; }

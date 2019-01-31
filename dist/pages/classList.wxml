@@ -1,0 +1,33 @@
+
+  <view class="index">
+    <!-- 顶部区域 -->
+    <view class="img-mask">
+      <image src="../../images/banner.jpg" mode="scaleToFill" class="bg-img"/>
+      <view class="caption">
+        <text class="class">{{memberInfo.nickname}}</text>
+        <!-- <text class="school">共加入3个班级</text> -->
+      </view>
+    </view>
+    <image src="{{memberInfo.avatar}}" mode="scaleToFill" class="avatar"/>
+    <!-- 班级列表展示 -->
+    <view class="class-list font-grey">
+      <block  wx:if="{{list.length}}">
+        <view class="flex-wrapper center" wx:for="{{list}}" wx:key="key" wx:for-index="idx" bindtap="setClass" data-wpysetclass-a="{{idx}}">
+          <text class="dot dot-grey"/>
+          <text>{{item.class.name}}</text>
+        </view>
+      </block>
+      <block  wx:else>
+        <text class="no-remind">您还没有绑定班级</text>
+      </block>
+    </view>
+    <!-- 底部按钮 -->
+    <view class="fixed-bottom flex-wrapper between">
+      <navigator url="joinClass" open-type="navigate">
+        <view class="weui-btn weui-btn_primary btn">加入班级</view>
+      </navigator>
+      <navigator url="createClass" open-type="navigate">
+        <view class="weui-btn weui-btn_primary btn" style="background-color: #4171A5;">创建班级</view>
+      </navigator>
+    </view>
+  </view>

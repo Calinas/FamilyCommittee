@@ -6,7 +6,7 @@
         <repeat for="{{item.img_list}}" index="index" item="imgSrc">
           <view class="img-item">
             <image @tap='preview({{imgSrc.img_url}})' mode="widthFix" class='img' src='{{imgSrc.img_url}}' />
-            <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/>
+            <!-- <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/> -->
           </view>
         </repeat>
       </view>
@@ -20,7 +20,7 @@
 
 <script>
 import wepy from 'wepy'
-import { uploadImage, previewImage, showMsg } from '../utils/common'
+import { uploadImage, showMsg } from '../utils/common'
 import { photoIndex, addPhoto } from '../api/zone'
 export default class bindRelationship extends wepy.page {
   config = {
@@ -65,9 +65,11 @@ export default class bindRelationship extends wepy.page {
     })
   }
   methods = {
-    preview(url, urls) {
-      console.log(url, urls)
-      previewImage(url, urls)
+    preview(url) {
+      wx.previewImage({
+        current: url,
+        urls: [url]
+      })
     },
     upload() {
       uploadImage().then(res => {

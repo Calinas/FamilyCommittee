@@ -1,0 +1,94 @@
+<template lang="wxml" minapp="wepy">
+  <view class="wx-popup" wx:if="{{flag}}">
+    <view class='popup-container'>
+      <view class="wx-popup-con">
+        <checkbox-group class="radio-group" @change="pickerChange" class="width80" id="type">
+          <label class="radio" wx:for="{{list}}">
+            <checkbox value="{{item.id}}" checked="{{item.checked}}" />
+            {{item.name}}
+          </label>
+        </checkbox-group>
+      </view>
+      <view class="wx-popup-btn">
+        <text class="btn-no" @tap='cancelFn'>取消</text>
+        <text class="btn-ok" @tap='sureFn'>确认</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class SelectModal extends wepy.component {
+  props = {
+    flag: Boolean,
+    list: Array
+  }
+  onLoad() {
+
+  }
+  data = {
+    ids: []
+  }
+  methods = {
+    pickerChange (e) {
+      this.ids = e.detail.value
+      this.$apply()
+    },
+    cancelFn () {
+      this.$emit('cancel')
+    },
+    sureFn () {
+      this.$emit('sure', this.ids)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.wx-popup {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .5);
+  z-index: 3;
+}
+.popup-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+  max-width: 600rpx;
+  border: 2rpx solid #ccc;
+  border-radius: 10rpx;
+  box-sizing: bordre-box;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  background: #fff;
+  input {
+    padding-bottom:40rpx;
+    border-bottom:2rpx solid #f2f2f2;
+  }
+}
+.wx-popup-con {
+  margin: 60rpx;
+  text-align:center;
+}
+.wx-popup-btn {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 40rpx;
+}
+.wx-popup-btn text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  height: 80rpx;
+  border: 2rpx solid #ccc;
+  border-radius: 10rpx;
+}
+
+</style>

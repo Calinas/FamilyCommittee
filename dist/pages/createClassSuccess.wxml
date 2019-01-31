@@ -1,0 +1,11 @@
+
+  <view class="common-container common-container-grey">
+    <view class="font-grey info">
+      恭喜，您成功创建了一个班级。您的班级为：{{info.schoolName}}{{unitName}}级{{className}}班。您是当前班级家委会的管理员，管理员可以转让给其他家长。
+    </view>
+    <text class="font-green btn-invite bg-white">马上邀请其他家长加入</text>
+    <view class="common-line line-with-btn">
+      <input type="text" placeholder="请输入验证码"/>
+      <view class="weui-btn weui-btn_primary btn">确认修改</view>
+    </view>
+    </view>

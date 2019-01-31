@@ -1,0 +1,55 @@
+@import "./../components/modal2.wxss";
+@import "./../components/modal.wxss";
+.img-list {
+  margin-bottom: 100rpx;
+  flex-wrap: wrap; }
+  .img-list .img-item {
+    position: relative;
+    width: 30%;
+    margin-right: 5%;
+    height: 200rpx; }
+    .img-list .img-item:nth-child(3n + 3) {
+      margin-right: 0; }
+    .img-list .img-item > image {
+      width: 100%; }
+    .img-list .img-item .close-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 40rpx;
+      height: 40rpx; }
+
+.common-container {
+  padding-bottom: 100rpx; }
+
+.icon-arrow-right {
+  color: #808080;
+  font-size: 24rpx;
+  margin-left: 20rpx; }
+
+textarea {
+  width: calc(100% - 40rpx);
+  border: 2rpx solid #f1f1f1;
+  margin-bottom: 40rpx;
+  padding: 20rpx; }
+
+.select-common-picker {
+  margin-top: 40rpx;
+  padding-bottom: 30rpx;
+  border-bottom: 2rpx solid #d0d0d0; }
+
+.icon-user {
+  margin-right: 10rpx; }
+
+.activity-list {
+  flex-wrap: wrap;
+  margin-top: 40rpx; }
+  .activity-list .tag {
+    position: relative;
+    margin-bottom: 20rpx; }
+  .activity-list .icon-delete {
+    font-size: 24rpx;
+    color: red;
+    position: absolute;
+    right: 0rpx;
+    top: -6rpx; }

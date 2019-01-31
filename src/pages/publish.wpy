@@ -216,6 +216,7 @@ export default class Publish extends wepy.page {
       showMsg(msg)
       return false
     }
+
     return true
   }
   saveCircles(commonParams, type) {
@@ -265,6 +266,10 @@ export default class Publish extends wepy.page {
   }
   methods = {
     chooseImage() {
+      if (this.img.length > 9) {
+        showMsg('最多上传9张图')
+        return
+      }
       uploadImage().then(res => {
         this.img.push(res)
         this.$apply()

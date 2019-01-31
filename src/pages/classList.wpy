@@ -70,7 +70,12 @@ export default class ClassList extends wepy.page {
       })
     }
   }
-
+  onShow() {
+    if (this.$parent.globalData.classHasChange) {
+      this.getClassList()
+      this.$parent.globalData.classHasChange = false
+    }
+  }
   onLoad() {
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.$parent.globalData.userData = this.memberInfo

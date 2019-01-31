@@ -1,7 +1,7 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey" style="padding: 0;position:relative" @tap="closeToggle">
     <view class="img-mask">
-      <image src="../../images/house.jpg" mode="scaleToFill" class="bg-img"/>
+      <image src="../../images/banner1.jpg" mode="scaleToFill" class="bg-img"/>
       <view class="mask"></view>
       <block>
         <view class="btn btn-set flex-wrapper center" catchtap="toggleMenu('setFlag')">
@@ -41,7 +41,8 @@
         <text>记账</text>
       </view>
     </view>
-    <view class="item-wrapper">
+
+    <view class="item-wrapper" wx:if="{{list.length}}">
       <view class="item" wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
         <view class="flex-wrapper center">
           <image src="{{item.member.head_img}}"  class="small-avatar" />
@@ -50,7 +51,7 @@
         <view class="font-small font-grey text-right">{{item.created_at}}</view>
         <view class="item-desc">{{item.info.description}}</view>
         <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
-          <image src="{{img}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" mode="widthFix" class="img-item" @tap="preview({{img}},{{item.image}})" />
+          <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
         </view>
         <view class="font-grey iconfont icon-message text-right" @tap="addComment('add', {{item.id}})"></view>
         <block wx:if="{{item.app_type === 'activity'}}">
@@ -72,21 +73,21 @@
                 <text class="tag tag-light-grey">{{student.name}}</text>
               </view>
             </view>
-            <!-- 没有参加报名的 -->
+          </block>
+          <!-- 没有参加报名的 -->
             <view class="result-wrapper" wx:if="{{item.info.not_join_student_list.length}}">
               <view class="title item-tag">
                 <text>有{{item.info.not_join_student_list.length}}人未报名</text>
               </view>
-              <view class="person-list tag-wrapper" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">
-                <text class="tag tag-light-grey">{{nostudent.name}}</text>
+              <view class="person-list tag-wrapper">
+                <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
               </view>
             </view>
-          </block>
         </block>
         <!-- 收款 -->
         <block wx:if="{{item.app_type === 'collection'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:key="key" @tap="pay({{item.id}})">{{item.name}}</text>
+            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}</text>
           </view>
         </block>
         <!-- 留言结果 -->
@@ -98,6 +99,8 @@
         </view>
       </view>
     </view>
+    <!-- <view wx:if="{{!this.loadFinished && !list.length}}" class="text-center">暂无内容</view> -->
+
     <!-- 左边侧边栏 -->
     <view class="sidebar sidebar-set bg-white {{setFlag ? 'show': ''}}">
       <view class="list">
@@ -105,7 +108,7 @@
           <text class="iconfont icon-setting"></text>
           <text>设置</text>
         </view>
-        <!-- <view catchtap="jumpPage('bindRelationship')">身份绑定</view> -->
+        <view catchtap="jumpPage('bindRelationship?type=edit')" wx:if="{{classInfo.id}}">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
         <view catchtap="jumpPage('cashflow')" wx:if="{{auth.finance}}">财务流水</view>
         <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view>
@@ -137,11 +140,19 @@
       @sure.user="commentSure"
       @input.user="bindCommentInput"
     ></CurrentModal>
+    <SelectModal
+      :flag.sync="selectFlag"
+      :list.sync="payMemberList"
+      @cancel.user="selectCancel"
+      @sure.user="selectSure"
+    >
+    </SelectModal>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
 import { showMsg, previewImage } from '../utils/common'
 import { getCircleList, addComment, joinActivity } from '../api/zone'
@@ -154,10 +165,12 @@ export default class Zone extends wepy.page {
     enablePullDownRefresh: true
   }
   components = {
-    CurrentModal
+    CurrentModal,
+    SelectModal
   }
   data = {
     commentFlag: false,
+    selectFlag: false,
     activeType: 'circles',
     setFlag: false,
     publishFlag: false,
@@ -171,6 +184,7 @@ export default class Zone extends wepy.page {
     pn: 1,
     ps: 10,
     list: [],
+    payMemberList: [],
     classInfo: null,
     memberInfo: null,
     schoolInfo: null,
@@ -182,6 +196,7 @@ export default class Zone extends wepy.page {
     currentReplyToCommentId: -1,
     currerntJoinAcitivytId: -1,
     currerntSubActivityId: [],
+    currentCollectionId: -1,
     auth: {
       president: false,
       finance: false,
@@ -191,7 +206,8 @@ export default class Zone extends wepy.page {
       circles: false
     },
     memberList: [],
-    studentIds: []
+    studentIds: [],
+    firstInit: true
   }
   watch = {
     classInfo(newVal, oldVal) {
@@ -199,7 +215,7 @@ export default class Zone extends wepy.page {
       if (oldVal !== null) {
         this.resetData()
         this.getAuthList()
-        this.checkMember()
+        this.getZoneList()
       }
     },
     currentJoinActivityId(newVal, oldVal) {
@@ -210,6 +226,7 @@ export default class Zone extends wepy.page {
     }
   }
   resetData() {
+    this.studentIds = []
     this.pn = 1
     this.list = []
     this.$apply()
@@ -240,7 +257,6 @@ export default class Zone extends wepy.page {
       this.$parent.globalData.userData = this.memberInfo
       this.$apply()
       this.getZoneList()
-      this.checkMember()
     }
   }
   getAuthList() {
@@ -299,35 +315,39 @@ export default class Zone extends wepy.page {
       this.$apply()
     })
   }
-  checkMember() {
-    checkStudent({
-      class_id: this.classInfo.id
-    }).then(res => {
-      this.memberList = res.data.list
-      this.$apply()
-    })
-  }
   paymentParams(id) {
-    console.log(id)
     getPaymentParams({
       order_id: id
     }).then(res => {
       console.log(res)
     })
   }
+  addToOrder(id) {
+    addOrder({
+      class_id: this.classInfo.id,
+      student_ids: this.studentIds,
+      collection_item_id: id
+    }).then(res => {
+      this.paymentParams(res.data.data.id)
+    })
+  }
   methods = {
-    pay(id) {
-      if (this.memberList.length > 1) {
-
-      } else {
-        addOrder({
-          class_id: this.classInfo.id,
-          student_ids: [20],
-          collection_item_id: id
-        }).then(res => {
-          this.paymentParams(res.data.data.id)
-        })
-      }
+    pay(momentId, collectionId) {
+      checkStudent({
+        class_id: this.classInfo.id,
+        moment_id: momentId,
+        is_pay: 1
+      }).then(res => {
+        this.payMemberList = res.data.list
+        if (this.payMemberList.length > 1) {
+          this.selectFlag = true
+          this.currentCollectionId = collectionId
+          this.$apply()
+        } else {
+          this.studentIds.push(this.payMemberList[0].id)
+          this.addToOrder(collectionId)
+        }
+      })
     },
     submitJoinActivity() {
       joinActivity({
@@ -373,11 +393,11 @@ export default class Zone extends wepy.page {
       }
       this.$apply()
     },
-    bindCommentInput(value) {
+    bindCommentInput (value) {
       this.commentInput = value
       this.$apply()
     },
-    commentSure() {
+    commentSure () {
       this.commentFlag = false
       addComment({
         class_id: this.classInfo.id,
@@ -386,18 +406,20 @@ export default class Zone extends wepy.page {
         root_id: this.currentReplyRootId,
         to_comment_id: this.currentReplyRootId
       }).then(res => {
-        this.commentInput = ''
-        this.resetData()
-        this.getZoneList()
-        this.$apply()
+        if (res.data.success) {
+          this.commentInput = ''
+          this.resetData()
+          this.getZoneList()
+          this.$apply()
+        }
       })
     },
-    commentCancel() {
+    commentCancel () {
       this.commentFlag = false
       this.commentInput = ''
       this.$apply()
     },
-    filter(type) {
+    filter (type) {
       this.resetData()
       this.activeType = type
       this.$apply()
@@ -425,6 +447,21 @@ export default class Zone extends wepy.page {
     },
     preview(img, imgList) {
       previewImage(img, imgList)
+    },
+    selectCancel() {
+      this.selectFlag = false
+      this.$apply()
+    },
+    selectSure(value) {
+      if (!value.length) {
+        showMsg('请选择')
+        return
+      }
+      const val = value
+      this.studentIds = [...val]
+      this.selectFlag = false
+      this.$apply()
+      this.addToOrder(this.currentCollectionId)
     }
   }
 }

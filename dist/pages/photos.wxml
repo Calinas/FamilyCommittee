@@ -1,0 +1,17 @@
+
+  <view class="common-container">
+    <block  wx:for="{{list}}" wx:key="{{key}}">
+      <view class="photo-title font-black">{{item.upload_date}}{{item.upload_member.class_nickname}}上传</view>
+      <view class="img-list flex-wrapper">
+        <block wx:for="{{item.img_list}}" wx:for-index="index" wx:for-item="imgSrc" wx:key="key">
+          <view class="img-item">
+            <image bindtap="preview" mode="widthFix" class="img" src="{{imgSrc.img_url}}" data-wpypreview-a="{{imgSrc.img_url}}"/>
+            <!-- <image src='../../images/close-white.png' bindtap="closeImg" class="close-btn"/> -->
+          </view>
+        </block>
+      </view>
+    </block>
+    <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
+      <view class="text-center" style="width: 100%;" bindtap="upload">上传</view>
+    </view>
+  </view>

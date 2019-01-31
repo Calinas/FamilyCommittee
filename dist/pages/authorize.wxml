@@ -1,0 +1,61 @@
+
+  <view class="common-container">
+    <view class="font-black font-bold title">
+      <text>班级信息</text>
+    </view>
+    <view class="flex-wrapper item">
+      <text class="font-bold font-black sub-title">班级：</text>
+      <text>{{classInfo.name}}</text>
+    </view>
+    <view class="flex-wrapper item">
+      <text class="font-bold font-black sub-title">班委会验证码：</text>
+      <text>{{classInfo.join_key}}</text>
+    </view>
+    <view class="flex-wrapper item last-one">
+      <text class="font-bold font-black sub-title">班委会二维码：</text>
+      <image src="{{classInfo.qr_code}}" class="qr-code"/>
+    </view>
+    <view class="font-black font-bold title">
+      <text>权限管理</text>
+    </view>
+    <!-- 会长权限 -->
+    <view class="flex-wrapper item"  wx:for="{{list}}">
+      <view class="font-bold font-black sub-title">{{item.name}}</view>
+      <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member" bindtap="del" data-wpydel-a="{{member.class_auth_id}}">
+        <text class="iconfont icon-delete"/>
+        <text>{{member.member.class_nickname}}</text>
+      </view>
+      <view class="tag-wrapper">
+        <text class="tag tag-blue" bindtap="addNew" data-wpyaddnew-a="{{true}}" data-wpyaddnew-b="{{item.id}}">添加</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="wx-popup _4d5f1a4"  wx:if="{{$Modal$flag}}">
+    <view class="popup-container _4d5f1a4">
+      <view class="wx-popup-con _4d5f1a4">
+        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" class="_4d5f1a4"/>
+      </view>
+      <view class="wx-popup-btn _4d5f1a4">
+        <text class="btn-no _4d5f1a4" bindtap="$Modal$cancelFn">{{$Modal$cancelBtnText}}</text>
+        <text class="btn-ok _4d5f1a4" bindtap="$Modal$sureFn">{{$Modal$sureBtnText}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="wx-popup _daec1b0"  wx:if="{{$Search$flag}}">
+    <view class="popup-container _daec1b0">
+      <view class="flex-wrapper _daec1b0">
+        <input type="text" placeholder="请输入姓名" class="input _daec1b0" id="input" value="{{$Search$input}}" bindinput="$Search$bindInput"/>
+        <view class="search-btn _daec1b0" bindtap="$Search$sureFn">搜索</view>
+      </view>
+      <view class="list _daec1b0">
+        <block wx:if="{{!$Search$studentList.length}}" class="_daec1b0">
+          <text class="text-center no-remind _daec1b0">暂无内容</text>
+        </block>
+        <block wx:else class="_daec1b0">
+          <view class="item _daec1b0" wx:for="{{$Search$studentList}}" bindtap="$Search$select" data-wpyselect-a="{{item.id}}">{{item.class_nickname}}</view>
+        </block>
+      </view>
+    </view>
+  </view>

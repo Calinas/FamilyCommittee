@@ -45,7 +45,7 @@ export default class CurrentModal extends wepy.component {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/mixins.scss';
 .wx-popup {
   position: fixed;

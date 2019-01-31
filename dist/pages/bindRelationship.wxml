@@ -1,0 +1,15 @@
+
+  <view class="common-container common-container-grey">
+    <view class="flex-wrapper center choose-item"  wx:for="{{list}}" wx:key="key" wx:for-index="idx">
+      <input type="text" placeholder="请输入孩子姓名" id="value" bindinput="bindForm" data-idx="{{idx}}" value="{{item.value}}"/>
+      <picker class="picker" mode="selector" value="{{item.activeIndex}}" range="{{item.relationship}}" range-key="name" bindchange="bindForm" data-idx="{{idx}}" id="activeIndex">
+      <text>的{{item.relationship[item.activeIndex].name}}</text>
+      </picker>
+      <view class="icon-wrapper" bindtap="delete" data-wpydelete-a="{{idx}}">
+        <text class="iconfont icon-delete" wx:if="{{idx > 0}}"/></view>
+      </view>
+    </view>
+    <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
+      <view class="btn-white" bindtap="addNew">新增一项</view>
+      <view bindtap="submit">确认提交</view>
+    </view>

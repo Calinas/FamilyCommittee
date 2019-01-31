@@ -1,0 +1,35 @@
+
+  <view class="common-container common-container-grey" style="padding: 30rpx 0;">
+    <view class="flex-wrapper font-grey info-wrapper" bindtap="jumpPage">
+      <text class="font-black"  wx:if="{{memberList.length}}">本班财务：</text>
+      <text  wx:for="{{memberList}}">{{item.member.class_nickname}}</text>
+    </view>
+    <view class="balance bg-white font-black">
+      <text class="title">班级财务余额</text>
+      <view>
+        <text>CNY</text>
+        <text class="price">{{balance}}</text>
+      </view>
+    </view>
+    <scroll-view class="scroll-container">
+      <view class="msg-card font-black" wx:for="{{list}}" wx:key="key">
+        <view class="flex-wrapper center">
+          <image src="{{item.member.head_img}}" class="small-avatar"/>
+          <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+        </view>
+        <view class="font-small font-grey text-right">{{item.created_at}}</view>
+        <view class="tag-wrapper">
+          <text class="tag tag-grey">{{item.info.type === 'in' ? '收入': '支出'}}</text>
+          <text class="tag tag-light-grey">{{item.info.money}}</text>
+          <!-- <text class="tag tag-grey">余额：3588元</text> -->
+        </view>
+        <view class="desc">
+          事由：{{item.info.description}}
+        </view>
+        <view class="operate-btn" bindtap="preview" data-wpypreview-a="{{item.image}}">
+          <view class="font-small font-grey text-right">点击查看凭证</view>
+        </view>
+      </view>
+      
+    </scroll-view>
+  </view>

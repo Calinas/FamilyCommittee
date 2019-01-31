@@ -1,0 +1,17 @@
+
+  <view class="common-container">
+    <view class="font-black item">
+      <text>2018年12月30日，您发起了一个收款，共收到</text>
+      <view class="operate-btn flex-wrapper center">
+        <input type="number" placeholder="请输入"/>
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">申请提现</view>
+      </view>
+    </view>
+    <view class="font-black item">
+      <text>2018年12月30日，您发起了一个收款，共收到</text>
+      <view class="operate-btn flex-wrapper center">
+        <input type="number" placeholder="请输入"/>
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">申请提现</view>
+      </view>
+    </view>
+  </view>

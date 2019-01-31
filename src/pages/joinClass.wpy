@@ -1,50 +1,52 @@
 <template lang="wxml" minapp="wepy">
   <view class="join-class common-container common-container-grey">
-    <view class="common-line">
+    <!-- <view class="common-line">
       重庆市第三中学xx小区2018级10班
-    </view>
+    </view> -->
     <view class="common-line">
-      <input type="text" placeholder="在此填入该班级验证码" />
+      <input type="text" placeholder="在此填入该班级验证码" @input="bindInput" id="joinKey" />
     </view>
-    <view class="common-line text-center font-green">申请加入</view>
+    <view class="common-line text-center font-green" @tap="joinNow">申请加入</view>
 
-    <view class="create-btn font-grey text-right">我要创建班级</view>
+    <!-- <view class="create-btn font-grey text-right">我要创建班级</view> -->
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-export default class joinClass extends wepy.page{
+import wepy from 'wepy'
+import { joinClass } from '../api/createClass'
+import { showMsg } from '../utils/common'
+export default class JoinClass extends wepy.page {
   config = {
-    navigationBarTitleText:'创建班级'
+    navigationBarTitleText: '创建班级'
   }
   data = {
-    classTypes: [
-      {
-        title: '幼儿园',
-        id: 0
-      },
-      {
-        title: '小学',
-        id: 1
-      },
-      {
-        title: '初中',
-        id: 2
-      },
-      {
-        title: '高中',
-        id: 3
-      }
-    ],
     memberInfo: {},
-    classInfo: {}
+    classInfo: {},
+    joinKey: ''
   }
   onLoad() {
     const globalData = this.$parent.globalData
     this.memberInfo = globalData.memberInfo
-    this.classInfo = globalData.classInfo
     this.$apply()
+  }
+  methods = {
+    bindInput(e) {
+      this[e.currentTarget.id] = e.detail.value
+      this.$apply()
+    },
+    joinNow() {
+      joinClass({
+        join_key: this.joinKey
+      }).then(res => {
+        let data = res.data
+        setTimeout(() => {
+          wepy.navigateTo({
+            url: `bindRelationship?id=${data.class.id}`
+          })
+        }, 2000)
+      })
+    }
   }
 }
 </script>

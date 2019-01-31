@@ -1,0 +1,8 @@
+'use strict';
+
+var _wepy = require('./../npm/wepy/lib/wepy.js');
+
+var _wepy2 = _interopRequireDefault(_wepy);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlcXVlc3QuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSIsImZpbGUiOiJyZXF1ZXN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHdlcHkgZnJvbSAnd2VweSdcblxuLy8gZXhwb3J0IGZ1bmN0aW9uIHJlcXVlc3RQb3N0KG9wdGlvbnMpIHtcbi8vICAgY29uc3Qgb2JqID0gT2JqZWN0LmFzc2lnbih7fSwge21ldGhvZDogJ3Bvc3QnfSwgb3B0aW9ucylcbi8vICAgcmV0dXJuIHdlcHkucmVxdWVzdChvYmopXG4vLyB9XG5cbi8vIGV4cG9ydCBmdW5jdGlvbiByZXF1ZXN0R2V0KG9wdGlvbnMpIHtcbi8vICAgY29uc3Qgb2JqID0gT2JqZWN0LmFzc2lnbih7fSwge21ldGhvZDogJ2dldCd9LCBvcHRpb25zKVxuLy8gICByZXR1cm4gd2VweS5yZXF1ZXN0KG9iailcbi8vIH1cbiJdfQ==

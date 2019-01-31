@@ -44,9 +44,9 @@
 import wepy from 'wepy'
 import { showMsg } from '../utils/common'
 import { schoolList, addClass } from '../api/createClass'
-export default class joinClass extends wepy.page{
+export default class joinClass extends wepy.page {
   config = {
-    navigationBarTitleText:'申请加入班级'
+    navigationBarTitleText: '创建班级'
   }
   data = {
     classNumber: 0,
@@ -78,7 +78,6 @@ export default class joinClass extends wepy.page{
     schoolList: [],
     schoolIndex: 0
   }
-  // 绑定身份的时候调两个接口,先从本地读取创建班级时缓存的数据，调用addClass接口, 然后bindIdentity ?
   methods = {
     bindInput(e) {
       this[e.currentTarget.id] = e.detail.value
@@ -108,7 +107,6 @@ export default class joinClass extends wepy.page{
         class: Number(this.classNumber)
       }
       this.$parent.globalData.createClass = data
-      console.log(this.$parent.globalData.createClass)
       wepy.navigateTo({
         url: 'bindRelationship'
       })

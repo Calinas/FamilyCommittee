@@ -41,8 +41,8 @@ export function joinClass(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/class/join',
-      data: Object.assign({}, commonParams, {
-        join_key: data.key
+      data: Object.assign({}, commonParams(), {
+        join_key: data.join_key
       }),
       method: 'post'
     }).then(res => {

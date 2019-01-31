@@ -1,7 +1,7 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey">
     <view class="flex-wrapper center choose-item" wx:for="{{list}}" wx:key="key" wx:for-index="idx">
-      <input type="text" placeholder="请输入孩子姓名" id="studentName" @input="bindForm" id="value" data-idx="{{idx}}"/>
+      <input type="text" placeholder="请输入孩子姓名" id="studentName" @input="bindForm" id="value" data-idx="{{idx}}" value="{{item.value}}"/>
       <picker class="picker" mode="selector" value="{{item.activeIndex}}" range="{{item.relationship}}" range-key="name" @change="bindForm" data-idx="{{idx}}" id="activeIndex">
       <text>的{{item.relationship[item.activeIndex].name}}</text>
       </picker>
@@ -18,7 +18,7 @@
 
 <script>
 import wepy from 'wepy'
-import { getIdentityList } from '../api/user'
+import { getIdentityList, bindIdentity, identityList } from '../api/user'
 import { addClass } from '../api/createClass'
 import { showMsg, isEmptyString } from '../utils/common'
 export default class bindRelationship extends wepy.page {
@@ -34,19 +34,64 @@ export default class bindRelationship extends wepy.page {
     studentName: '',
     list: [],
     memberInfo: null,
-    classId: -1
+    classInfo: null,
+    classId: -1,
+    joinClassId: 0,
+    classIdentityList: [],
+    type: ''
   }
   watch = {
     studentName (newValue, oldValue) {
       this.canSubmit = !isEmptyString(newValue)
     }
   }
-  onLoad() {
-    const globalData = this.$parent.globalData
-    this.memberInfo = globalData.memberInfo
-    this.classInfo = globalData.classInfo
+  onLoad(e) {
+    this.memberInfo = wx.getStorageSync('memberInfo')
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.joinClassId = e.id
+    this.type = e.type
     this.getRelationShip()
     this.$apply()
+  }
+  addClassCallback(data, filterList) {
+    addClass(Object.assign({}, data, {
+      item: filterList
+    })).then(res => {
+      this.commonFn(res)
+    })
+  }
+  joinClassCallback(id, filterList) {
+    bindIdentity({
+      class_id: id,
+      item: filterList
+    }).then(res => {
+      this.commonFn(res)
+    })
+  }
+  commonFn(res) {
+    if (res.data.success) {
+      this.$parent.globalData.classHasChange = true
+      setTimeout(() => {
+        wx.switchTab({
+          url: 'classList?id=2'
+        })
+      }, 2000)
+    }
+  }
+  getClassIdentity() {
+    identityList({
+      class_id: this.classInfo.id
+    }).then(res => {
+      this.list = res.data.list.map(item => {
+        return {
+          relationship: this.relationship,
+          value: item.student.name,
+          activeIndex: item.identity.id - 1,
+          id: item.id
+        }
+      })
+      this.$apply()
+    })
   }
   methods = {
     delete(idx) {
@@ -77,31 +122,33 @@ export default class bindRelationship extends wepy.page {
         showMsg('请填写您孩子姓名')
         return
       }
-      let createClassData = this.$parent.globalData.createClass
-      let data = {
-        school_id: createClassData.school_id,
-        grade_type: createClassData.grade,
-        year_class: createClassData.year,
-        class: createClassData.class
-      }
-      const filterList = this.list.map(item => {
+      let filterList = this.list.map(item => {
         return {
           identity_id: item.relationship[item.activeIndex].id,
           student_name: item.value
         }
       })
-      addClass(Object.assign({}, data, {
-        item: filterList
-      })).then(res => {
-        if (res.data.success) {
-          showMsg('班级创建成功，可前往家委会管理界面查看班级详情', 2000)
-          setTimeout(() => {
-            wx.switchTab({
-              url: 'classList'
-            })
-          }, 2000)
+      if (this.type) { // 如果是直接修改身份绑定
+        filterList = this.list.map(item => {
+          return {
+            identity_id: item.relationship[item.activeIndex].id,
+            student_name: item.value,
+            member_identity_id: item.id
+          }
+        })
+        this.joinClassCallback(this.classInfo.id, filterList)
+      } else if (!this.joinClassId) { // 如果是创建班级得
+        let createClassData = this.$parent.globalData.createClass
+        let data = {
+          school_id: createClassData.school_id,
+          grade_type: createClassData.grade,
+          year_class: createClassData.year,
+          class: createClassData.class
         }
-      })
+        this.addClassCallback(data, filterList)
+      } else { // 如果是加入班级
+        this.joinClassId && this.joinClassCallback(this.joinClassId, filterList)
+      }
     }
   }
   checkCanSubmit() {
@@ -132,6 +179,7 @@ export default class bindRelationship extends wepy.page {
         activeIndex: 0
       }
       this.list.push(item)
+      this.type && this.getClassIdentity()
       this.$apply()
     })
   }
