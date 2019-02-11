@@ -109,3 +109,8 @@ export function previewImage(src, imgList) {
     urls: imgList
   })
 }
+
+// 只获取日期
+export function getOnlyDate(timeStr) {
+  return timeStr.split(' ')[0]
+}

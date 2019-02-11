@@ -1,14 +1,7 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
-    <view class="font-black item">
-      <text>2018年12月30日，您发起了一个收款，共收到</text>
-      <view class="operate-btn flex-wrapper center">
-        <input type="number" placeholder="请输入">
-        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">申请提现</view>
-      </view>
-    </view>
-    <view class="font-black item">
-      <text>2018年12月30日，您发起了一个收款，共收到</text>
+    <view class="font-black item" wx:for="{{list}}">
+      <text>{{item.desc}}</text>
       <view class="operate-btn flex-wrapper center">
         <input type="number" placeholder="请输入">
         <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">申请提现</view>
@@ -19,21 +12,53 @@
 
 <script>
 import wepy from 'wepy'
+import { getCircleList } from '../api/zone'
+import { getOnlyDate } from '../utils/common'
 export default class CashWithdrawal extends wepy.page {
   config = {
     navigationBarTitleText: '收款提现'
   }
   data = {
     money: '',
-    memberInfo: null
+    memberInfo: null,
+    classInfo: null,
+    pn: 1,
+    ps: 10,
+    list: []
   }
   onLoad() {
-    const globalData = this.$parent.globalData
-    this.memberInfo = globalData.memberInfo
-    this.classInfo = globalData.classInfo
+    this.memberInfo = wx.getStorageSync('memberInfo')
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.getList()
     this.$apply()
   }
-  methods = {
+  getList() {
+    const id = this.classInfo.id
+    getCircleList({
+      class_id: id,
+      see_type: id ? '' : 'all',
+      type: 'collection',
+      pn: this.pn,
+      ps: this.ps,
+    }).then(res => {
+      let { list } = res.data
+      list = this.normalizeList(list)
+      this.loading = false
+      this.pn++
+      this.list = [...this.list, ...list]
+      if (list.length < this.ps) {
+        this.loadFinished = true
+      }
+      this.$apply()
+    })
+  }
+  normalizeList(list) {
+    let ret = list.map(item => {
+      return {
+        desc: `${getOnlyDate(item.created_at)},您发起了一个收款，共收到${item.info.total_money}`
+      }
+    })
+    return ret
   }
 }
 </script>
