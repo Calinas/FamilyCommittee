@@ -20,29 +20,13 @@
     </view>
     <!-- 筛选框 -->
     <view class="menu-wrapper flex-wrapper">
-      <view data-type="circles" bindtap="filter" data-wpyfilter-a="circles">
-        <image src="/images/icon/2.jpg" mode="scaleToFill"/>
-        <text>家长圈</text>
-      </view>
-      <view type="collection" bindtap="filter" data-wpyfilter-a="collection">
-        <image src="/images/icon/money.jpg" mode="scaleToFill"/>
-        <text>收款缴费</text>
-      </view>
-      <view type="notify" bindtap="filter" data-wpyfilter-a="notify">
-        <image src="/images/icon/4.jpg" mode="scaleToFill"/>
-        <text>通知</text>
-      </view>
-      <view type="activity" bindtap="filter" data-wpyfilter-a="activity">
-        <image src="/images/icon/5.jpg" mode="scaleToFill"/>
-        <text>活动</text>
-      </view>
-      <view type="account" bindtap="filter" data-wpyfilter-a="account">
-        <image src="/images/icon/photos.jpg" mode="scaleToFill"/>
-        <text>记账</text>
+      <view data-type="circles" bindtap="filter"  wx:for="{{menuList}}" class="{{activeType === item.type ? 'font-bold' : ''}}" data-wpyfilter-a="{{item.type}}">
+        <image src="{{item.src}}" mode="scaleToFill"/>
+        <text>{{item.text}}</text>
       </view>
     </view>
 
-    <view class="item-wrapper"  wx:if="{{list.length}}">
+    <view class="item-wrapper" wx:if="{{list.length}}">
       <view class="item" wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
         <view class="flex-wrapper center">
           <image src="{{item.member.head_img}}" class="small-avatar"/>
@@ -69,17 +53,17 @@
             <view class="result-wrapper" wx:if="{{activity.student_list.length}}">
               <view class="title item-tag">
                 <text class="tag tag-empty">{{activity.name}}</text>
-                <text>有{{activity.student_list.length}}人报名</text>
+                <text>{{activity.student_list.length}}人报名</text>
               </view>
-              <view class="person-list tag-wrapper" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">
-                <text class="tag tag-light-grey">{{student.name}}</text>
+              <view class="person-list tag-wrapper">
+                <text class="tag tag-light-grey" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
               </view>
             </view>
           </block>
           <!-- 没有参加报名的 -->
             <view class="result-wrapper" wx:if="{{item.info.not_join_student_list.length}}">
               <view class="title item-tag">
-                <text>有{{item.info.not_join_student_list.length}}人未报名</text>
+                <text>{{item.info.not_join_student_list.length}}人未报名</text>
               </view>
               <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
                 <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
@@ -89,16 +73,28 @@
         <!-- 收款 -->
         <block wx:if="{{item.app_type === 'collection'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}：缴费{{collection.money}}</text>
+            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}：¥{{collection.money}}</text>
           </view>
-          <view class="result-wrapper" wx:if="{{item.info.not_join_student_list.length}}">
+          <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key">
+            <view class="result-wrapper" wx:if="{{collection.student_list.length}}">
               <view class="title item-tag">
-                <text>有{{item.info.not_join_student_list.length}}人未缴费</text>
+                <text>{{collection.student_list.length}}人缴费{{collection.money}}</text>
+              </view>
+              <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
+                <text class="tag tag-light-grey" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
+              </view>
+            </view>
+          </block>
+          <block wx:if="{{item.info.not_join_student_list.length}}">
+            <view class="result-wrapper">
+              <view class="title item-tag">
+                <text>{{item.info.not_join_student_list.length}}人未缴费</text>
               </view>
               <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
                 <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
               </view>
             </view>
+          </block>
         </block>
         <!-- 留言结果 -->
         <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">

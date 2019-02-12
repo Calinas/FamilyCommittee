@@ -6,13 +6,13 @@
         {{item.title}}
       </label>
     </radio-group>
-    <input type="number" placeholder="请输入支出金额" class="money-input width80" @input="pickerChange" id="money"/>
+    <input type="number" placeholder="请输入金额" class="money-input width80" @input="pickerChange" id="money"/>
     <textarea class="money-desc" placeholder="请输入您支出金额的详情描述" @input="pickerChange" id="msg"></textarea>
     <text class="font-black font-bold upload-text">上传凭证</text>
     <view class="img-list flex-wrapper">
       <repeat for="{{img}}" index="index" item="item">
         <view class="img-item">
-          <image @tap='previewImage' mode="widthFix" class='img' src='{{item}}'/>
+          <image @tap='previewImage' class='img' src='{{item}}'/>
           <image src='/images/close-white.png' @tap="deleteFn('img',{{index}})" class="close-btn"/>
         </view>
       </repeat>
@@ -119,15 +119,40 @@ export default class recordCashflow extends wepy.page {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/mixins.scss';
-@include upload-img-wrapper;
 .common-container {
   padding-bottom: 160rpx;
 }
 .picker {
   margin-top: 40rpx;
   font-size: 32rpx;
+}
+.img-list {
+  margin-bottom: 100rpx;
+  flex-wrap: wrap;
+  .img-item {
+    position: relative;
+    width: 150rpx;
+    margin-right: 20rpx;
+    height: 150rpx;
+    overflow: hidden;
+    margin-bottom: 40rpx;
+    & > .img {
+      width: 100%;
+      height: 100%;
+    }
+    &:nth-child( 4n + 4 ) {
+      margin-right: 0;
+    }
+    .close-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 40rpx;
+      height: 40rpx;
+    }
+  }
 }
 .width80 {
   display: block;
