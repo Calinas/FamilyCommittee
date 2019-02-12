@@ -26,7 +26,7 @@
       </view>
       <view type="collection" @tap="filter('collection')">
         <image src="/images/icon/money.jpg" mode="scaleToFill" />
-        <text>收款</text>
+        <text>收款缴费</text>
       </view>
       <view type="notify" @tap="filter('notify')">
         <image src="/images/icon/4.jpg" mode="scaleToFill" />
@@ -81,7 +81,7 @@
               <view class="title item-tag">
                 <text>有{{item.info.not_join_student_list.length}}人未报名</text>
               </view>
-              <view class="person-list tag-wrapper">
+              <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
                 <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
               </view>
             </view>
@@ -89,13 +89,26 @@
         <!-- 收款 -->
         <block wx:if="{{item.app_type === 'collection'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}-¥{{collection.money}}</text>
+            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}：缴费{{collection.money}}</text>
           </view>
+          <view class="result-wrapper" wx:if="{{item.info.not_join_student_list.length}}">
+              <view class="title item-tag">
+                <text>有{{item.info.not_join_student_list.length}}人未缴费</text>
+              </view>
+              <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
+                <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+              </view>
+            </view>
         </block>
         <!-- 留言结果 -->
         <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">
           <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
-            <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
+            <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
+              <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
+            </block>
+            <block wx:else>
+              <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
+            </block>
             <text>{{comment.content}}</text>
           </view>
         </view>
