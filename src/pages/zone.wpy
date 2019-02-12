@@ -271,6 +271,9 @@ export default class Zone extends wepy.page {
     }
   }
   resetData() {
+    this.commentLoadFinished = false
+    this.commentPn = 1
+    this.commentPs = 6
     this.studentIds = []
     this.pn = 1
     this.list = []
