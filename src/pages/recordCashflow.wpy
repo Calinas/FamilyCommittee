@@ -7,7 +7,7 @@
       </label>
     </radio-group>
     <input type="number" placeholder="请输入金额" class="money-input width80" @input="pickerChange" id="money"/>
-    <textarea class="money-desc" placeholder="请输入您支出金额的详情描述" @input="pickerChange" id="msg"></textarea>
+    <textarea class="money-desc" placeholder="请输入详情描述" @input="pickerChange" id="msg"></textarea>
     <text class="font-black font-bold upload-text">上传凭证</text>
     <view class="img-list flex-wrapper">
       <repeat for="{{img}}" index="index" item="item">
@@ -100,6 +100,15 @@ export default class recordCashflow extends wepy.page {
         showMsg('请输入支出金额')
         return
       }
+      if (this.msg.length <= 0) {
+        showMsg('请输入描述')
+        return
+      }
+      if (this.img.length <= 0) {
+        showMsg('请上传凭证')
+        return
+      }
+
       addAccount({
         class_id: this.classInfo.id,
         type: this.type,

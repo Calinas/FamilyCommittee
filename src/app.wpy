@@ -71,7 +71,7 @@ export default class extends wepy.app {
     userData: {},
     classHasChange: false
   }
-
+  
   constructor () {
     super()
     this.use('requestfix')

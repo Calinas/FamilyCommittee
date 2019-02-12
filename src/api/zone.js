@@ -179,3 +179,20 @@ export function joinActivity(data) {
     })
   })
 }
+
+// 加载更多评论列表
+export function getCommentList(data) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/moment/getCommentList',
+      data: Object.assign({}, commonParams(), {
+        moment_id: data.moment_id,
+        pn: data.pn,
+        ps: data.ps,
+        offset: data.offset
+      })
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

@@ -46,7 +46,7 @@
           </view>
           <view class="tag-wrapper">
             <text class="tag tag-blue" bindtap="submitJoinActivity">选好了，报名</text>
-            <text class="tag tag-grey">已报名</text>
+            <!-- <text class="tag tag-grey">已报名</text> -->
           </view>
           <!-- 报名结果 -->
           <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key">
@@ -106,6 +106,9 @@
               <text class="font-blue" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}: </text>
             </block>
             <text>{{comment.content}}</text>
+          </view>
+          <view wx:if="{{item.comment_list.count > 6 && !commentLoadFinished}}" class="text-center" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}">
+            <text class="font-grey">加载更多评论</text>
           </view>
         </view>
       </view>

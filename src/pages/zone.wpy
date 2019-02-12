@@ -46,7 +46,7 @@
           </view>
           <view class="tag-wrapper">
             <text class="tag tag-blue" @tap="submitJoinActivity">选好了，报名</text>
-            <text class="tag tag-grey">已报名</text>
+            <!-- <text class="tag tag-grey">已报名</text> -->
           </view>
           <!-- 报名结果 -->
           <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key">
@@ -107,6 +107,9 @@
             </block>
             <text>{{comment.content}}</text>
           </view>
+          <view wx:if="{{item.comment_list.count > 6 && !commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
+            <text class="font-grey">加载更多评论</text>
+          </view>
         </view>
       </view>
     </view>
@@ -166,7 +169,7 @@ import wepy from 'wepy'
 import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
 import { showMsg, previewImage } from '../utils/common'
-import { getCircleList, addComment, joinActivity } from '../api/zone'
+import { getCircleList, addComment, joinActivity, getCommentList } from '../api/zone'
 import { addOrder, getPaymentParams } from '../api/finance'
 import { getAuth } from '../api/authorize'
 import { checkStudent } from '../api/user'
@@ -243,6 +246,10 @@ export default class Zone extends wepy.page {
       photos: false,
       circles: false
     },
+    commentPn: 2,
+    commentPs: 6,
+    commentOffset: 6,
+    commentLoadFinished: false,
     memberList: [],
     studentIds: [],
     firstInit: true
@@ -430,6 +437,26 @@ export default class Zone extends wepy.page {
         this.list[listIndex].info.item[activityIndex].checked = true
       }
       this.$apply()
+    },
+    loadMoreComment(momentId, idx) {
+      getCommentList({
+        moment_id: momentId,
+        ps: this.commentPs,
+        pn: this.commentPn,
+        offset: this.commentOffset
+      }).then(res => {
+        if (res.data.success) {
+          let resultList = res.data.list
+          if (resultList.length < 6) {
+            this.commentLoadFinished = true
+          }
+          let {list} = this.list[idx].comment_list
+          list = [...list, ...resultList]
+          this.list[idx].comment_list.list = list
+          this.commentPn++
+          this.$apply()
+        }
+      })
     },
     addComment(type, id, rootId, toCommentId, name) {
       if (!this.classInfo) {
