@@ -23,9 +23,13 @@
 .img-list {
   margin-bottom: 0; }
 
+.icon-msg-wrapper {
+  display: flex;
+  justify-content: flex-end; }
+
 .icon-message {
-  display: block;
-  padding: 20rpx 0; }
+  padding: 20rpx 0;
+  width: 10%; }
 
 .menu-wrapper {
   background-color: #fff;

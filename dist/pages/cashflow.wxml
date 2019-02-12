@@ -11,7 +11,7 @@
         <text class="price">{{balance}}</text>
       </view>
     </view>
-    <scroll-view class="scroll-container">
+    <scroll-view class="scroll-container" wx:if="{{list.length}}">
       <view class="msg-card font-black" wx:for="{{list}}" wx:key="key">
         <view class="flex-wrapper center">
           <image src="{{item.member.head_img}}" class="small-avatar"/>
@@ -21,7 +21,6 @@
         <view class="tag-wrapper">
           <text class="tag tag-grey">{{item.info.type === 'in' ? '收入': '支出'}}</text>
           <text class="tag tag-light-grey">{{item.info.money}}</text>
-          <!-- <text class="tag tag-grey">余额：3588元</text> -->
         </view>
         <view class="desc">
           事由：{{item.info.description}}
@@ -32,4 +31,7 @@
       </view>
       
     </scroll-view>
+    <block wx:if="{{!list.length}}">
+      <text class="text-center" style="display: block;">暂无数据</text>
+    </block>
   </view>

@@ -53,7 +53,9 @@
         <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
           <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
         </view>
-        <view class="font-grey iconfont icon-message text-right" bindtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
+        <view class="icon-msg-wrapper">
+          <view class="font-grey iconfont icon-message text-right" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
+        </view>
         <block wx:if="{{item.app_type === 'activity'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
             <text class="tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" bindtap="joinActivity" data-wpyjoinactivity-a="{{item.activity_id}}" data-wpyjoinactivity-b="{{item.id}}" data-wpyjoinactivity-c="{{listIndex}}" data-wpyjoinactivity-d="{{activityIndex}}">{{item.name}}</text>
@@ -87,7 +89,7 @@
         <!-- 收款 -->
         <block wx:if="{{item.app_type === 'collection'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}</text>
+            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}-¥{{collection.money}}</text>
           </view>
         </block>
         <!-- 留言结果 -->
@@ -99,7 +101,7 @@
         </view>
       </view>
     </view>
-    <!-- <view wx:if="{{!this.loadFinished && !list.length}}" class="text-center">暂无内容</view> -->
+    <view wx:if="{{this.loadFinished && !list.length}}" class="text-center">暂无内容</view>
 
     <!-- 左边侧边栏 -->
     <view class="sidebar sidebar-set bg-white {{setFlag ? 'show': ''}}">
@@ -111,7 +113,7 @@
         <view catchtap="jumpPage" wx:if="{{classInfo.id}}" data-wpyjumppage-a="bindRelationship?type=edit">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
         <view catchtap="jumpPage" wx:if="{{auth.finance}}" data-wpyjumppage-a="cashflow">财务流水</view>
-        <view catchtap="jumpPage" wx:if="{{auth.finance}}" data-wpyjumppage-a="cashWithdraw">收款提现</view>
+        <!-- <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view> -->
         <view catchtap="jumpPage" wx:if="{{auth.president}}" data-wpyjumppage-a="authorize">家委会管理</view>
         </view>
     </view>

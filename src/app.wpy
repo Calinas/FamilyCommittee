@@ -88,6 +88,7 @@ export default class extends wepy.app {
         return req
       },
       success(res) {
+        wx.hideLoading()
         if (!res.data.success) {
           wx.showToast({
             title: res.data.error_msg,
@@ -100,9 +101,6 @@ export default class extends wepy.app {
       fail(req) {
         console.log('request fail: ', req)
         return req
-      },
-      complete(req) {
-        wx.hideLoading()
       }
     })
   }

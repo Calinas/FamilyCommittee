@@ -53,7 +53,9 @@
         <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
           <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
         </view>
-        <view class="font-grey iconfont icon-message text-right" @tap="addComment('add', {{item.id}})"></view>
+        <view class="icon-msg-wrapper">
+          <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
+        </view>
         <block wx:if="{{item.app_type === 'activity'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
             <text class="tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
@@ -87,7 +89,7 @@
         <!-- 收款 -->
         <block wx:if="{{item.app_type === 'collection'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}</text>
+            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}-¥{{collection.money}}</text>
           </view>
         </block>
         <!-- 留言结果 -->
@@ -99,7 +101,7 @@
         </view>
       </view>
     </view>
-    <!-- <view wx:if="{{!this.loadFinished && !list.length}}" class="text-center">暂无内容</view> -->
+    <view wx:if="{{this.loadFinished && !list.length}}" class="text-center">暂无内容</view>
 
     <!-- 左边侧边栏 -->
     <view class="sidebar sidebar-set bg-white {{setFlag ? 'show': ''}}">
@@ -111,7 +113,7 @@
         <view catchtap="jumpPage('bindRelationship?type=edit')" wx:if="{{classInfo.id}}">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
         <view catchtap="jumpPage('cashflow')" wx:if="{{auth.finance}}">财务流水</view>
-        <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view>
+        <!-- <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view> -->
         <view catchtap="jumpPage('authorize')" wx:if="{{auth.president}}">家委会管理</view>
         </view>
     </view>
@@ -308,10 +310,10 @@ export default class Zone extends wepy.page {
       let { list } = res.data
       this.loading = false
       this.pn++
-      this.list = [...this.list, ...list]
       if (list.length < this.ps) {
         this.loadFinished = true
       }
+      this.list = [...this.list, ...list]
       this.$apply()
     })
   }
@@ -346,9 +348,13 @@ export default class Zone extends wepy.page {
       checkStudent({
         class_id: this.classInfo.id,
         moment_id: momentId,
-        is_pay: 1
+        is_pay: 0
       }).then(res => {
         this.payMemberList = res.data.list
+        if (!this.payMemberList.length) {
+          showMsg('请勿重复缴费')
+          return
+        }
         if (this.payMemberList.length > 1) {
           this.selectFlag = true
           this.currentCollectionId = collectionId
@@ -484,9 +490,13 @@ export default class Zone extends wepy.page {
 .img-list {
   margin-bottom: 0;
 }
+.icon-msg-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
 .icon-message {
-  display: block;
-  padding: 20rpx 0;
+  padding:20rpx 0;
+  width:10%;
 }
 .menu-wrapper {
   background-color: #fff;
