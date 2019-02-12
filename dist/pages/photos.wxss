@@ -5,8 +5,9 @@
     position: relative;
     width: 30%;
     margin-right: 5%;
-    height: 200rpx; }
-    .img-list .img-item:nth-child(3n + 3) {
+    height: 200rpx;
+    overflow: hidden; }
+    .img-list .img-item:nth-child(4n + 4) {
       margin-right: 0; }
     .img-list .img-item > image {
       width: 100%; }
@@ -33,10 +34,11 @@ textarea {
 
 .img-list .img-item {
   position: relative;
-  width: 20%;
-  margin-right: 2%; }
-  .img-list .img-item > image {
-    width: 100%; }
+  width: 150rpx;
+  margin-right: 20rpx;
+  height: 150rpx;
+  overflow: hidden;
+  margin-bottom: 40rpx; }
   .img-list .img-item .close-btn {
     position: absolute;
     right: 0;

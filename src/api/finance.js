@@ -55,10 +55,27 @@ export function getPaymentParams(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/payment/paymentParams',
-      data: Object.assign({}, commonParams, {
+      data: Object.assign({}, commonParams(), {
         order_id: data.order_id,
         payment_type: 'wxpay',
         payment_source: 'mobile'
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 申请提现
+export function withdrawCash(data) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/class/collection/withdrawal',
+      data: Object.assign({}, commonParams(), {
+        class_id: data.class_id,
+        collection_id: data.collection_id,
+        amount: data.amount
       }),
       method: 'post'
     }).then(res => {

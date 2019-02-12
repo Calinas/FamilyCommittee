@@ -3,8 +3,8 @@
     <view class="font-black item" wx:for="{{list}}">
       <text>{{item.desc}}</text>
       <view class="operate-btn flex-wrapper center">
-        <input type="number" placeholder="请输入">
-        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">申请提现</view>
+        <input type="number" placeholder="请输入提现金额" @input="bindInput">
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" @tap="submit({{item.id}})">申请提现</view>
       </view>
     </view>
   </view>
@@ -13,7 +13,8 @@
 <script>
 import wepy from 'wepy'
 import { getCircleList } from '../api/zone'
-import { getOnlyDate } from '../utils/common'
+import { withdrawCash } from '../api/finance'
+import { getOnlyDate, showMsg } from '../utils/common'
 export default class CashWithdrawal extends wepy.page {
   config = {
     navigationBarTitleText: '收款提现'
@@ -25,6 +26,25 @@ export default class CashWithdrawal extends wepy.page {
     pn: 1,
     ps: 10,
     list: []
+  }
+  methods = {
+    bindInput(e) {
+      this.money = e.detail.value
+      this.$apply()
+    },
+    submit(id) {
+      withdrawCash({
+        class_id: this.classInfo.id,
+        collection_id: id,
+        amount: this.money
+      }).then(res => {
+        if (res.data.success) {
+          showMsg('操作成功')
+          this.money = ''
+          this.$apply()
+        }
+      })
+    }
   }
   onLoad() {
     this.memberInfo = wx.getStorageSync('memberInfo')
@@ -55,7 +75,8 @@ export default class CashWithdrawal extends wepy.page {
   normalizeList(list) {
     let ret = list.map(item => {
       return {
-        desc: `${getOnlyDate(item.created_at)},您发起了一个收款，共收到${item.info.total_money}`
+        desc: `${getOnlyDate(item.created_at)},您发起了一个收款，共收到${item.info.total_money}`,
+        id: item.info.id
       }
     })
     return ret

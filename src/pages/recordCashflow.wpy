@@ -13,11 +13,11 @@
       <repeat for="{{img}}" index="index" item="item">
         <view class="img-item">
           <image @tap='previewImage' mode="widthFix" class='img' src='{{item}}'/>
-          <image src='../../images/close-white.png' @tap="deleteFn('img',{{index}})" class="close-btn"/>
+          <image src='/images/close-white.png' @tap="deleteFn('img',{{index}})" class="close-btn"/>
         </view>
       </repeat>
       <view class="img-item" @tap="chooseImage">
-        <image mode="widthFix" class='img' src='../../images/add-img.png'/>
+        <image mode="widthFix" class='img' src='/images/add-img.png'/>
       </view>
     </view>
     <picker class="" mode="selector" value="{{seenIndex}}" range="{{seeTypes}}" range-key="title" @change="pickerChange" class="picker" id="seenIndex">

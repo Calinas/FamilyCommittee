@@ -3,8 +3,8 @@
     <view class="font-black item"  wx:for="{{list}}">
       <text>{{item.desc}}</text>
       <view class="operate-btn flex-wrapper center">
-        <input type="number" placeholder="请输入"/>
-        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx">申请提现</view>
+        <input type="number" placeholder="请输入提现金额" bindinput="bindInput"/>
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" bindtap="submit" data-wpysubmit-a="{{item.id}}">申请提现</view>
       </view>
     </view>
   </view>

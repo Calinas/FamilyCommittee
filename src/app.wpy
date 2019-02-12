@@ -67,7 +67,7 @@ export default class extends wepy.app {
 
   globalData = {
     userInfo: null,
-    apiUrl: 'http://www.patriarch.cm/api/v1',
+    apiUrl: 'https://test.ctjwh.com/api/v1',
     userData: {},
     classHasChange: false
   }
@@ -80,11 +80,11 @@ export default class extends wepy.app {
 
       config(req) {
         // req.url = 'http://127.0.0.1:3000/mock/11/api/v1' + req.url
-        req.url = 'http://test.ctjwh.com/api/v1' + req.url
-        wx.showLoading({
-          title: '加载中',
-          mask: true
-        })
+        req.url = 'https://test.ctjwh.com/api/v1' + req.url
+        // wx.showLoading({
+        //   title: '加载中',
+        //   mask: true
+        // })
         return req
       },
       success(res) {

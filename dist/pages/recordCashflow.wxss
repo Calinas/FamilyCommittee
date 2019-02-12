@@ -5,8 +5,9 @@
     position: relative;
     width: 30%;
     margin-right: 5%;
-    height: 200rpx; }
-    .img-list .img-item:nth-child(3n + 3) {
+    height: 200rpx;
+    overflow: hidden; }
+    .img-list .img-item:nth-child(4n + 4) {
       margin-right: 0; }
     .img-list .img-item > image {
       width: 100%; }

@@ -45,6 +45,7 @@
   
   <view class="wx-popup _daec1b0"  wx:if="{{$Search$flag}}">
     <view class="popup-container _daec1b0">
+      <text class="iconfont icon-delete _daec1b0" bindtap="$Search$closeModal"/>
       <view class="flex-wrapper _daec1b0">
         <input type="text" placeholder="请输入姓名" class="input _daec1b0" id="input" value="{{$Search$input}}" bindinput="$Search$bindInput"/>
         <view class="search-btn _daec1b0" bindtap="$Search$sureFn">搜索</view>

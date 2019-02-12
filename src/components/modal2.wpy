@@ -2,7 +2,7 @@
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="wx-popup-con">
-        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}" id="input">
+        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}" id="input" style="margin-bottom: 40rpx">
         <input type="number" placeholder={{placeholderText2}} @input="bindInput" value="{{money}}" id="money">
       </view>
       <view class="wx-popup-btn">

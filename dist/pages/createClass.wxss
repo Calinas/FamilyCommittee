@@ -27,7 +27,16 @@
   padding: 40rpx 0; }
 
 .bottom-buttons .link._490fc7e {
-  padding: 40rpx; }
+  background-color: transparent;
+  border: none;
+  margin-top: 40rpx;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 30rpx; }
+  .bottom-buttons .link._490fc7e::after {
+    display: none; }
 
 .icon-arrow-right._490fc7e {
   color: #808080;

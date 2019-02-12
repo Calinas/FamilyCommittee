@@ -39,6 +39,7 @@
     @sure.user="sure"
   ></Modal>
   <Search
+    @closeModal.user="closeSearch"
     :flag.sync="showAdd"
     :studentList.sync="studentList"
     @sure.user="sure"
@@ -82,6 +83,10 @@ export default class bindRelationship extends wepy.page {
     })
   }
   methods = {
+    closeSearch() {
+      this.showAdd = false
+      this.$apply()
+    },
     del(authId) {
       authorizeReq.deleteAuth({
         class_id: this.classInfo.id,

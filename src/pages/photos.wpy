@@ -4,10 +4,9 @@
       <view class="photo-title font-black">{{item.upload_date}}{{item.upload_member.class_nickname}}上传</view>
       <view class="img-list flex-wrapper">
         <repeat for="{{item.img_list}}" index="index" item="imgSrc">
-          <view class="img-item">
-            <image @tap='preview({{imgSrc.img_url}})' mode="widthFix" class='img' src='{{imgSrc.img_url}}' />
+
+            <image @tap='preview({{imgSrc.img_url}})' class='img-item' src='{{imgSrc.img_url}}' />
             <!-- <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/> -->
-          </view>
         </repeat>
       </view>
     </block>
@@ -73,6 +72,7 @@ export default class bindRelationship extends wepy.page {
     },
     upload() {
       uploadImage().then(res => {
+        this.imgList = []
         this.imgList.push(res)
         this.addPhotos()
       })
@@ -101,11 +101,11 @@ textarea {
 .img-list {
   .img-item {
     position: relative;
-    width: 20%;
-    margin-right: 2%;
-    & > image {
-      width: 100%;
-    }
+    width: 150rpx;
+    margin-right: 20rpx;
+    height: 150rpx;
+    overflow: hidden;
+    margin-bottom: 40rpx;
     .close-btn {
       position: absolute;
       right: 0;

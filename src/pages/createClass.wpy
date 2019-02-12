@@ -34,8 +34,8 @@
     <view class="common-line text-center font-green submit-btn" @tap="submit">下一步</view>
 
     <view class="flex-wrapper between bottom-buttons">
-      <text class="link">邀请他人来创建班级</text>
-      <text class="link">加入已有班级</text>
+      <button open-type="share" class="link">邀请他人来创建班级</button>
+      <button class="link">加入已有班级</button>
     </view>
   </view>
 </template>
@@ -43,7 +43,7 @@
 <script>
 import wepy from 'wepy'
 import { showMsg } from '../utils/common'
-import { schoolList, addClass } from '../api/createClass'
+import { schoolList } from '../api/createClass'
 export default class joinClass extends wepy.page {
   config = {
     navigationBarTitleText: '创建班级'
@@ -118,6 +118,11 @@ export default class joinClass extends wepy.page {
     this.getSchoolList()
     this.$apply()
   }
+  onShareAppMessage(res) {
+    return {
+      title: `${this.memberInfo.nickname}邀请您一起创建班级`
+    }
+  }
   getSchoolList() {
     schoolList().then(res => {
       this.schoolList = res.data.list
@@ -143,7 +148,17 @@ export default class joinClass extends wepy.page {
   padding: 40rpx 0;
 }
 .bottom-buttons .link {
-  padding: 40rpx;
+  background-color:transparent;
+  border:none;
+  margin-top:40rpx;
+  padding-left:0;
+  padding-right: 0;
+  margin-left:0;
+  margin-right: 0;
+  font-size:30rpx;
+  &::after {
+    display: none;
+  }
 }
 .icon-arrow-right {
   color: #808080;

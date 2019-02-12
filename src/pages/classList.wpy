@@ -2,7 +2,7 @@
   <view class="index">
     <!-- 顶部区域 -->
     <view class="img-mask">
-      <image src="../../images/banner.jpg" mode="scaleToFill" class="bg-img"/>
+      <image src="/images/banner.jpg" mode="scaleToFill" class="bg-img"/>
       <view class="caption">
         <text class="class">{{memberInfo.nickname}}</text>
         <!-- <text class="school">共加入3个班级</text> -->
@@ -12,6 +12,16 @@
     <!-- 班级列表展示 -->
     <view class="class-list font-grey">
       <block wx:if="{{list.length}}">
+        <block wx:if="{{classInfo && classInfo.name}}">
+          <view class="text-center font-bold">
+            当前选中班级：{{classInfo.name}}
+          </view>
+        </block>
+        <block wx:if="{{!classInfo}}">
+          <view class="text-center font-bold">
+            暂未选择班级
+          </view>
+        </block>
         <view class="flex-wrapper center" wx:for="{{list}}" wx:key="key" wx:for-index="idx" @tap="setClass({{idx}})">
           <text class="dot dot-grey"></text>
           <text>{{item.class.name}}</text>
@@ -49,6 +59,7 @@ export default class ClassList extends wepy.page {
   data = {
     classList: [],
     memberInfo: {},
+    classInfo: null,
     list: []
   }
   getClassList() {
@@ -63,9 +74,13 @@ export default class ClassList extends wepy.page {
         key: 'classInfo',
         data: this.list[index].class,
         success: res => {
-          wx.switchTab({
-            url: 'zone'
-          })
+          this.classInfo = this.list[index].class
+          this.$apply()
+          setTimeout(() => {
+            wx.switchTab({
+              url: 'zone'
+            })
+          }, 1000)
         }
       })
     }
@@ -78,6 +93,7 @@ export default class ClassList extends wepy.page {
   }
   onLoad() {
     this.memberInfo = wx.getStorageSync('memberInfo')
+    this.classInfo = wx.getStorageSync('classInfo')
     this.$parent.globalData.userData = this.memberInfo
     this.getClassList()
     this.$apply()

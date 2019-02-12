@@ -1,6 +1,7 @@
 <template lang="wxml" minapp="wepy">
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
+      <text class="iconfont icon-delete" @tap="closeModal"></text>
       <view class="flex-wrapper">
         <input type="text" placeholder="请输入姓名" class="input" id="input" value="{{input}}" @input="bindInput">
         <view class="search-btn" @tap="sureFn">搜索</view>
@@ -33,6 +34,9 @@ export default class Search extends wepy.component {
     money: ''
   }
   methods = {
+    closeModal() {
+      this.$emit('closeModal')
+    },
     bindInput (e) {
       this[e.currentTarget.id] = e.detail.value
       this.$apply()
@@ -54,6 +58,11 @@ export default class Search extends wepy.component {
 </script>
 
 <style lang="scss" scoped>
+.icon-delete {
+  position: absolute;
+  right: 20rpx;
+  top: 20rpx;
+}
 .no-remind {
   display: block;
   margin: 0 auto;

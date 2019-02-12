@@ -33,7 +33,7 @@
     <view class="common-line text-center font-green submit-btn _490fc7e" bindtap="submit">下一步</view>
 
     <view class="flex-wrapper between bottom-buttons _490fc7e">
-      <text class="link _490fc7e">邀请他人来创建班级</text>
-      <text class="link _490fc7e">加入已有班级</text>
+      <button open-type="share" class="link _490fc7e">邀请他人来创建班级</button>
+      <button class="link _490fc7e">加入已有班级</button>
     </view>
   </view>

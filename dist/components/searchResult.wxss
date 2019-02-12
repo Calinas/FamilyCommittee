@@ -1,3 +1,8 @@
+.icon-delete._daec1b0 {
+  position: absolute;
+  right: 20rpx;
+  top: 20rpx; }
+
 .no-remind._daec1b0 {
   display: block;
   margin: 0 auto;

@@ -5,11 +5,11 @@
       <block wx:for="{{img}}" wx:for-index="index" wx:for-item="item" wx:key="key">
         <view class="img-item">
           <image bindtap="previewImage" mode="widthFix" class="img" src="{{item}}"/>
-          <image src="../../images/close-white.png" bindtap="deleteFn" class="close-btn" data-wpydeletefn-a="img" data-wpydeletefn-b="{{index}}"/>
+          <image src="/images/close-white.png" bindtap="deleteFn" class="close-btn" data-wpydeletefn-a="img" data-wpydeletefn-b="{{index}}"/>
         </view>
       </block>
       <view class="img-item" bindtap="chooseImage">
-        <image mode="widthFix" class="img" src="../../images/add-img.png"/>
+        <image mode="widthFix" class="img" src="/images/add-img.png"/>
       </view>
     </view>
     <picker class="select-common-picker" mode="selector" value="{{seeType}}" range="{{type}}" range-key="title" id="seeType" bindchange="bindChange"  wx:if="{{activeType === 'zone' || activeType === 'notice'}}">
@@ -97,7 +97,7 @@
   <view class="wx-popup"  wx:if="{{$Modal2$flag}}">
     <view class="popup-container">
       <view class="wx-popup-con">
-        <input type="text" placeholder="{{$Modal2$placeholderText}}" bindinput="$Modal2$bindInput" value="{{$Modal2$input}}" id="input"/>
+        <input type="text" placeholder="{{$Modal2$placeholderText}}" bindinput="$Modal2$bindInput" value="{{$Modal2$input}}" id="input" style="margin-bottom: 40rpx"/>
         <input type="number" placeholder="{{$Modal2$placeholderText2}}" bindinput="$Modal2$bindInput" value="{{$Modal2$money}}" id="money"/>
       </view>
       <view class="wx-popup-btn">
