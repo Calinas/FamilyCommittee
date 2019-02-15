@@ -20,7 +20,7 @@
       <!-- <text>2019年10班</text>
       <text class="iconfont icon-arrow-right"></text> -->
       <view class="flex-wrapper center _490fc7e" style="padding: 30rpx;background-color: #fff;margin-right: 20rpx">
-        <input type="number" placeholder="比如2016" id="gradeNumber" bindinput="bindInput" class="_490fc7e"/>
+        <input type="number" placeholder="比如2021" id="gradeNumber" bindinput="bindInput" class="_490fc7e"/>
         <text class="_490fc7e">级</text>
       </view>
       <view class="flex-wrapper center _490fc7e" style="padding: 30rpx;background-color: #fff;">

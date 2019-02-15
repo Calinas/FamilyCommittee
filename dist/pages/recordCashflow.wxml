@@ -1,5 +1,5 @@
 
-  <view class="common-container _2c23631">
+  <view class="common-container _2c23631" style="padding-top: 140rpx;">
     <radio-group class="width80 _2c23631" bindchange="pickerChange" id="type">
       <label class="radio _2c23631"  wx:for="{{cashType}}">
         <radio value="{{item.type}}" checked="{{item.checked}}" class="_2c23631"/>
@@ -29,5 +29,5 @@
         <text class="_2c23631">{{seeTypes[seenIndex].title}}</text>
       </view>
     </picker>
-    <view class="fixed-bottom-btn _2c23631" bindtap="submit">记一笔</view>
+    <view class="fixed-bottom-btn top _2c23631" bindtap="submit">记一笔</view>
   </view>

@@ -1,5 +1,5 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container">
+  <view class="common-container" style="padding-top: 140rpx;">
     <radio-group class="radio-group" @change="pickerChange" class="width80" id="type">
       <label class="radio" wx:for="{{cashType}}">
         <radio value="{{item.type}}" checked="{{item.checked}}" />
@@ -29,7 +29,7 @@
         <text>{{seeTypes[seenIndex].title}}</text>
       </view>
     </picker>
-    <view class="fixed-bottom-btn" @tap="submit">记一笔</view>
+    <view class="fixed-bottom-btn top" @tap="submit">记一笔</view>
   </view>
 
 </template>

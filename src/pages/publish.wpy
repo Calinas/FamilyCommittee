@@ -1,5 +1,5 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container">
+  <view class="common-container" style="padding-top: 120rpx;">
     <textarea class="msg-wrapper" placeholder="{{placeholder}}" @input="bindChange" id="msg"></textarea>
     <view class="img-list flex-wrapper" wx:if="{{activeType === 'zone' || activeType === 'activity'}}">
       <repeat for="{{img}}" index="index" item="item">
@@ -44,9 +44,9 @@
       <view class="flex-wrapper between select-common-picker" @tap="addNew('showAddMoney')">
         <view>
           <text class="iconfont icon-user font-black"></text>
-          <text class="font-black">收款金额</text>
+          <text class="font-black">增加选项</text>
         </view>
-        <text class="font-black">新增收款项目</text>
+        <text>可重复添加多个收款选项</text>
       </view>
     </block>
     <!-- 活动 -->
@@ -64,7 +64,7 @@
         <view class="flex-wrapper between">
           <view>
             <text class="iconfont icon-user font-black"></text>
-            <text class="font-black">是否能参加多项</text>
+            <text class="font-black">单选或多选</text>
           </view>
           <view>
             <text>{{activityJoinType[activityType].title}}</text>
@@ -75,7 +75,7 @@
       <view class="flex-wrapper between select-common-picker" @tap="addNew('showAddActivity')">
         <view>
           <text class="iconfont icon-user font-black"></text>
-          <text class="font-black">新增活动项目</text>
+          <text class="font-black">增加选项</text>
         </view>
         <text>点击添加</text>
       </view>
@@ -92,8 +92,8 @@
     <Modal2
       sureBtnText="确认"
       cancelBtnText="取消"
-      placeholderText="请输入您新增收款的名目"
-      placeholderText2="请输入您新增收款的金额"
+      placeholderText="收款选项名"
+      placeholderText2="金额"
       :flag.sync="showAddMoney"
       @cancel.user="cancel"
       @sure.user="moneySureFn"
@@ -114,7 +114,7 @@
         </view>
       </repeat>
     </view>
-    <view class="fixed-bottom-btn" @tap="submit">确认发布</view>
+    <view class="fixed-bottom-btn top" @tap="submit">确认发布</view>
   </view>
 </template>
 
@@ -142,12 +142,12 @@ export default class Publish extends wepy.page {
     activityJoinType: [
       {
         id: 0,
-        title: '单项',
+        title: '单选',
         type: 'radio'
       },
       {
         id: 1,
-        title: '多项',
+        title: '多选',
         type: 'select'
       }
     ],
@@ -162,15 +162,15 @@ export default class Publish extends wepy.page {
       }
     ],
     type: [
-      // {
-      //   id: 0,
-      //   title: '全部可见',
-      //   type: 'all'
-      // },
       {
         id: 1,
         title: '班级可见',
         type: 'class'
+      },
+      {
+        id: 0,
+        title: '全部可见',
+        type: 'all'
       }
     ],
     typeList: {
@@ -187,7 +187,9 @@ export default class Publish extends wepy.page {
     classInfo: null,
     money: '',
     isRemind: 0,
-    moneyList: []
+    moneyList: [],
+    maxPhotoCount: 9,
+    uploads: []
   }
   commonFn(res) {
     if (res.data.success) {
@@ -223,6 +225,9 @@ export default class Publish extends wepy.page {
     const params = Object.assign({}, commonParams, {
       img_url: this.img
     })
+    const circleParams = Object.assign({}, params, {
+      see_type: this.type[this.seeType].type
+    })
     if (type === 'money') {
       if (!this.moneyList.length) {
         showMsg('请至少添加一个收款条目')
@@ -234,7 +239,7 @@ export default class Publish extends wepy.page {
       })
       addCollection(moneyParams).then(res => { this.commonFn(res) })
     } else {
-      addCircles(params).then(res => { this.commonFn(res) })
+      addCircles(circleParams).then(res => { this.commonFn(res) })
     }
   }
   saveActivity(commonParams) {
@@ -256,6 +261,17 @@ export default class Publish extends wepy.page {
     })
     addNotify(params).then(res => { this.commonFn(res) })
   }
+  checkRepeat(value, arr) {
+    let retValue = false
+    for (let i = 0, len = arr.length; i < len; i++) {
+      if (arr[i].name === value) {
+        retValue = true
+        break
+      }
+      retValue = false
+    }
+    return retValue
+  }
   watch = {
     msg (newVal, oldVal) {
       if (!isEmptyString(newVal)) {
@@ -266,13 +282,49 @@ export default class Publish extends wepy.page {
   }
   methods = {
     chooseImage() {
-      if (this.img.length > 9) {
+      if (this.img.length > this.maxPhotoCount) {
         showMsg('最多上传9张图')
         return
       }
-      uploadImage().then(res => {
-        this.img.push(res)
-        this.$apply()
+      let _this = this
+      wx.chooseImage({
+        count: this.maxPhotoCount,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album', 'camera'],
+        success: res => {
+          if (this.img.length + res.tempFilePaths.length > this.maxPhotoCount) {
+            wx.showToast({
+              title: '最多只能选择' + this.maxPhotoCount + '张图片',
+              icon: 'none'
+            })
+          }
+          res.tempFilePaths.forEach(path => {
+            let upload = {}
+            upload.path = path
+            upload.error = false
+            upload.uploadProgress = wx.uploadFile({
+              url: 'https://test.ctjwh.com/api/v1/file/uploadPic',
+              filePath: path,
+              formData: {
+                'member_id': this.memberInfo.member_id,
+                'member_token': this.memberInfo.member_token,
+                'folder': 'committee'
+              },
+              name: 'file',
+              success: res => {
+                const data = JSON.parse(res.data)
+                const url = data.data.file_url
+                _this.img.push(url)
+                _this.$apply()
+              }
+            })
+            upload.uploadProgress.onProgressUpdate(function(res) {
+              upload.progress = res.progress
+            })
+            _this.uploads.push(upload)
+            _this.$apply()
+          })
+        }
       })
     },
     submit() {
@@ -300,6 +352,10 @@ export default class Publish extends wepy.page {
       this.$apply()
     },
     sure(value) {
+      if (this.checkRepeat(value, this.activityList)) {
+        showMsg('请不要输入重复的活动项目')
+        return
+      }
       const obj = {
         name: value
       }

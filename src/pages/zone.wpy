@@ -20,7 +20,7 @@
     </view>
     <!-- 筛选框 -->
     <view class="menu-wrapper flex-wrapper">
-      <view data-type="circles" @tap="filter({{item.type}})" wx:for="{{menuList}}" class="{{activeType === item.type ? 'font-bold' : ''}}">
+      <view data-type="circles" @tap="jumpPublish({{item.type}})" wx:for="{{menuList}}" >
         <image src="{{item.src}}" mode="scaleToFill" />
         <text>{{item.text}}</text>
       </view>
@@ -37,12 +37,13 @@
         <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
           <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
         </view>
-        <view class="icon-msg-wrapper">
+        <view class="flex-wrapper font-grey font-small see-type">
+          <text>{{item.see_type === 'all' ? '全部可见' : '班级可见'}}</text>
           <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
         </view>
         <block wx:if="{{item.app_type === 'activity'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
+            <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
           </view>
           <view class="tag-wrapper">
             <text class="tag tag-blue" @tap="submitJoinActivity">选好了，报名</text>
@@ -73,7 +74,7 @@
         <!-- 收款 -->
         <block wx:if="{{item.app_type === 'collection'}}">
           <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}：¥{{collection.money}}</text>
+            <text class="tag-big tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}：¥{{collection.money}}</text>
           </view>
           <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key">
             <view class="result-wrapper" wx:if="{{collection.student_list.length}}">
@@ -124,7 +125,8 @@
         </view>
         <view catchtap="jumpPage('bindRelationship?type=edit')" wx:if="{{classInfo.id}}">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
-        <view catchtap="jumpPage('cashflow')" wx:if="{{auth.finance}}">财务流水</view>
+        <view catchtap="jumpPage('cashflow')" wx:if="{{auth.finance}}">财务记账</view>
+        <view catchtap="jumpPage('personalCashflow')" wx:if="{{auth.finance}}">财务流水</view>
         <!-- <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view> -->
         <view catchtap="jumpPage('authorize')" wx:if="{{auth.president}}">家委会管理</view>
         </view>
@@ -186,17 +188,17 @@ export default class Zone extends wepy.page {
     menuList: [
       {
         text: '家长圈',
-        type: 'circles',
+        type: 'zone',
         src: '/images/icon/2.jpg'
       },
       {
         text: '收费',
-        type: 'collection',
+        type: 'money',
         src: '/images/icon/money.jpg'
       },
       {
         text: '通知',
-        type: 'notify',
+        type: 'notice',
         src: '/images/icon/4.jpg'
       },
       {
@@ -212,7 +214,7 @@ export default class Zone extends wepy.page {
     ],
     commentFlag: false,
     selectFlag: false,
-    activeType: 'circles',
+    activeType: 'all',
     setFlag: false,
     publishFlag: false,
     type: {
@@ -252,7 +254,8 @@ export default class Zone extends wepy.page {
     commentLoadFinished: false,
     memberList: [],
     studentIds: [],
-    firstInit: true
+    firstInit: true,
+    paymentLocked: false
   }
   watch = {
     classInfo(newVal, oldVal) {
@@ -272,9 +275,10 @@ export default class Zone extends wepy.page {
   }
   resetData() {
     this.commentLoadFinished = false
-    this.commentPn = 1
+    this.commentPn = 2
     this.commentPs = 6
     this.studentIds = []
+    this.paymentLocked = false
     this.pn = 1
     this.list = []
     this.$apply()
@@ -367,6 +371,7 @@ export default class Zone extends wepy.page {
     getPaymentParams({
       order_id: id
     }).then(res => {
+      let _this = this
       let data = res.data.payment_params
       wx.requestPayment({
         timeStamp: String(data.timeStamp),
@@ -375,7 +380,12 @@ export default class Zone extends wepy.page {
         paySign: data.paySign,
         signType: 'MD5',
         success() {
-          console.log('成功了')
+          _this.paymentLocked = false
+          _this.$apply()
+        },
+        fail() {
+          _this.paymentLocked = false
+          _this.$apply()
         }
       })
     })
@@ -391,6 +401,10 @@ export default class Zone extends wepy.page {
   }
   methods = {
     pay(momentId, collectionId) {
+      if (this.paymentLocked) {
+        return
+      }
+      this.paymentLocked = true
       checkStudent({
         class_id: this.classInfo.id,
         moment_id: momentId,
@@ -398,6 +412,8 @@ export default class Zone extends wepy.page {
       }).then(res => {
         this.payMemberList = res.data.list
         if (!this.payMemberList.length) {
+          this.paymentLocked = false
+          this.$apply()
           showMsg('请勿重复缴费')
           return
         }
@@ -450,7 +466,7 @@ export default class Zone extends wepy.page {
       }).then(res => {
         if (res.data.success) {
           let resultList = res.data.list
-          if (resultList.length < 6) {
+          if (resultList.length < this.commentPs) {
             this.commentLoadFinished = true
           }
           let {list} = this.list[idx].comment_list
@@ -462,6 +478,10 @@ export default class Zone extends wepy.page {
       })
     },
     addComment(type, id, rootId, toCommentId, name) {
+      if (toCommentId === this.memberInfo.member_id) {
+        showMsg('请不要回复自己')
+        return
+      }
       if (!this.classInfo) {
         showMsg('请先选择班级')
         return
@@ -497,16 +517,16 @@ export default class Zone extends wepy.page {
         }
       })
     },
+    jumpPublish(value) {
+      let url = value === 'account' ? 'recordCashflow' : `publish?type=${value}`
+      wx.navigateTo({
+        url: url
+      })
+    },
     commentCancel () {
       this.commentFlag = false
       this.commentInput = ''
       this.$apply()
-    },
-    filter (type) {
-      this.resetData()
-      this.activeType = type
-      this.$apply()
-      this.getZoneList()
     },
     jumpPage (pageName, type) {
       this.publishFlag = false
@@ -550,19 +570,18 @@ export default class Zone extends wepy.page {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
+.see-type {
+  justify-content: space-between;
+  padding: 20rpx 0;
+  .icon-message {
+    width:20%;
+  }
+}
 .img-list {
   margin-bottom: 0;
-}
-.icon-msg-wrapper {
-  display: flex;
-  justify-content: flex-end;
-}
-.icon-message {
-  padding:20rpx 0;
-  width:10%;
 }
 .menu-wrapper {
   background-color: #fff;

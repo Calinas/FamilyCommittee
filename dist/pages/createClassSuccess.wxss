@@ -33,3 +33,15 @@
   background-color: #fff;
   width: 320rpx;
   font-size: 30rpx; }
+
+.code {
+  display: block;
+  width: 200rpx;
+  height: 200rpx;
+  margin: 20rpx auto; }
+
+.remind {
+  width: 100%;
+  text-align: center;
+  display: block;
+  margin: 20rpx auto; }

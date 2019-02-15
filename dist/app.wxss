@@ -96,6 +96,9 @@ page {
   z-index: 2;
   background-color: #1F9E3C; }
 
+.fixed-bottom-btn.top {
+  top: 0; }
+
 .fixed-bottom-btn-2 > view {
   width: 50%; }
 
@@ -109,6 +112,9 @@ page {
   border-radius: 20rpx;
   font-size: 26rpx;
   margin-right: 20rpx; }
+
+.tag-big {
+  padding: 10rpx 20rpx; }
 
 .tag-grey {
   background-color: #586069;

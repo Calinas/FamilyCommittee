@@ -22,9 +22,10 @@
             暂未选择班级
           </view>
         </block>
-        <view class="flex-wrapper center" wx:for="{{list}}" wx:key="key" wx:for-index="idx" @tap="setClass({{idx}})">
-          <text class="dot dot-grey"></text>
+        <view class="flex-wrapper center between" wx:for="{{list}}" wx:key="key" wx:for-index="idx" @tap="setClass({{idx}})">
+          <!-- <text class="dot dot-grey"></text> -->
           <text>{{item.class.name}}</text>
+          <text class="iconfont icon-arrow-right" style="font-size: 30rpx;"></text>
         </view>
       </block>
       <block wx:else>
@@ -76,11 +77,6 @@ export default class ClassList extends wepy.page {
         success: res => {
           this.classInfo = this.list[index].class
           this.$apply()
-          setTimeout(() => {
-            wx.switchTab({
-              url: 'zone'
-            })
-          }, 1000)
         }
       })
     }

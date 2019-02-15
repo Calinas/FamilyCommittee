@@ -4,8 +4,7 @@
       <view class="photo-title font-black">{{item.upload_date}}{{item.upload_member.class_nickname}}上传</view>
       <view class="img-list flex-wrapper">
         <repeat for="{{item.img_list}}" index="index" item="imgSrc">
-
-            <image @tap='preview({{imgSrc.img_url}})' class='img-item' src='{{imgSrc.img_url}}' />
+            <image @tap='preview({{imgSrc}}, {{item.img_list}})' class='img-item' src='{{imgSrc}}' />
             <!-- <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/> -->
         </repeat>
       </view>
@@ -19,7 +18,7 @@
 
 <script>
 import wepy from 'wepy'
-import { uploadImage, showMsg } from '../utils/common'
+import { uploadImage, showMsg, previewImage } from '../utils/common'
 import { photoIndex, addPhoto } from '../api/zone'
 export default class bindRelationship extends wepy.page {
   config = {
@@ -48,7 +47,20 @@ export default class bindRelationship extends wepy.page {
       pn: this.pn,
       class_id: this.classInfo.id
     }).then(res => {
-      this.list = res.data.list
+      let list = []
+      let returnList = res.data.list
+      for (let i = 0, len = returnList.length; i < len; i++) {
+        list[i] = {
+          img_list: [],
+          upload_date: returnList[i].upload_date,
+          upload_member: returnList[i].upload_member
+        }
+        for (let j = 0, len = returnList[i].img_list.length; j < len; j++) {
+          let obj = returnList[i].img_list[j]
+          list[i].img_list.push(obj.img_url)
+        }
+      }
+      this.list = list
       this.$apply()
     })
   }
@@ -64,17 +76,50 @@ export default class bindRelationship extends wepy.page {
     })
   }
   methods = {
-    preview(url) {
-      wx.previewImage({
-        current: url,
-        urls: [url]
-      })
+    preview(url, urls) {
+      previewImage(url, urls)
     },
     upload() {
-      uploadImage().then(res => {
-        this.imgList = []
-        this.imgList.push(res)
-        this.addPhotos()
+      let _this = this
+      wx.chooseImage({
+        count: 9,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album', 'camera'],
+        success: res => {
+          if (res.tempFilePaths.length > this.maxPhotoCount) {
+            wx.showToast({
+              title: '最多只能选择' + this.maxPhotoCount + '张图片',
+              icon: 'none'
+            })
+          }
+          res.tempFilePaths.forEach(path => {
+            let upload = {}
+            upload.path = path
+            upload.error = false
+            upload.uploadProgress = wx.uploadFile({
+              url: 'https://test.ctjwh.com/api/v1/file/uploadPic',
+              filePath: path,
+              formData: {
+                'member_id': this.memberInfo.member_id,
+                'member_token': this.memberInfo.member_token,
+                'folder': 'committee'
+              },
+              name: 'file',
+              success: res => {
+                const data = JSON.parse(res.data)
+                const url = data.data.file_url
+                _this.imgList.push(url)
+                _this.addPhotos()
+                _this.$apply()
+              }
+            })
+            upload.uploadProgress.onProgressUpdate(function(res) {
+              upload.progress = res.progress
+            })
+            _this.uploads.push(upload)
+            _this.$apply()
+          })
+        }
       })
     }
   }

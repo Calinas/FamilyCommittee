@@ -8,7 +8,7 @@ export function addCircles(data) {
       url: '/moment/addCircles',
       data: Object.assign({}, commonParams(), {
         class_id: data.class_id,
-        see_type: data.type,
+        see_type: data.see_type,
         description: data.desc,
         img_url: data.img_url
       }),

@@ -1,5 +1,5 @@
 
-  <view class="common-container">
+  <view class="common-container" style="padding-top: 120rpx;">
     <textarea class="msg-wrapper" placeholder="{{placeholder}}" bindinput="bindChange" id="msg"/>
     <view class="img-list flex-wrapper"  wx:if="{{activeType === 'zone' || activeType === 'activity'}}">
       <block wx:for="{{img}}" wx:for-index="index" wx:for-item="item" wx:key="key">
@@ -44,9 +44,9 @@
       <view class="flex-wrapper between select-common-picker" bindtap="addNew" data-wpyaddnew-a="showAddMoney">
         <view>
           <text class="iconfont icon-user font-black"/>
-          <text class="font-black">收款金额</text>
+          <text class="font-black">增加选项</text>
         </view>
-        <text class="font-black">新增收款项目</text>
+        <text>可重复添加多个收款选项</text>
       </view>
     </block>
     <!-- 活动 -->
@@ -64,7 +64,7 @@
         <view class="flex-wrapper between">
           <view>
             <text class="iconfont icon-user font-black"/>
-            <text class="font-black">是否能参加多项</text>
+            <text class="font-black">单选或多选</text>
           </view>
           <view>
             <text>{{activityJoinType[activityType].title}}</text>
@@ -75,7 +75,7 @@
       <view class="flex-wrapper between select-common-picker" bindtap="addNew" data-wpyaddnew-a="showAddActivity">
         <view>
           <text class="iconfont icon-user font-black"/>
-          <text class="font-black">新增活动项目</text>
+          <text class="font-black">增加选项</text>
         </view>
         <text>点击添加</text>
       </view>
@@ -98,7 +98,7 @@
     <view class="popup-container">
       <view class="wx-popup-con">
         <input type="text" placeholder="{{$Modal2$placeholderText}}" bindinput="$Modal2$bindInput" value="{{$Modal2$input}}" id="input" style="margin-bottom: 40rpx"/>
-        <input type="number" placeholder="{{$Modal2$placeholderText2}}" bindinput="$Modal2$bindInput" value="{{$Modal2$money}}" id="money"/>
+        <input type="digit" min="10" placeholder="{{$Modal2$placeholderText2}}" bindinput="$Modal2$bindInput" value="{{$Modal2$money}}" id="money"/>
       </view>
       <view class="wx-popup-btn">
         <text class="btn-no" bindtap="$Modal2$cancelFn">{{$Modal2$cancelBtnText}}</text>
@@ -123,5 +123,5 @@
         </view>
       </block>
     </view>
-    <view class="fixed-bottom-btn" bindtap="submit">确认发布</view>
+    <view class="fixed-bottom-btn top" bindtap="submit">确认发布</view>
   </view>

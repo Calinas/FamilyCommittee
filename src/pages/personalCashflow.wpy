@@ -1,0 +1,42 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container common-container-grey">
+    <scroll-view class="scroll-container">
+      <view class="msg-card font-black">
+        <view class="flex-wrapper center">
+          <image src="" class="small-avatar"/>
+          <text>我通过谁发布的收款信息支付了</text>
+        </view>
+        <view class="btn-money">1258元</view>
+        <view class="font-grey font-small time">2018年11月234日 19:25</view>
+      </view>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+</script>
+
+<style lang="scss" scoped>
+.msg-card {
+  background-color: #fff;
+  margin-bottom: 30rpx;
+  padding: 30rpx;
+}
+.time {
+  text-align: right;
+}
+.btn-money {
+  display: block;
+  width: 40%;
+  font-size: 40rpx;
+  color: #fff;
+  background-color: #1F9E3C;
+  text-align: center;
+  border-radius: 40rpx;
+  margin: 20rpx auto;
+  padding: 14rpx 0;
+}
+</style>

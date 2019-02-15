@@ -32,7 +32,8 @@ export default class login extends wepy.page {
     sex: '',
     head_img: '',
     phone: '',
-    open_id: ''
+    open_id: '',
+    joinKey: ''
   };
   methods = {
     getUserInfo(e) {
@@ -84,13 +85,14 @@ export default class login extends wepy.page {
         avatar: this.head_img
       }
       wx.setStorageSync('memberInfo', memberInfo)
-      console.log(wx.getStorageSync('memberInfo'), 1)
+      let url = this.joinKey ? `login?key=${this.joinKey}` : 'classList'
       wx.reLaunch({
-        url: 'classList'
+        url: url
       })
     })
   }
-  onLoad() {
+  onLoad(e) {
+    this.joinKey = e.key
     wx.login({
       success: res => {
         let old_wxapp_token = wx.getStorageSync('wxtoken')

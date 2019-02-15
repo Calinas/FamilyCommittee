@@ -1,18 +1,23 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey">
+    <view class="remind-text">
+      <text class="red">*</text>
+      <text>必填项</text>
+    </view>
     <view class="flex-wrapper center choose-item" wx:for="{{list}}" wx:key="key" wx:for-index="idx">
       <input type="text" placeholder="请输入孩子姓名" id="studentName" @input="bindForm" id="value" data-idx="{{idx}}" value="{{item.value}}"/>
       <picker class="picker" mode="selector" value="{{item.activeIndex}}" range="{{item.relationship}}" range-key="name" @change="bindForm" data-idx="{{idx}}" id="activeIndex">
-      <text>的{{item.relationship[item.activeIndex].name}}</text>
+        <text>的{{item.relationship[item.activeIndex].name}}</text>
+        <text class="iconfont icon-arrow-right" style="font-size: 30rpx;"></text>
       </picker>
       <view class="icon-wrapper" @tap="delete({{idx}})">
         <text class="iconfont icon-delete" wx:if="{{idx > 0}}"></view>
       </view>
     </view>
-    <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
-      <view class="btn-white" @tap="addNew">新增一项</view>
-      <view @tap="submit">确认提交</view>
-    </view>
+  </view>
+  <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
+    <view class="btn-white" @tap="addNew">新增一项</view>
+    <view @tap="submit">确认提交</view>
   </view>
 </template>
 
@@ -70,12 +75,15 @@ export default class bindRelationship extends wepy.page {
   }
   commonFn(res) {
     if (res.data.success) {
+      showMsg('班级创建成功')
+      let data = res.data.data
+      let url = `createClassSuccess?name=${data.name}&code=${data.qr_code}&key=${data.join_key}`
       this.$parent.globalData.classHasChange = true
       setTimeout(() => {
-        wx.switchTab({
-          url: 'classList?id=2'
+        wx.navigateTo({
+          url: url
         })
-      }, 2000)
+      }, 1000)
     }
   }
   getClassIdentity() {

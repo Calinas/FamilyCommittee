@@ -1,0 +1,18 @@
+.msg-card._d8ff260 {
+  background-color: #fff;
+  margin-bottom: 30rpx;
+  padding: 30rpx; }
+
+.time._d8ff260 {
+  text-align: right; }
+
+.btn-money._d8ff260 {
+  display: block;
+  width: 40%;
+  font-size: 40rpx;
+  color: #fff;
+  background-color: #1F9E3C;
+  text-align: center;
+  border-radius: 40rpx;
+  margin: 20rpx auto;
+  padding: 14rpx 0; }

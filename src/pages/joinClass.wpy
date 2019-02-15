@@ -25,9 +25,15 @@ export default class JoinClass extends wepy.page {
     classInfo: {},
     joinKey: ''
   }
-  onLoad() {
-    const globalData = this.$parent.globalData
-    this.memberInfo = globalData.memberInfo
+  onLoad(options) {
+    this.memberInfo = wx.getStorageSync('memberInfo')
+    this.joinKey = options.key
+    if (this.joinKey && !this.memberInfo.member_id) {
+      // 如果是从分享链接进入且没有注册，先走注册流程
+      wx.redirectTo({
+        url: `login?key=${this.joinKey}`
+      })
+    }
     this.$apply()
   }
   methods = {
