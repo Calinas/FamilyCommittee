@@ -33,7 +33,6 @@ export function bindTeacher(data) {
   })
 }
 
-
 // 绑定手机
 export function bindMobile(data) {
   return new Promise((resolve, reject) => {
