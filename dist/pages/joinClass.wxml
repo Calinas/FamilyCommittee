@@ -1,12 +1,12 @@
 
-  <view class="join-class common-container common-container-grey _5990213">
+  <view class="join-class common-container common-container-grey _678cfbc">
     <!-- <view class="common-line">
       重庆市第三中学xx小区2018级10班
     </view> -->
-    <view class="common-line _5990213">
-      <input type="text" placeholder="在此填入该班级验证码" bindinput="bindInput" id="joinKey" class="_5990213"/>
+    <view class="common-line _678cfbc">
+      <input type="text" placeholder="在此填入该班级验证码" bindinput="bindInput" id="joinKey" class="_678cfbc"/>
     </view>
-    <view class="common-line text-center font-green _5990213" bindtap="joinNow">申请加入</view>
+    <view class="common-line text-center font-green _678cfbc" bindtap="joinNow">申请加入</view>
 
     <!-- <view class="create-btn font-grey text-right">我要创建班级</view> -->
   </view>

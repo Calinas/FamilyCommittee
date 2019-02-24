@@ -73,7 +73,8 @@ export default class login extends wepy.page {
       head_img: this.head_img,
       sex: this.sex,
       auth_id: this.unionid,
-      wxapp_token: this.wxtoken
+      wxapp_token: this.wxtoken,
+      mobile: this.phone
     }).then(res => {
       let data = res.data.data
       let memberInfo = Object.create(null)

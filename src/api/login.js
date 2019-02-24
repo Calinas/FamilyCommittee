@@ -45,7 +45,8 @@ export function wxLogin(data) {
         head_img: data.head_img,
         sex: data.sex,
         auth_id: data.auth_id,
-        wxapp_token: data.wxapp_token
+        wxapp_token: data.wxapp_token,
+        mobile: data.mobile
       }
     }).then(res => {
       resolve(res)

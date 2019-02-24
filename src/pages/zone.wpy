@@ -108,7 +108,7 @@
             </block>
             <text>{{comment.content}}</text>
           </view>
-          <view wx:if="{{item.comment_list.count > 6 && !commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
+          <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
             <text class="font-grey">加载更多评论</text>
           </view>
         </view>
@@ -255,7 +255,8 @@ export default class Zone extends wepy.page {
     memberList: [],
     studentIds: [],
     firstInit: true,
-    paymentLocked: false
+    paymentLocked: false,
+    loadMoreCommentArray: []
   }
   watch = {
     classInfo(newVal, oldVal) {
@@ -399,6 +400,17 @@ export default class Zone extends wepy.page {
       this.paymentParams(res.data.data.id)
     })
   }
+  findLoadmoreCommentInfo(arr, currentId) {
+    let retObj = {}
+    for(let i = 0,len = arr.length; i < len; i++) {
+      if(arr[i].moment_id === currentId) {
+        retObj = Object.assign({},arr[i],{
+          index: i
+        })
+      }
+    }
+    return retObj
+  }
   methods = {
     pay(momentId, collectionId) {
       if (this.paymentLocked) {
@@ -458,21 +470,30 @@ export default class Zone extends wepy.page {
       this.$apply()
     },
     loadMoreComment(momentId, idx) {
+      const retObj = this.findLoadmoreCommentInfo(this.loadMoreCommentArray, momentId);
       getCommentList({
         moment_id: momentId,
         ps: this.commentPs,
-        pn: this.commentPn,
+        pn: retObj.commentPn ? retObj.commentPn : this.commentPn,
         offset: this.commentOffset
       }).then(res => {
         if (res.data.success) {
           let resultList = res.data.list
-          if (resultList.length < this.commentPs) {
-            this.commentLoadFinished = true
-          }
           let {list} = this.list[idx].comment_list
           list = [...list, ...resultList]
           this.list[idx].comment_list.list = list
-          this.commentPn++
+          if (resultList.length < this.commentPs) {
+            this.list[idx].commentLoadFinished = true
+          }
+          if (!retObj.commentPn) {
+            const obj = {
+              commentPn: this.commentPn + 1,
+              moment_id: momentId
+            }
+            this.loadMoreCommentArray.push(obj)
+          } else {
+            this.loadMoreCommentArray[retObj.index].commentPn = retObj.commentPn + 1;
+          }
           this.$apply()
         }
       })

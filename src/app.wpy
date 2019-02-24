@@ -80,7 +80,7 @@ export default class extends wepy.app {
     this.intercept('request', {
 
       config(req) {
-        // req.url = 'http://127.0.0.1:3000/mock/11/api/v1' + req.url
+        // req.url = 'http://www.patriarch.cm:8080/api/v1' + req.url
         req.url = 'https://test.ctjwh.com/api/v1' + req.url
         // wx.showLoading({
         //   title: '加载中',

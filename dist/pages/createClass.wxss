@@ -1,4 +1,4 @@
-.weui-btn._490fc7e {
+.weui-btn._c94d010 {
   position: relative;
   display: block;
   margin: 0 auto;
@@ -13,20 +13,20 @@
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   overflow: hidden; }
 
-.weui-btn_primary._490fc7e {
+.weui-btn_primary._c94d010 {
   background-color: #2DB200; }
 
-.class-select-wrapper .item._490fc7e {
+.class-select-wrapper .item._c94d010 {
   flex: 1;
   text-align: center; }
-  .class-select-wrapper .item.active._490fc7e {
+  .class-select-wrapper .item.active._c94d010 {
     background-color: #2DB200;
     color: #fff; }
 
-.create-btn._490fc7e {
+.create-btn._c94d010 {
   padding: 40rpx 0; }
 
-.bottom-buttons .link._490fc7e {
+.bottom-buttons .link._c94d010 {
   background-color: transparent;
   border: none;
   margin-top: 40rpx;
@@ -35,12 +35,12 @@
   margin-left: 0;
   margin-right: 0;
   font-size: 30rpx; }
-  .bottom-buttons .link._490fc7e::after {
+  .bottom-buttons .link._c94d010::after {
     display: none; }
 
-.icon-arrow-right._490fc7e {
+.icon-arrow-right._c94d010 {
   color: #808080;
   font-size: 24rpx; }
 
-.submit-btn._490fc7e {
+.submit-btn._c94d010 {
   margin-top: 200rpx; }
