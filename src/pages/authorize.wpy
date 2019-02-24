@@ -15,6 +15,11 @@
       <text class="font-bold font-black sub-title">班委会二维码：</text>
       <image src="{{classInfo.qr_code}}" class="qr-code"/>
     </view>
+    <view class="flex-wrapper item last-one" style="align-items:center;">
+      <text class="font-bold font-black sub-title" style="margin-right: 0;">修改班级验证码：</text>
+      <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @input="bindForm" />
+      <button>修改</button>
+    </view>
     <view class="font-black font-bold title">
       <text>权限管理</text>
     </view>
@@ -66,7 +71,8 @@ export default class bindRelationship extends wepy.page {
     currentRoleId: -1,
     memberInfo: null,
     classInfo: {},
-    studentList: []
+    studentList: [],
+    code: ''
   }
   onLoad() {
     this.classInfo = wx.getStorageSync('classInfo')
@@ -83,6 +89,10 @@ export default class bindRelationship extends wepy.page {
     })
   }
   methods = {
+    bindForm(e){
+      this[e.currentTarget.id] = e.detail.value
+      this.$apply()
+    },
     closeSearch() {
       this.showAdd = false
       this.$apply()

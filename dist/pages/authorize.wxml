@@ -15,6 +15,11 @@
       <text class="font-bold font-black sub-title">班委会二维码：</text>
       <image src="{{classInfo.qr_code}}" class="qr-code"/>
     </view>
+    <view class="flex-wrapper item last-one" style="align-items:center;">
+      <text class="font-bold font-black sub-title" style="margin-right: 0;">修改班级验证码：</text>
+      <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" bindinput="bindForm"/>
+      <button>修改</button>
+    </view>
     <view class="font-black font-bold title">
       <text>权限管理</text>
     </view>
