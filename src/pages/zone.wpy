@@ -275,6 +275,7 @@ export default class Zone extends wepy.page {
     }
   }
   resetData() {
+    this.loadMoreCommentArray = []
     this.commentLoadFinished = false
     this.commentPn = 2
     this.commentPs = 6
