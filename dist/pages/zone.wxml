@@ -126,7 +126,7 @@
         <view catchtap="jumpPage" wx:if="{{classInfo.id}}" class="_17dc948" data-wpyjumppage-a="bindRelationship?type=edit">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
         <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_17dc948" data-wpyjumppage-a="cashflow">财务记账</view>
-        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_17dc948" data-wpyjumppage-a="personalCashflow">财务流水</view>
+        <view catchtap="jumpPage" class="_17dc948" data-wpyjumppage-a="personalCashflow">财务流水</view>
         <!-- <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view> -->
         <view catchtap="jumpPage" wx:if="{{auth.president}}" class="_17dc948" data-wpyjumppage-a="authorize">家委会管理</view>
         </view>

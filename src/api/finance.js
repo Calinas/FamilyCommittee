@@ -18,6 +18,20 @@ export function getFinanceList(data) {
   })
 }
 
+// 获取个人财务流水列表
+export function getPersonFinanceList(params) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/member/class/orderList',
+      data: Object.assign({}, commonParams(), {
+        class_id: params.class_id
+      })
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
 // 获取班级财务信息
 export function getFinanceInfo(data) {
   return new Promise((resolve, reject) => {

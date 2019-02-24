@@ -33,7 +33,7 @@
 
     <view class="common-line text-center font-green submit-btn" @tap="submit">下一步</view>
 
-    <view class="flex-wrapper between bottom-buttons">
+    <view class="flex-wrapper between bottom-buttons" style="display: none;">
       <button open-type="share" class="link">邀请他人来创建班级</button>
       <button class="link">加入已有班级</button>
     </view>
@@ -43,7 +43,7 @@
 <script>
 import wepy from 'wepy'
 import { showMsg } from '../utils/common'
-import { schoolList } from '../api/createClass'
+import { schoolList, searchClass } from '../api/createClass'
 export default class joinClass extends wepy.page {
   config = {
     navigationBarTitleText: '创建班级'
@@ -76,7 +76,21 @@ export default class joinClass extends wepy.page {
     ],
     memberInfo: null,
     schoolList: [],
-    schoolIndex: 0
+    schoolIndex: 0,
+    type: ''
+  }
+  checkClassExist(data){
+    searchClass(data).then(res => {
+      wepy.navigateTo({
+        url: `joinClass?id=${res.data.data.id}`
+      })
+    })
+  }
+  createClassCallback(data){
+    this.$parent.globalData.createClass = data
+    wepy.navigateTo({
+        url: 'bindRelationship'
+      })
   }
   methods = {
     bindInput(e) {
@@ -106,13 +120,13 @@ export default class joinClass extends wepy.page {
         year: Number(this.gradeNumber),
         class: Number(this.classNumber)
       }
-      this.$parent.globalData.createClass = data
-      wepy.navigateTo({
-        url: 'bindRelationship'
-      })
+      this.type === 'create' && this.crateClassCallback(data)
+      this.type === 'join' && this.checkClassExist(data)
+
     }
   }
-  onLoad() {
+  onLoad(params) {
+    this.type = params.type
     const globalData = this.$parent.globalData
     this.memberInfo = globalData.memberInfo
     this.getSchoolList()

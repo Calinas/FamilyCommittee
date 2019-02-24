@@ -1,29 +1,38 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey">
-    <view class="remind-text">
-      <text class="red">*</text>
-      <text>必填项</text>
-    </view>
-    <view class="flex-wrapper center choose-item" wx:for="{{list}}" wx:key="key" wx:for-index="idx">
-      <input type="text" placeholder="请输入孩子姓名" id="studentName" @input="bindForm" id="value" data-idx="{{idx}}" value="{{item.value}}"/>
-      <picker class="picker" mode="selector" value="{{item.activeIndex}}" range="{{item.relationship}}" range-key="name" @change="bindForm" data-idx="{{idx}}" id="activeIndex">
-        <text>的{{item.relationship[item.activeIndex].name}}</text>
-        <text class="iconfont icon-arrow-right" style="font-size: 30rpx;"></text>
-      </picker>
-      <view class="icon-wrapper" @tap="delete({{idx}})">
-        <text class="iconfont icon-delete" wx:if="{{idx > 0}}"></view>
+    <radio-group class="radio-group" @change="pickerChange" id="currentType" wx:if="{{type === 'edit'}}">
+        <label class="radio" wx:for="{{relationshipTypes}}">
+          <radio value="{{item.value}}" checked="{{item.checked}}" />
+          {{item.label}}
+        </label>
+      </radio-group>
+    <block wx:if="{{currentType === 'parents'}}">
+      <view class="flex-wrapper center choose-item" wx:for="{{list}}" wx:key="key" wx:for-index="idx">
+        <input type="text" placeholder="请输入孩子姓名" id="studentName" @input="bindForm" id="value" data-idx="{{idx}}" value="{{item.value}}"/>
+        <picker class="picker" mode="selector" value="{{item.activeIndex}}" range="{{item.relationship}}" range-key="name" @change="bindForm" data-idx="{{idx}}" id="activeIndex">
+          <text>的{{item.relationship[item.activeIndex].name}}</text>
+          <text class="iconfont icon-arrow-right" style="font-size: 30rpx;"></text>
+        </picker>
+        <view class="icon-wrapper" @tap="delete({{idx}})">
+          <text class="iconfont icon-delete" wx:if="{{idx > 0}}"></view>
+        </view>
       </view>
-    </view>
+    </block>
+    <block wx:if="{{currentType === 'teacher'}}">
+      <view class="flex-wrapper center choose-item">
+        <input type="text" placeholder="请输入您的姓名" id="teacherName" @input="pickerChange" id="teacherName" value="{{teacherName}}"/>
+      </view>
+    </block>
   </view>
   <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
-    <view class="btn-white" @tap="addNew">新增一项</view>
+    <view class="btn-white" @tap="addNew" wx:if="{{currentType === 'parents'}}">新增一项</view>
     <view @tap="submit">确认提交</view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import { getIdentityList, bindIdentity, identityList } from '../api/user'
+import { getIdentityList, bindIdentity, identityList, bindTeacher } from '../api/user'
 import { addClass } from '../api/createClass'
 import { showMsg, isEmptyString } from '../utils/common'
 export default class bindRelationship extends wepy.page {
@@ -33,17 +42,29 @@ export default class bindRelationship extends wepy.page {
   data = {
     relationship: [],
     parentIndex: 0,
-    isTeacher: false,
-    teacherName: '',
     canSubmit: false,
     studentName: '',
+    teacherName: '',
     list: [],
     memberInfo: null,
     classInfo: null,
     classId: -1,
     joinClassId: 0,
     classIdentityList: [],
-    type: ''
+    type: '',
+    currentType: 'parents',
+    relationshipTypes: [
+      {
+        checked: true,
+        label: '我是家长',
+        value: 'parents'
+      },
+      {
+        checked: false,
+        label: '我是教师',
+        value: 'teacher'
+      }
+    ]
   }
   watch = {
     studentName (newValue, oldValue) {
@@ -70,7 +91,19 @@ export default class bindRelationship extends wepy.page {
       class_id: id,
       item: filterList
     }).then(res => {
-      this.commonFn(res)
+      if(res.data.success){
+        wx.navigateBack()
+      }
+    })
+  }
+  teacherCallback() {
+    bindTeacher({
+      class_id: this.classInfo.id,
+      name: this.teacherName
+    }).then(res => {
+      if(res.data.success) {
+        wx.navigateBack()
+      }
     })
   }
   commonFn(res) {
@@ -90,7 +123,10 @@ export default class bindRelationship extends wepy.page {
     identityList({
       class_id: this.classInfo.id
     }).then(res => {
-      this.list = res.data.list.map(item => {
+      const list = res.data.list
+      const teacherObj = list.filter(item => item.app_type === 'teacher')
+      const parentList = list.filter(item => item.app_type === 'student')
+      this.list = parentList.map(item => {
         return {
           relationship: this.relationship,
           value: item.student.name,
@@ -98,10 +134,15 @@ export default class bindRelationship extends wepy.page {
           id: item.id
         }
       })
+      this.teacherName = teacherObj[0].teacher.name
       this.$apply()
     })
   }
   methods = {
+    pickerChange(e) {
+      this[e.currentTarget.id] = e.detail.value
+      this.$apply()
+    },
     delete(idx) {
       this.list.splice(idx, 1)
       this.$apply()
@@ -121,22 +162,19 @@ export default class bindRelationship extends wepy.page {
       this.list[idx][target.id] = e.detail.value
       this.$apply()
     },
-    selectTeacher() {
-      this.isTeacher = !this.isTeacher
-      this.$apply()
-    },
     submit() {
-      if (!this.checkData()) {
+      if (this.currentType === 'parents' && !this.checkData()) {
         showMsg('请填写您孩子姓名')
         return
       }
+      this.checkCanSubmit()
       let filterList = this.list.map(item => {
         return {
           identity_id: item.relationship[item.activeIndex].id,
           student_name: item.value
         }
       })
-      if (this.type) { // 如果是直接修改身份绑定
+      if (this.type && this.currentType=== 'parents') { // 如果是直接修改身份绑定
         filterList = this.list.map(item => {
           return {
             identity_id: item.relationship[item.activeIndex].id,
@@ -145,6 +183,8 @@ export default class bindRelationship extends wepy.page {
           }
         })
         this.joinClassCallback(this.classInfo.id, filterList)
+      } else if(this.type && this.currentType === 'teacher') {
+        this.teacherCallback()
       } else if (!this.joinClassId) { // 如果是创建班级得
         let createClassData = this.$parent.globalData.createClass
         let data = {
@@ -160,7 +200,7 @@ export default class bindRelationship extends wepy.page {
     }
   }
   checkCanSubmit() {
-    if (this.isTeacher && isEmptyString(this.teacherName)) {
+    if (this.currentType === 'teacher' && isEmptyString(this.teacherName)) {
       showMsg('如果您勾选了老师身份，请填写您的姓名')
       return false
     }
@@ -196,6 +236,10 @@ export default class bindRelationship extends wepy.page {
 
 <style lang="scss">
 @import '../styles/buttons.wxss';
+.radio-group {
+  text-align: center;
+  padding: 40rpx 0 80rpx 0;
+}
 .icon-wrapper {
   width: 10%;
 }

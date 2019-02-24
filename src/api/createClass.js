@@ -42,6 +42,7 @@ export function joinClass(data) {
     wepy.request({
       url: '/member/class/join',
       data: Object.assign({}, commonParams(), {
+        class_id: data.class_id,
         join_key: data.join_key
       }),
       method: 'post'
@@ -57,6 +58,23 @@ export function getClassList(data) {
     wepy.request({
       url: '/member/class/index',
       data: commonParams()
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 班级查询
+export function searchClass(params) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/class/search',
+      data: Object.assign({}, commonParams(), {
+        school_id: params.school_id,
+        grade_type: params.grade,
+        year_class: params.year,
+        class: params.class
+      })
     }).then(res => {
       resolve(res)
     })

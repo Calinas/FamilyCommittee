@@ -17,6 +17,23 @@ export function bindIdentity(data) {
   })
 }
 
+// 绑定老师
+export function bindTeacher(data) {
+  return new Promise((resolve) => {
+    wepy.request({
+      url: '/member/class/bindTeacher',
+      data: Object.assign({}, commonParams(), {
+        class_id: data.class_id,
+        name: data.name
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+
 // 绑定手机
 export function bindMobile(data) {
   return new Promise((resolve, reject) => {

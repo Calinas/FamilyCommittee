@@ -23,9 +23,13 @@ export default class JoinClass extends wepy.page {
   data = {
     memberInfo: {},
     classInfo: {},
-    joinKey: ''
+    classId: -1,
+    joinKey: '',
+    createClassInfo: {}
   }
   onLoad(options) {
+    console.log(options)
+    this.classId = options.id
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.joinKey = options.key
     if (this.joinKey && !this.memberInfo.member_id) {
@@ -43,6 +47,7 @@ export default class JoinClass extends wepy.page {
     },
     joinNow() {
       joinClass({
+        class_id: this.classId,
         join_key: this.joinKey
       }).then(res => {
         let data = res.data

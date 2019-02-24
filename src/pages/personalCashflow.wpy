@@ -1,13 +1,13 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey">
     <scroll-view class="scroll-container">
-      <view class="msg-card font-black">
+      <view class="msg-card font-black" wx:for="{{list}}">
         <view class="flex-wrapper center">
           <image src="" class="small-avatar"/>
-          <text>我通过谁发布的收款信息支付了</text>
+          <text>我通过{{item.member.nickname}}发布的收s款信息支付了</text>
         </view>
-        <view class="btn-money">1258元</view>
-        <view class="font-grey font-small time">2018年11月234日 19:25</view>
+        <view class="btn-money">{{item.pay_amount}}元</view>
+        <view class="font-grey font-small time">{{item.updated_at}}</view>
       </view>
       </view>
     </scroll-view>
@@ -16,6 +16,27 @@
 
 <script>
 import wepy from 'wepy'
+import { getPersonFinanceList } from '../api/finance'
+export default class personCashflow extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人财务流水'
+  };
+  data = {
+    list: [],
+    classInfo: {}
+  }
+  onLoad(e){
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.getList()
+  }
+  getList(){
+    getPersonFinanceList({
+      class_id: this.classInfo.id
+    }).then(res => {
+      this.list = res.data.list
+    })
+  }
+}
 
 </script>
 

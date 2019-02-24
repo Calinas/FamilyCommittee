@@ -35,13 +35,13 @@
     <!-- 底部按钮 -->
     <view class="fixed-bottom flex-wrapper between">
       <navigator
-        url="joinClass"
+        url="createClass?type=join"
         open-type="navigate"
       >
         <view class="weui-btn weui-btn_primary btn">加入班级</view>
       </navigator>
       <navigator
-        url="createClass"
+        url="createClass?type=create"
         open-type="navigate"
       >
         <view class="weui-btn weui-btn_primary btn" style="background-color: #4171A5;">创建班级</view>
