@@ -18,7 +18,12 @@
     <view class="flex-wrapper item last-one" style="align-items:center;">
       <text class="font-bold font-black sub-title" style="margin-right: 0;">修改班级验证码：</text>
       <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @input="bindForm" />
-      <button>修改</button>
+      <button @tap="changeCode">修改</button>
+    </view>
+    <view class="flex-wrapper item last-one" style="align-items:center;">
+      <text class="font-bold font-black sub-title" style="margin-right: 0;">逐出成员：</text>
+      <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @tap="addNew({{true}})" />
+      <button @tap="changeCode">确认</button>
     </view>
     <view class="font-black font-bold title">
       <text>权限管理</text>
@@ -89,6 +94,20 @@ export default class bindRelationship extends wepy.page {
     })
   }
   methods = {
+    changeCode() {
+      authorizeReq.changeCode({
+        class_id: this.classInfo.id,
+        join_key: this.code
+      }).then(res => {
+        if(res.data.success) {
+          this.classInfo.join_key = this.code
+          wx.setStorageSync('classInfo', this.classInfo)
+          this.code = ''
+          this.$apply()
+          showMsg('更新成功')
+        }
+      })
+    },
     bindForm(e){
       this[e.currentTarget.id] = e.detail.value
       this.$apply()

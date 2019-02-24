@@ -18,7 +18,12 @@
     <view class="flex-wrapper item last-one" style="align-items:center;">
       <text class="font-bold font-black sub-title" style="margin-right: 0;">修改班级验证码：</text>
       <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" bindinput="bindForm"/>
-      <button>修改</button>
+      <button bindtap="changeCode">修改</button>
+    </view>
+    <view class="flex-wrapper item last-one" style="align-items:center;">
+      <text class="font-bold font-black sub-title" style="margin-right: 0;">逐出成员：</text>
+      <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" bindtap="addNew" data-wpyaddnew-a="{{true}}"/>
+      <button bindtap="changeCode">确认</button>
     </view>
     <view class="font-black font-bold title">
       <text>权限管理</text>

@@ -76,3 +76,19 @@ export function deleteAuth(data) {
     })
   })
 }
+
+// 修改班级验证码
+export function changeCode(params) {
+  return new Promise((resolve) => {
+    wepy.request({
+      url: '/class/updateJoinKey',
+      data: Object.assign({}, commonParams(), {
+        class_id: params.class_id,
+        join_key: params.join_key
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

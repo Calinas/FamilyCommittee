@@ -34,6 +34,7 @@ export default class personCashflow extends wepy.page {
       class_id: this.classInfo.id
     }).then(res => {
       this.list = res.data.list
+      this.$apply()
     })
   }
 }
