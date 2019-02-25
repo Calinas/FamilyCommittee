@@ -37,10 +37,9 @@ export function getFinanceInfo(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/class/financial/info',
-      data: {
-        member_id: data.member_id,
+      data: Object.assign({}, commonParams(), {
         class_id: data.class_id
-      }
+      })
     }).then(res => {
       resolve(res)
     })

@@ -196,3 +196,18 @@ export function getCommentList(data) {
     })
   })
 }
+
+// 删除圈子
+export function deleteCircle(data) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/moment/delete',
+      data: Object.assign({}, commonParams(), {
+        moment_id: data.moment_id
+      }),
+      method: 'delete'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

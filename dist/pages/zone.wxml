@@ -27,92 +27,110 @@
     </view>
 
     <view class="item-wrapper _17dc948"  wx:if="{{list.length}}">
-      <view class="item _17dc948" wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
-        <view class="flex-wrapper center _17dc948">
-          <image src="{{item.member.head_img}}" class="small-avatar _17dc948"/>
-          <text class="_17dc948">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
-        </view>
-        <view class="font-small font-grey text-right _17dc948">{{item.created_at}}</view>
-        <view class="item-desc _17dc948">{{item.info.description}}</view>
-        <view class="img-list flex-wrapper _17dc948" wx:if="{{item.image.length}}">
-          <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _17dc948" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
-        </view>
-        <view class="flex-wrapper font-grey font-small see-type _17dc948">
-          <text class="_17dc948">{{item.see_type === 'all' ? '全部可见' : '班级可见'}}</text>
-          <view class="font-grey iconfont icon-message text-right _17dc948" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
-        </view>
-        <block wx:if="{{item.app_type === 'activity'}}" class="_17dc948">
-          <view class="tag-wrapper item-tag _17dc948" wx:if="{{item.info.item.length}}">
-            <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }} _17dc948" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" bindtap="joinActivity" data-wpyjoinactivity-a="{{item.activity_id}}" data-wpyjoinactivity-b="{{item.id}}" data-wpyjoinactivity-c="{{listIndex}}" data-wpyjoinactivity-d="{{activityIndex}}">{{item.name}}</text>
+      <block wx:for="{{list}}" class="_17dc948">
+         <view class="item _17dc948" wx:key="key" wx:for-index="listIndex">
+          <view class="flex-wrapper center _17dc948">
+            <image src="{{item.member.head_img}}" class="small-avatar _17dc948"/>
+            <text class="_17dc948">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
           </view>
-          <view class="tag-wrapper _17dc948">
-            <text class="tag tag-blue _17dc948" bindtap="submitJoinActivity">选好了，报名</text>
-            <!-- <text class="tag tag-grey">已报名</text> -->
-          </view>
-          <!-- 报名结果 -->
-          <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key" class="_17dc948">
-            <view class="result-wrapper _17dc948" wx:if="{{activity.student_list.length}}">
-              <view class="title item-tag _17dc948">
-                <text class="tag tag-empty _17dc948">{{activity.name}}</text>
-                <text class="_17dc948">{{activity.student_list.length}}人报名</text>
-              </view>
-              <view class="person-list tag-wrapper _17dc948">
-                <text class="tag tag-light-grey _17dc948" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
-              </view>
+          <view class="font-small font-grey text-right _17dc948">{{item.created_at}}</view>
+          <block wx:if="{{item.app_type !== 'account'}}" class="_17dc948">
+            <view class="item-desc _17dc948">{{item.info.description}}</view>
+            <view class="img-list flex-wrapper _17dc948" wx:if="{{item.image.length}}">
+              <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _17dc948" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
             </view>
           </block>
-          <!-- 没有参加报名的 -->
-            <view class="result-wrapper _17dc948" wx:if="{{item.info.not_join_student_list.length}}">
-              <view class="title item-tag _17dc948">
-                <text class="_17dc948">{{item.info.not_join_student_list.length}}人未报名</text>
-              </view>
-              <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey _17dc948" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
-              </view>
+          <block wx:if="{{item.app_type === 'account'}}" class="_17dc948">
+            <view class="tag-wrapper _17dc948">
+              <text class="tag tag-grey _17dc948">{{item.info.type === 'in' ? '收入': '支出'}}</text>
+              <text class="tag tag-light-grey _17dc948">{{item.info.money}}</text>
             </view>
-        </block>
-        <!-- 收款 -->
-        <block wx:if="{{item.app_type === 'collection'}}" class="_17dc948">
-          <view class="tag-wrapper item-tag _17dc948" wx:if="{{item.info.item.length}}">
-            <text class="tag-big tag tag-empty _17dc948" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}：¥{{collection.money}}</text>
+            <view class="desc _17dc948">
+              事由：{{item.info.description}}
+            </view>
+          </block>
+
+          <view class="flex-wrapper font-grey font-small see-type _17dc948">
+            <text class="_17dc948">{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
+            <view class="flex-wrapper icon-wrapper _17dc948">
+              <button open-type="share" class="font-grey iconfont icon-share text-right _17dc948"/>
+              <view class="font-grey iconfont icon-message text-right _17dc948" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
+            </view>
           </view>
-          <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" class="_17dc948">
-            <view class="result-wrapper _17dc948" wx:if="{{collection.student_list.length}}">
-              <view class="title item-tag _17dc948">
-                <text class="_17dc948">{{collection.student_list.length}}人缴费{{collection.money}}</text>
-              </view>
-              <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey _17dc948" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
-              </view>
+          <block wx:if="{{item.app_type === 'activity'}}" class="_17dc948">
+            <view class="tag-wrapper item-tag _17dc948" wx:if="{{item.info.item.length}}">
+              <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }} _17dc948" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" bindtap="joinActivity" data-wpyjoinactivity-a="{{item.activity_id}}" data-wpyjoinactivity-b="{{item.id}}" data-wpyjoinactivity-c="{{listIndex}}" data-wpyjoinactivity-d="{{activityIndex}}">{{item.name}}</text>
             </view>
-          </block>
-          <block wx:if="{{item.info.not_join_student_list.length}}" class="_17dc948">
-            <view class="result-wrapper _17dc948">
-              <view class="title item-tag _17dc948">
-                <text class="_17dc948">{{item.info.not_join_student_list.length}}人未缴费</text>
-              </view>
-              <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey _17dc948" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
-              </view>
+            <view class="tag-wrapper _17dc948">
+              <text class="tag tag-blue _17dc948" bindtap="submitJoinActivity">选好了，报名</text>
+              <!-- <text class="tag tag-grey">已报名</text> -->
             </view>
-          </block>
-        </block>
-        <!-- 留言结果 -->
-        <view class="comment-wrapper item-desc font-grey _17dc948" wx:if="{{item.comment_list.count}}">
-          <view class="item _17dc948" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
-            <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_17dc948">
-              <text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.to_member.id}}" data-wpyaddcomment-e="{{comment.to_member.class_nickname}}">{{comment.to_member.class_nickname}}：</text>
+            <!-- 报名结果 -->
+            <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key" class="_17dc948">
+              <view class="result-wrapper _17dc948" wx:if="{{activity.student_list.length}}">
+                <view class="title item-tag _17dc948">
+                  <text class="tag tag-empty _17dc948">{{activity.name}}</text>
+                  <text class="_17dc948">{{activity.student_list.length}}人报名</text>
+                </view>
+                <view class="person-list tag-wrapper _17dc948">
+                  <text class="tag tag-light-grey _17dc948" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
+                </view>
+              </view>
             </block>
-            <block wx:else class="_17dc948">
-              <text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}: </text>
+            <!-- 没有参加报名的 -->
+              <view class="result-wrapper _17dc948" wx:if="{{item.info.not_join_student_list.length}}">
+                <view class="title item-tag _17dc948">
+                  <text class="_17dc948">{{item.info.not_join_student_list.length}}人未报名</text>
+                </view>
+                <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey _17dc948" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+                </view>
+              </view>
+          </block>
+          <!-- 收款 -->
+          <block wx:if="{{item.app_type === 'collection'}}" class="_17dc948">
+            <view class="tag-wrapper item-tag _17dc948" wx:if="{{item.info.item.length}}">
+              <text class="tag-big tag tag-empty _17dc948" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}：¥{{collection.money}}</text>
+            </view>
+            <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" class="_17dc948">
+              <view class="result-wrapper _17dc948" wx:if="{{collection.student_list.length}}">
+                <view class="title item-tag _17dc948">
+                  <text class="_17dc948">{{collection.student_list.length}}人缴费{{collection.money}}</text>
+                </view>
+                <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey _17dc948" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
+                </view>
+              </view>
             </block>
-            <text class="_17dc948">{{comment.content}}</text>
-          </view>
-          <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center _17dc948" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}">
-            <text class="font-grey _17dc948">加载更多评论</text>
+            <block wx:if="{{item.info.not_join_student_list.length}}" class="_17dc948">
+              <view class="result-wrapper _17dc948">
+                <view class="title item-tag _17dc948">
+                  <text class="_17dc948">{{item.info.not_join_student_list.length}}人未缴费</text>
+                </view>
+                <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey _17dc948" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+                </view>
+              </view>
+            </block>
+          </block>
+          <!-- 留言结果 -->
+          <view class="comment-wrapper item-desc font-grey _17dc948" wx:if="{{item.comment_list.count}}">
+            <view class="item _17dc948" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
+              <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_17dc948">
+                <text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.to_member.id}}" data-wpyaddcomment-e="{{comment.to_member.class_nickname}}">{{comment.to_member.class_nickname}}：</text>
+              </block>
+              <block wx:else class="_17dc948">
+                <text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}: </text>
+              </block>
+              <text class="_17dc948">{{comment.content}}</text>
+            </view>
+            <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center _17dc948" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}">
+              <text class="font-grey _17dc948">加载更多评论</text>
+            </view>
           </view>
         </view>
-      </view>
+      </block>
+
     </view>
     <view wx:if="{{this.loadFinished && !list.length}}" class="text-center _17dc948">暂无内容</view>
 

@@ -72,6 +72,8 @@ export default class bindRelationship extends wepy.page {
       if (res.data.success) {
         showMsg('提交成功')
         this.getPhotoList()
+        this.imgList = []
+        this.$apply()
       }
     })
   }
@@ -86,7 +88,8 @@ export default class bindRelationship extends wepy.page {
         sizeType: ['original', 'compressed'],
         sourceType: ['album', 'camera'],
         success: res => {
-          if (res.tempFilePaths.length > this.maxPhotoCount) {
+          const length = res.tempFilePaths.length
+          if (length > this.maxPhotoCount) {
             wx.showToast({
               title: '最多只能选择' + this.maxPhotoCount + '张图片',
               icon: 'none'
@@ -109,7 +112,9 @@ export default class bindRelationship extends wepy.page {
                 const data = JSON.parse(res.data)
                 const url = data.data.file_url
                 _this.imgList.push(url)
-                _this.addPhotos()
+                if(_this.imgList.length === length) {
+                  _this.addPhotos()
+                }
                 _this.$apply()
               }
             })

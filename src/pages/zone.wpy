@@ -27,92 +27,110 @@
     </view>
 
     <view class="item-wrapper" wx:if="{{list.length}}">
-      <view class="item" wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
-        <view class="flex-wrapper center">
-          <image src="{{item.member.head_img}}"  class="small-avatar" />
-          <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
-        </view>
-        <view class="font-small font-grey text-right">{{item.created_at}}</view>
-        <view class="item-desc">{{item.info.description}}</view>
-        <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
-          <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
-        </view>
-        <view class="flex-wrapper font-grey font-small see-type">
-          <text>{{item.see_type === 'all' ? '全部可见' : '班级可见'}}</text>
-          <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
-        </view>
-        <block wx:if="{{item.app_type === 'activity'}}">
-          <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
+      <block wx:for="{{list}}">
+         <view class="item" wx:key="key" wx:for-index="listIndex">
+          <view class="flex-wrapper center">
+            <image src="{{item.member.head_img}}"  class="small-avatar" />
+            <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
           </view>
-          <view class="tag-wrapper">
-            <text class="tag tag-blue" @tap="submitJoinActivity">选好了，报名</text>
-            <!-- <text class="tag tag-grey">已报名</text> -->
-          </view>
-          <!-- 报名结果 -->
-          <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key">
-            <view class="result-wrapper" wx:if="{{activity.student_list.length}}">
-              <view class="title item-tag">
-                <text class="tag tag-empty">{{activity.name}}</text>
-                <text>{{activity.student_list.length}}人报名</text>
-              </view>
-              <view class="person-list tag-wrapper">
-                <text class="tag tag-light-grey" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
-              </view>
+          <view class="font-small font-grey text-right">{{item.created_at}}</view>
+          <block wx:if="{{item.app_type !== 'account'}}">
+            <view class="item-desc">{{item.info.description}}</view>
+            <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
+              <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
             </view>
           </block>
-          <!-- 没有参加报名的 -->
-            <view class="result-wrapper" wx:if="{{item.info.not_join_student_list.length}}">
-              <view class="title item-tag">
-                <text>{{item.info.not_join_student_list.length}}人未报名</text>
-              </view>
-              <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
-              </view>
+          <block wx:if="{{item.app_type === 'account'}}">
+            <view class="tag-wrapper">
+              <text class="tag tag-grey">{{item.info.type === 'in' ? '收入': '支出'}}</text>
+              <text class="tag tag-light-grey">{{item.info.money}}</text>
             </view>
-        </block>
-        <!-- 收款 -->
-        <block wx:if="{{item.app_type === 'collection'}}">
-          <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-            <text class="tag-big tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}：¥{{collection.money}}</text>
+            <view class="desc">
+              事由：{{item.info.description}}
+            </view>
+          </block>
+
+          <view class="flex-wrapper font-grey font-small see-type">
+            <text>{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
+            <view class="flex-wrapper icon-wrapper">
+              <button open-type="share" class="font-grey iconfont icon-share text-right"></button>
+              <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
+            </view>
           </view>
-          <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key">
-            <view class="result-wrapper" wx:if="{{collection.student_list.length}}">
-              <view class="title item-tag">
-                <text>{{collection.student_list.length}}人缴费{{collection.money}}</text>
-              </view>
-              <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key" >{{student.name}}</text>
-              </view>
+          <block wx:if="{{item.app_type === 'activity'}}">
+            <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
+              <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
             </view>
-          </block>
-          <block wx:if="{{item.info.not_join_student_list.length}}">
-            <view class="result-wrapper">
-              <view class="title item-tag">
-                <text>{{item.info.not_join_student_list.length}}人未缴费</text>
-              </view>
-              <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
-              </view>
+            <view class="tag-wrapper">
+              <text class="tag tag-blue" @tap="submitJoinActivity">选好了，报名</text>
+              <!-- <text class="tag tag-grey">已报名</text> -->
             </view>
-          </block>
-        </block>
-        <!-- 留言结果 -->
-        <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">
-          <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
-            <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
-              <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
+            <!-- 报名结果 -->
+            <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key">
+              <view class="result-wrapper" wx:if="{{activity.student_list.length}}">
+                <view class="title item-tag">
+                  <text class="tag tag-empty">{{activity.name}}</text>
+                  <text>{{activity.student_list.length}}人报名</text>
+                </view>
+                <view class="person-list tag-wrapper">
+                  <text class="tag tag-light-grey" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
+                </view>
+              </view>
             </block>
-            <block wx:else>
-              <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
+            <!-- 没有参加报名的 -->
+              <view class="result-wrapper" wx:if="{{item.info.not_join_student_list.length}}">
+                <view class="title item-tag">
+                  <text>{{item.info.not_join_student_list.length}}人未报名</text>
+                </view>
+                <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+                </view>
+              </view>
+          </block>
+          <!-- 收款 -->
+          <block wx:if="{{item.app_type === 'collection'}}">
+            <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
+              <text class="tag-big tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}：¥{{collection.money}}</text>
+            </view>
+            <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key">
+              <view class="result-wrapper" wx:if="{{collection.student_list.length}}">
+                <view class="title item-tag">
+                  <text>{{collection.student_list.length}}人缴费{{collection.money}}</text>
+                </view>
+                <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key" >{{student.name}}</text>
+                </view>
+              </view>
             </block>
-            <text>{{comment.content}}</text>
-          </view>
-          <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
-            <text class="font-grey">加载更多评论</text>
+            <block wx:if="{{item.info.not_join_student_list.length}}">
+              <view class="result-wrapper">
+                <view class="title item-tag">
+                  <text>{{item.info.not_join_student_list.length}}人未缴费</text>
+                </view>
+                <view class="person-list tag-wrapper" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+                </view>
+              </view>
+            </block>
+          </block>
+          <!-- 留言结果 -->
+          <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">
+            <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
+              <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
+                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
+              </block>
+              <block wx:else>
+                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
+              </block>
+              <text>{{comment.content}}</text>
+            </view>
+            <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
+              <text class="font-grey">加载更多评论</text>
+            </view>
           </view>
         </view>
-      </view>
+      </block>
+
     </view>
     <view wx:if="{{this.loadFinished && !list.length}}" class="text-center">暂无内容</view>
 
@@ -256,7 +274,8 @@ export default class Zone extends wepy.page {
     studentIds: [],
     firstInit: true,
     paymentLocked: false,
-    loadMoreCommentArray: []
+    loadMoreCommentArray: [],
+    shareTitle: ''
   }
   watch = {
     classInfo(newVal, oldVal) {
@@ -298,6 +317,8 @@ export default class Zone extends wepy.page {
     this.currerntSubActivityId = []
     this.classInfo = wx.getStorageSync('classInfo')
     this.$apply()
+    this.resetData()
+    this.getZoneList()
   }
   onLoad() {
     if (!this.checkDataExist('memberInfo')) {
@@ -413,6 +434,10 @@ export default class Zone extends wepy.page {
     return retObj
   }
   methods = {
+    // shareMsg(title) {
+    //   this.shareTitle = title
+    //   this.$apply()
+    // },
     pay(momentId, collectionId) {
       if (this.paymentLocked) {
         return
@@ -540,6 +565,10 @@ export default class Zone extends wepy.page {
       })
     },
     jumpPublish(value) {
+      if (!this.classInfo) {
+        showMsg('请选绑定班级', 3000)
+        return
+      }
       let url = value === 'account' ? 'recordCashflow' : `publish?type=${value}`
       wx.navigateTo({
         url: url
@@ -589,17 +618,41 @@ export default class Zone extends wepy.page {
       this.addToOrder(this.currentCollectionId)
     }
   }
+  onShareAppMessage(res) {
+    return {
+      title: this.shareTitle
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
+.msg-card {
+  background-color: #fff;
+  margin-bottom: 30rpx;
+  padding: 30rpx;
+}
+.tag-wrapper {
+  padding: 20rpx 0;
+}
 .see-type {
   justify-content: space-between;
   padding: 20rpx 0;
-  .icon-message {
-    width:20%;
+  & > .icon-wrapper {
+    justify-content:flex-end;
+    width:30%;
+    .icon-share {
+      line-height: 1;
+      background-color: transparent;
+    }
+    button::after {
+      display: none;
+    }
+    .icon-message {
+      // padding-left: 30%;
+    }
   }
 }
 .img-list {
@@ -674,12 +727,12 @@ export default class Zone extends wepy.page {
 }
 .item-wrapper {
   margin-top: 30rpx;
-  background-color: #fff;
-  padding: 30rpx;
   color: #000;
+  background-color:#EBEBEB;
   & > .item {
-    margin-bottom:30rpx;
-    @include border-bottom;
+    margin-bottom:20rpx;
+    padding:30rpx;
+    background-color:#fff;
   }
 }
 .item {
