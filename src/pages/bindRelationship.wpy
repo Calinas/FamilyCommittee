@@ -51,7 +51,7 @@ export default class bindRelationship extends wepy.page {
     classId: -1,
     joinClassId: 0,
     classIdentityList: [],
-    type: '',
+    type: 'create',
     key: '',
     currentType: 'parents',
     relationshipTypes: [
@@ -94,17 +94,7 @@ export default class bindRelationship extends wepy.page {
       item: filterList
     }).then(res => {
       if(res.data.success){
-        this.checkJoinKey()
-      }
-    })
-  }
-  checkJoinKey() {
-    joinClass({
-      class_id: this.joinClassId,
-      join_key: this.key
-    }).then(res => {
-      if(res.data.success) {
-        showMsg('成功加入班级');
+        showMsg('成功绑定身份');
         setTimeout(() => {
           wx.switchTab({url: 'zone'})
         },2000)
@@ -202,7 +192,7 @@ export default class bindRelationship extends wepy.page {
         this.joinClassCallback(this.classInfo.id, filterList)
       } else if(this.type === 'edit' && this.currentType === 'teacher') {// 如果是直接修改身份绑定
         this.teacherCallback()
-      } else if ( this.type === 'create' && !this.joinClassId) { // 如果是创建班级得
+      } else if ( this.type === 'create') { // 如果是创建班级得
         let createClassData = this.$parent.globalData.createClass
         let data = {
           school_id: createClassData.school_id,
@@ -211,9 +201,9 @@ export default class bindRelationship extends wepy.page {
           class: createClassData.class
         }
         this.addClassCallback(data, filterList)
-      } else if(this.type === 'join'){ // 如果是加入班级
-        this.joinClassId && this.joinClassCallback(this.joinClassId, filterList)
-      }
+      } else if(this.type === 'join' && this.currentType === 'parents'){ // 如果是加入班级
+        this.joinClassCallback(this.joinClassId, filterList)
+      } 
     }
   }
   checkCanSubmit() {

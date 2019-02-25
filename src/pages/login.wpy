@@ -33,7 +33,9 @@ export default class login extends wepy.page {
     head_img: '',
     phone: '',
     open_id: '',
-    joinKey: ''
+    joinKey: '',
+    classId: -1,
+    name: ''
   };
   methods = {
     getUserInfo(e) {
@@ -86,14 +88,21 @@ export default class login extends wepy.page {
         avatar: this.head_img
       }
       wx.setStorageSync('memberInfo', memberInfo)
-      let url = this.joinKey ? `login?key=${this.joinKey}` : 'classList'
-      wx.reLaunch({
-        url: url
-      })
+      if (this.joinKey) {
+        wx.navigateTo({
+          url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
+        })
+      } else {
+        wx.reLaunch({
+          url: 'classList'
+        })
+      }
     })
   }
   onLoad(e) {
     this.joinKey = e.key
+    this.classId = e.classId
+    this.name = e.name
     wx.login({
       success: res => {
         let old_wxapp_token = wx.getStorageSync('wxtoken')

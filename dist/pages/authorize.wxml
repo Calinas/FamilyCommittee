@@ -23,7 +23,7 @@
     <view class="flex-wrapper item last-one" style="align-items:center;">
       <text class="font-bold font-black sub-title" style="margin-right: 0;">逐出成员：</text>
       <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" bindtap="addNew" value="{{removeName}}" data-wpyaddnew-a="{{true}}" data-wpyaddnew-b="0" data-wpyaddnew-c="remove"/>
-      <button bindtap="changeCode">确认</button>
+      <button bindtap="remove">确认</button>
     </view>
     <view class="font-black font-bold title">
       <text>权限管理</text>

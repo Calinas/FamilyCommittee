@@ -94,7 +94,7 @@ export default class joinClass extends wepy.page {
   createClassCallback(data){
     this.$parent.globalData.createClass = data
     wepy.navigateTo({
-        url: 'bindRelationship'
+        url: 'bindRelationship?type=create'
       })
   }
   methods = {

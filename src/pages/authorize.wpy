@@ -23,7 +23,7 @@
     <view class="flex-wrapper item last-one" style="align-items:center;">
       <text class="font-bold font-black sub-title" style="margin-right: 0;">逐出成员：</text>
       <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @tap="addNew({{true}}, 0, 'remove')" value="{{removeName}}"/>
-      <button @tap="changeCode">确认</button>
+      <button @tap="remove">确认</button>
     </view>
     <view class="font-black font-bold title">
       <text>权限管理</text>
@@ -79,7 +79,8 @@ export default class bindRelationship extends wepy.page {
     studentList: [],
     code: '',
     removeFlag: false,
-    removeName: ''
+    removeName: '',
+    removeId: -1
   }
   onLoad() {
     this.classInfo = wx.getStorageSync('classInfo')
@@ -96,6 +97,19 @@ export default class bindRelationship extends wepy.page {
     })
   }
   methods = {
+    remove() {
+      authorizeReq.removeMember({
+        class_id: this.classInfo.id,
+        remove_member_id: this.removeId
+      }).then(res => {
+        if (res.data.success) {
+          showMsg('操作成功')
+          this.removeName = ''
+          this.removeId = -1
+          this.$apply()
+        }
+      })
+    },
     changeCode() {
       authorizeReq.changeCode({
         class_id: this.classInfo.id,
@@ -133,18 +147,10 @@ export default class bindRelationship extends wepy.page {
     selectStudent(value) {
       if (this.removeFlag) {
         this.removeName = value.class_nickname
+        this.removeId = value.id
+        this.removeFlag = false
+        this.showAdd = false
         this.$apply()
-        authorizeReq.removeMember({
-          class_id: this.classInfo.id,
-          remove_member_id: value.id
-        }).then(res => {
-          if (res.data.success) {
-            showMsg('操作成功')
-            this.removeFlag = false
-            this.showAdd = false
-            this.$apply()
-          }
-        })
       } else {
         authorizeReq.addAuth({
           class_id: this.classInfo.id,

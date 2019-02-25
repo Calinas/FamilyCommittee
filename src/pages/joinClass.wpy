@@ -39,7 +39,7 @@ export default class JoinClass extends wepy.page {
     if (this.isShare && !this.memberInfo.member_id) {
       // 如果是从分享链接进入且没有注册，先走注册流程
       wx.redirectTo({
-        url: `login?key=${this.key}`
+        url: `login?classId=${this.classId}&name=${this.name}&key=${this.key}`
       })
     }
   }
@@ -49,8 +49,16 @@ export default class JoinClass extends wepy.page {
       this.$apply()
     },
     joinNow() {
-      wepy.navigateTo({
-        url: `bindRelationship?id=${this.classId}&type=join&key=${this.key}`
+      joinClass({
+        class_id: this.classId,
+        join_key: this.key
+      }).then(res => {
+        if(res.data.success) {
+          showMsg('成功加入班级');
+          setTimeout(() => {
+            wepy.navigateTo({url: `bindRelationship?id=${this.classId}&type=join&key=${this.key}`})
+          },2000)
+        }
       })
     }
   }
