@@ -55,6 +55,10 @@ export default class JoinClass extends wepy.page {
       }).then(res => {
         if(res.data.success) {
           showMsg('成功加入班级');
+          wx.setStorage({
+            key: 'classInfo',
+            data: res.data.class
+          })
           setTimeout(() => {
             wepy.navigateTo({url: `bindRelationship?id=${this.classId}&type=join&key=${this.key}`})
           },2000)

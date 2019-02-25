@@ -1,13 +1,13 @@
 
-  <view class="common-container common-container-grey _d8ff260">
-    <scroll-view class="scroll-container _d8ff260">
-      <view class="msg-card font-black _d8ff260"  wx:for="{{list}}">
-        <view class="flex-wrapper center _d8ff260">
-          <image src="" class="small-avatar _d8ff260"/>
-          <text class="_d8ff260">我通过{{item.member.nickname}}发布的收s款信息支付了</text>
+  <view class="common-container common-container-grey _1a23d71">
+    <scroll-view class="scroll-container _1a23d71">
+      <view class="msg-card font-black _1a23d71"  wx:for="{{list}}">
+        <view class="flex-wrapper center _1a23d71">
+          <image src="" class="small-avatar _1a23d71"/>
+          <text class="_1a23d71">我通过{{item.member.nickname}}发布的收s款信息支付了</text>
         </view>
-        <view class="btn-money _d8ff260">{{item.pay_amount}}元</view>
-        <view class="font-grey font-small time _d8ff260">{{item.updated_at}}</view>
+        <view class="btn-money _1a23d71">{{item.pay_amount}}元</view>
+        <view class="font-grey font-small time _1a23d71">{{item.updated_at}}</view>
       </view>
       
     </scroll-view>

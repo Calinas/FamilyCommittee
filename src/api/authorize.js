@@ -93,9 +93,9 @@ export function changeCode(params) {
   })
 }
 
-// 逐出班级成员
+// 驱逐成员
 export function removeMember(params) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     wepy.request({
       url: '/class/removeMember',
       data: Object.assign({}, commonParams(), {

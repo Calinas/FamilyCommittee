@@ -57,7 +57,9 @@ export function getClassList(data) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/member/class/index',
-      data: commonParams()
+      data: Object.assign({}, commonParams(), {
+        ps: 100
+      })
     }).then(res => {
       resolve(res)
     })
