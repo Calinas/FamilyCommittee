@@ -61,13 +61,30 @@ export default class ClassList extends wepy.page {
     classList: [],
     memberInfo: {},
     classInfo: null,
-    list: []
+    list: [],
+    key: '',
+    name: '',
+    clasId: -1
   }
   getClassList() {
     getClassList().then(res => {
       this.list = res.data.list
       this.$apply()
     })
+  }
+  onShareAppMessage(res) {
+    return {
+      title: `${this.memberInfo.nickname}邀请您一起加入${this.classInfo.name}`,
+      path: `pages/classList?classId=${this.classInfo.id}&name=${this.classInfo.name}&key=${this.classInfo.join_key}`
+    }
+  }
+  onPullDownRefresh() {
+    this.resetData()
+    this.getClassList()
+  }
+  resetData() {
+    this.List = []
+    this.$apply()
   }
   methods = {
     setClass(index) {
@@ -76,6 +93,7 @@ export default class ClassList extends wepy.page {
         data: this.list[index].class,
         success: res => {
           this.classInfo = this.list[index].class
+          wx.switchTab({url: 'zone'})
           this.$apply()
         }
       })
@@ -87,10 +105,23 @@ export default class ClassList extends wepy.page {
       this.$parent.globalData.classHasChange = false
     }
   }
-  onLoad() {
+  onLoad(params) {
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.classInfo = wx.getStorageSync('classInfo')
     this.$parent.globalData.userData = this.memberInfo
+    this.name = params.name
+    this.classId = params.classId
+    this.key = params.key
+    if (this.key && !this.memberInfo.member_id) {
+      // 如果是从分享链接进入且没有注册，先走注册流程
+      wx.redirectTo({
+        url: `login?key=${this.key}`
+      })
+    } else if(this.key && this.memberInfo.member_id){
+      wx.navigateTo({
+        url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
+      })
+    }
     this.getClassList()
     this.$apply()
   }

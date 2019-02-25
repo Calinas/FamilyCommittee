@@ -81,9 +81,14 @@ export default class joinClass extends wepy.page {
   }
   checkClassExist(data){
     searchClass(data).then(res => {
-      wepy.navigateTo({
-        url: `joinClass?id=${res.data.data.id}`
-      })
+      let data = res.data.data
+      if(data && data.id) {
+        wepy.navigateTo({
+          url: `joinClass?classId=${data.id}&name=${data.name}`
+        })
+      } else {
+        showMsg('您输入的班级不存在，请重试')
+      }
     })
   }
   createClassCallback(data){
@@ -120,9 +125,8 @@ export default class joinClass extends wepy.page {
         year: Number(this.gradeNumber),
         class: Number(this.classNumber)
       }
-      this.type === 'create' && this.crateClassCallback(data)
+      this.type === 'create' && this.createClassCallback(data)
       this.type === 'join' && this.checkClassExist(data)
-
     }
   }
   onLoad(params) {
@@ -131,11 +135,6 @@ export default class joinClass extends wepy.page {
     this.memberInfo = globalData.memberInfo
     this.getSchoolList()
     this.$apply()
-  }
-  onShareAppMessage(res) {
-    return {
-      title: `${this.memberInfo.nickname}邀请您一起创建班级`
-    }
   }
   getSchoolList() {
     schoolList().then(res => {

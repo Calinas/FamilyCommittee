@@ -11,7 +11,7 @@
           <text class="text-center no-remind">暂无内容</text>
         </block>
         <block wx:else>
-          <view class="item" wx:for="{{studentList}}" @tap="select({{item.id}})">{{item.class_nickname}}</view>
+          <view class="item" wx:for="{{studentList}}" @tap="select({{item}})">{{item.class_nickname}}</view>
         </block>
       </view>
     </view>
@@ -49,6 +49,7 @@ export default class Search extends wepy.component {
       this.$emit('sure', this.input)
     },
     select (value) {
+      console.log(value)
       this.$emit('selectStudent', value)
       this.input = ''
       this.$apply()
@@ -61,7 +62,7 @@ export default class Search extends wepy.component {
 .icon-delete {
   position: absolute;
   right: 20rpx;
-  top: 20rpx;
+  top: 30rpx;
 }
 .no-remind {
   display: block;

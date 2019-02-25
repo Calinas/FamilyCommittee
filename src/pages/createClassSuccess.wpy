@@ -3,12 +3,12 @@
     <view class="font-grey info">
       恭喜，您成功创建了一个班级。您的班级为：{{name}}。您是当前班级家委会的管理员，管理员可以转让给其他家长。
     </view>
-    <button open-type="share" class="font-green btn-invite bg-white" @tap="share">马上邀请其他家长加入</button>
+    <button open-type="share" class="font-green btn-invite bg-white" @tap="share">点击按钮邀请其他家长加入</button>
     <image src="{{code}}" class="code"/>
     <text class="font-grey remind">也可通过扫码加入班级家委会</text>
     <view class="common-line line-with-btn">
       <input type="text" disabled value="{{key}}" />
-      <view class="weui-btn weui-btn_primary btn" style="width: 220rpx" data-text="{{key}}" @tap="copyText">加入家委会</view>
+      <view class="weui-btn weui-btn_primary btn" style="width: 320rpx" data-text="{{key}}" @tap="copyText">一键复制验证码</view>
     </view>
     </view>
   </view>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '创建班级成功'
@@ -26,7 +26,9 @@ export default class bindRelationship extends wepy.page {
     name: '重庆市第三中学',
     memberInfo: null,
     code: '',
-    key: ''
+    key: '',
+    classId: -1,
+    isShare: ''
   }
   methods = {
     copyText(e) {
@@ -36,12 +38,7 @@ export default class bindRelationship extends wepy.page {
           wx.getClipboardData({
             success: function (res) {
               wx.showToast({
-                title: '复制成功',
-                success: function(res) {
-                  wx.navigateTo({
-                    url: 'joinClass'
-                  })
-                }
+                title: '复制成功'
               })
             }
           })
@@ -49,17 +46,31 @@ export default class bindRelationship extends wepy.page {
       })
     }
   }
+  onShareAppMessage(res) {
+    return {
+      title: `${this.memberInfo.nickname}邀请您一起加入${this.name}`,
+      path: `pages/createClassSuccess?classId=${this.classId}&name=${this.name}&key=${this.key}&is_share=true`
+    }
+  }
   onLoad(params) {
+    console.log(params)
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.name = params.name
     this.code = params.code
     this.key = params.key
-    this.$apply()
-  }
-  onShareAppMessage(res) {
-    return {
-      title: `${this.memberInfo.nickname}邀请您一起加入${this.name}`
+    this.classId = params.classId
+    this.isShare = params.is_share
+    if (this.isShare && !this.memberInfo.member_id) {
+      // 如果是从分享链接进入且没有注册，先走注册流程
+      wx.redirectTo({
+        url: `login?key=${this.key}`
+      })
+    } else if(this.isShare && this.memberInfo.member_id){
+      wx.navigateTo({
+        url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
+      })
     }
+    this.$apply()
   }
 }
 </script>
@@ -81,7 +92,7 @@ export default class bindRelationship extends wepy.page {
   text-align:center;
   width:320rpx;
   background-color:#fff;
-  width:320rpx;
+  width:400rpx;
   font-size:30rpx;
 }
 .code {

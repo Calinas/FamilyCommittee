@@ -1,177 +1,177 @@
 
-  <view class="common-container common-container-grey _17dc948" style="padding: 0;position:relative" bindtap="closeToggle">
-    <view class="img-mask _17dc948">
-      <image src="/images/banner1.jpg" mode="scaleToFill" class="bg-img _17dc948"/>
-      <view class="mask _17dc948"/>
-      <block class="_17dc948">
-        <view class="btn btn-set flex-wrapper center _17dc948" catchtap="toggleMenu" data-wpytogglemenu-a="setFlag">
-          <text class="iconfont icon-menu _17dc948"/>
-          <text class="_17dc948">设置</text>
+  <view class="common-container common-container-grey _849026a" style="padding: 0;position:relative" bindtap="closeToggle">
+    <view class="img-mask _849026a">
+      <image src="/images/banner1.jpg" mode="scaleToFill" class="bg-img _849026a"/>
+      <view class="mask _849026a"/>
+      <block class="_849026a">
+        <view class="btn btn-set flex-wrapper center _849026a" catchtap="toggleMenu" data-wpytogglemenu-a="setFlag">
+          <text class="iconfont icon-menu _849026a"/>
+          <text class="_849026a">设置</text>
         </view>
-        <view class="btn btn-publish flex-wrapper center _17dc948" catchtap="toggleMenu" data-wpytogglemenu-a="publishFlag">
-          <text class="iconfont icon-edit _17dc948"/>
-          <text class="_17dc948">发布</text>
+        <view class="btn btn-publish flex-wrapper center _849026a" catchtap="toggleMenu" data-wpytogglemenu-a="publishFlag">
+          <text class="iconfont icon-edit _849026a"/>
+          <text class="_849026a">发布</text>
         </view>
       </block>
-      <view class="caption _17dc948"  wx:if="{{classInfo}}">
+      <view class="caption _849026a"  wx:if="{{classInfo}}">
         <!-- <text class="school"></text> -->
-        <text class="class _17dc948">{{classInfo.name}}</text>
+        <text class="class _849026a">{{classInfo.name}}</text>
       </view>
     </view>
     <!-- 筛选框 -->
-    <view class="menu-wrapper flex-wrapper _17dc948">
-      <view data-type="circles" bindtap="jumpPublish"  wx:for="{{menuList}}" class="_17dc948" data-wpyjumppublish-a="{{item.type}}">
-        <image src="{{item.src}}" mode="scaleToFill" class="_17dc948"/>
-        <text class="_17dc948">{{item.text}}</text>
+    <view class="menu-wrapper flex-wrapper _849026a">
+      <view data-type="circles" bindtap="jumpPublish"  wx:for="{{menuList}}" class="_849026a" data-wpyjumppublish-a="{{item.type}}">
+        <image src="{{item.src}}" mode="scaleToFill" class="_849026a"/>
+        <text class="_849026a">{{item.text}}</text>
       </view>
     </view>
 
-    <view class="item-wrapper _17dc948"  wx:if="{{list.length}}">
-      <view class="item _17dc948" wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
-        <view class="flex-wrapper center _17dc948">
-          <image src="{{item.member.head_img}}" class="small-avatar _17dc948"/>
-          <text class="_17dc948">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+    <view class="item-wrapper _849026a"  wx:if="{{list.length}}">
+      <view class="item _849026a" wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
+        <view class="flex-wrapper center _849026a">
+          <image src="{{item.member.head_img}}" class="small-avatar _849026a"/>
+          <text class="_849026a">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
         </view>
-        <view class="font-small font-grey text-right _17dc948">{{item.created_at}}</view>
-        <view class="item-desc _17dc948">{{item.info.description}}</view>
-        <view class="img-list flex-wrapper _17dc948" wx:if="{{item.image.length}}">
-          <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _17dc948" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
+        <view class="font-small font-grey text-right _849026a">{{item.created_at}}</view>
+        <view class="item-desc _849026a">{{item.info.description}}</view>
+        <view class="img-list flex-wrapper _849026a" wx:if="{{item.image.length}}">
+          <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
         </view>
-        <view class="flex-wrapper font-grey font-small see-type _17dc948">
-          <text class="_17dc948">{{item.see_type === 'all' ? '全部可见' : '班级可见'}}</text>
-          <view class="font-grey iconfont icon-message text-right _17dc948" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
+        <view class="flex-wrapper font-grey font-small see-type _849026a">
+          <text class="_849026a">{{item.see_type === 'all' ? '全部可见' : '班级可见'}}</text>
+          <view class="font-grey iconfont icon-message text-right _849026a" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
         </view>
-        <block wx:if="{{item.app_type === 'activity'}}" class="_17dc948">
-          <view class="tag-wrapper item-tag _17dc948" wx:if="{{item.info.item.length}}">
-            <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }} _17dc948" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" bindtap="joinActivity" data-wpyjoinactivity-a="{{item.activity_id}}" data-wpyjoinactivity-b="{{item.id}}" data-wpyjoinactivity-c="{{listIndex}}" data-wpyjoinactivity-d="{{activityIndex}}">{{item.name}}</text>
+        <block wx:if="{{item.app_type === 'activity'}}" class="_849026a">
+          <view class="tag-wrapper item-tag _849026a" wx:if="{{item.info.item.length}}">
+            <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }} _849026a" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" bindtap="joinActivity" data-wpyjoinactivity-a="{{item.activity_id}}" data-wpyjoinactivity-b="{{item.id}}" data-wpyjoinactivity-c="{{listIndex}}" data-wpyjoinactivity-d="{{activityIndex}}">{{item.name}}</text>
           </view>
-          <view class="tag-wrapper _17dc948">
-            <text class="tag tag-blue _17dc948" bindtap="submitJoinActivity">选好了，报名</text>
+          <view class="tag-wrapper _849026a">
+            <text class="tag tag-blue _849026a" bindtap="submitJoinActivity">选好了，报名</text>
             <!-- <text class="tag tag-grey">已报名</text> -->
           </view>
           <!-- 报名结果 -->
-          <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key" class="_17dc948">
-            <view class="result-wrapper _17dc948" wx:if="{{activity.student_list.length}}">
-              <view class="title item-tag _17dc948">
-                <text class="tag tag-empty _17dc948">{{activity.name}}</text>
-                <text class="_17dc948">{{activity.student_list.length}}人报名</text>
+          <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key" class="_849026a">
+            <view class="result-wrapper _849026a" wx:if="{{activity.student_list.length}}">
+              <view class="title item-tag _849026a">
+                <text class="tag tag-empty _849026a">{{activity.name}}</text>
+                <text class="_849026a">{{activity.student_list.length}}人报名</text>
               </view>
-              <view class="person-list tag-wrapper _17dc948">
-                <text class="tag tag-light-grey _17dc948" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
+              <view class="person-list tag-wrapper _849026a">
+                <text class="tag tag-light-grey _849026a" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
               </view>
             </view>
           </block>
           <!-- 没有参加报名的 -->
-            <view class="result-wrapper _17dc948" wx:if="{{item.info.not_join_student_list.length}}">
-              <view class="title item-tag _17dc948">
-                <text class="_17dc948">{{item.info.not_join_student_list.length}}人未报名</text>
+            <view class="result-wrapper _849026a" wx:if="{{item.info.not_join_student_list.length}}">
+              <view class="title item-tag _849026a">
+                <text class="_849026a">{{item.info.not_join_student_list.length}}人未报名</text>
               </view>
-              <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey _17dc948" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+              <view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;">
+                <text class="tag tag-light-grey _849026a" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
               </view>
             </view>
         </block>
         <!-- 收款 -->
-        <block wx:if="{{item.app_type === 'collection'}}" class="_17dc948">
-          <view class="tag-wrapper item-tag _17dc948" wx:if="{{item.info.item.length}}">
-            <text class="tag-big tag tag-empty _17dc948" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}：¥{{collection.money}}</text>
+        <block wx:if="{{item.app_type === 'collection'}}" class="_849026a">
+          <view class="tag-wrapper item-tag _849026a" wx:if="{{item.info.item.length}}">
+            <text class="tag-big tag tag-empty _849026a" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}：¥{{collection.money}}</text>
           </view>
-          <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" class="_17dc948">
-            <view class="result-wrapper _17dc948" wx:if="{{collection.student_list.length}}">
-              <view class="title item-tag _17dc948">
-                <text class="_17dc948">{{collection.student_list.length}}人缴费{{collection.money}}</text>
+          <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" class="_849026a">
+            <view class="result-wrapper _849026a" wx:if="{{collection.student_list.length}}">
+              <view class="title item-tag _849026a">
+                <text class="_849026a">{{collection.student_list.length}}人缴费{{collection.money}}</text>
               </view>
-              <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey _17dc948" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
+              <view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;">
+                <text class="tag tag-light-grey _849026a" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
               </view>
             </view>
           </block>
-          <block wx:if="{{item.info.not_join_student_list.length}}" class="_17dc948">
-            <view class="result-wrapper _17dc948">
-              <view class="title item-tag _17dc948">
-                <text class="_17dc948">{{item.info.not_join_student_list.length}}人未缴费</text>
+          <block wx:if="{{item.info.not_join_student_list.length}}" class="_849026a">
+            <view class="result-wrapper _849026a">
+              <view class="title item-tag _849026a">
+                <text class="_849026a">{{item.info.not_join_student_list.length}}人未缴费</text>
               </view>
-              <view class="person-list tag-wrapper _17dc948" style="margin-top: 20rpx;">
-                <text class="tag tag-light-grey _17dc948" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+              <view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;">
+                <text class="tag tag-light-grey _849026a" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
               </view>
             </view>
           </block>
         </block>
         <!-- 留言结果 -->
-        <view class="comment-wrapper item-desc font-grey _17dc948" wx:if="{{item.comment_list.count}}">
-          <view class="item _17dc948" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
-            <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_17dc948">
-              <text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.to_member.id}}" data-wpyaddcomment-e="{{comment.to_member.class_nickname}}">{{comment.to_member.class_nickname}}：</text>
+        <view class="comment-wrapper item-desc font-grey _849026a" wx:if="{{item.comment_list.count}}">
+          <view class="item _849026a" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
+            <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_849026a">
+              <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.to_member.id}}" data-wpyaddcomment-e="{{comment.to_member.class_nickname}}">{{comment.to_member.class_nickname}}：</text>
             </block>
-            <block wx:else class="_17dc948">
-              <text class="font-blue _17dc948" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}: </text>
+            <block wx:else class="_849026a">
+              <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}: </text>
             </block>
-            <text class="_17dc948">{{comment.content}}</text>
+            <text class="_849026a">{{comment.content}}</text>
           </view>
-          <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center _17dc948" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}">
-            <text class="font-grey _17dc948">加载更多评论</text>
+          <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center _849026a" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}">
+            <text class="font-grey _849026a">加载更多评论</text>
           </view>
         </view>
       </view>
     </view>
-    <view wx:if="{{this.loadFinished && !list.length}}" class="text-center _17dc948">暂无内容</view>
+    <view wx:if="{{this.loadFinished && !list.length}}" class="text-center _849026a">暂无内容</view>
 
     <!-- 左边侧边栏 -->
-    <view class="sidebar sidebar-set bg-white {{setFlag ? 'show': ''}} _17dc948">
-      <view class="list _17dc948">
-        <view class="title font-bold font-black _17dc948">
-          <text class="iconfont icon-setting _17dc948"/>
-          <text class="_17dc948">设置</text>
+    <view class="sidebar sidebar-set bg-white {{setFlag ? 'show': ''}} _849026a">
+      <view class="list _849026a">
+        <view class="title font-bold font-black _849026a">
+          <text class="iconfont icon-setting _849026a"/>
+          <text class="_849026a">设置</text>
         </view>
-        <view catchtap="jumpPage" wx:if="{{classInfo.id}}" class="_17dc948" data-wpyjumppage-a="bindRelationship?type=edit">身份绑定</view>
+        <view catchtap="jumpPage" wx:if="{{classInfo.id}}" class="_849026a" data-wpyjumppage-a="bindRelationship?type=edit">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
-        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_17dc948" data-wpyjumppage-a="cashflow">财务记账</view>
-        <view catchtap="jumpPage" class="_17dc948" data-wpyjumppage-a="personalCashflow">财务流水</view>
+        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="cashflow">财务记账</view>
+        <view catchtap="jumpPage" class="_849026a" data-wpyjumppage-a="personalCashflow">财务流水</view>
         <!-- <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view> -->
-        <view catchtap="jumpPage" wx:if="{{auth.president}}" class="_17dc948" data-wpyjumppage-a="authorize">家委会管理</view>
+        <view catchtap="jumpPage" wx:if="{{auth.president}}" class="_849026a" data-wpyjumppage-a="authorize">家委会管理</view>
         </view>
     </view>
     <!-- 右边侧边栏 -->
-    <view class="sidebar sidebar-publish bg-white {{publishFlag ? 'show': ''}} _17dc948">
-      <view class="list _17dc948">
-        <view class="title font-bold font-black _17dc948">
-          <text class="iconfont icon-publish _17dc948"/>
-          <text class="_17dc948">发布</text>
+    <view class="sidebar sidebar-publish bg-white {{publishFlag ? 'show': ''}} _849026a">
+      <view class="list _849026a">
+        <view class="title font-bold font-black _849026a">
+          <text class="iconfont icon-publish _849026a"/>
+          <text class="_849026a">发布</text>
         </view>
-        <view type="family" catchtap="jumpPage" wx:if="{{auth.circles}}" class="_17dc948" data-wpyjumppage-a="publish" data-wpyjumppage-b="zone">家长圈</view>
-        <view catchtap="jumpPage" wx:if="{{auth.photos}}" class="_17dc948" data-wpyjumppage-a="photos">相册</view>
-        <view catchtap="jumpPage" wx:if="{{auth.notify}}" class="_17dc948" data-wpyjumppage-a="publish" data-wpyjumppage-b="notice">通知</view>
-        <view catchtap="jumpPage" wx:if="{{auth.activity}}" class="_17dc948" data-wpyjumppage-a="publish" data-wpyjumppage-b="activity">活动</view>
-        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_17dc948" data-wpyjumppage-a="publish" data-wpyjumppage-b="money">收款</view>
-        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_17dc948" data-wpyjumppage-a="recordCashflow">记账</view>
+        <view type="family" catchtap="jumpPage" wx:if="{{auth.circles}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="zone">家长圈</view>
+        <view catchtap="jumpPage" wx:if="{{auth.photos}}" class="_849026a" data-wpyjumppage-a="photos">相册</view>
+        <view catchtap="jumpPage" wx:if="{{auth.notify}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="notice">通知</view>
+        <view catchtap="jumpPage" wx:if="{{auth.activity}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="activity">活动</view>
+        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="money">收款</view>
+        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="recordCashflow">记账</view>
         </view>
     </view>
     
-  <view class="wx-popup _e888540 _17dc948"  wx:if="{{$CurrentModal$flag}}">
-    <view class="popup-container _e888540">
-      <view class="wx-popup-con _e888540">
-        <textarea type="text" placeholder="{{$CurrentModal$placeholderText}}" bindinput="$CurrentModal$bindInput" value="{{$CurrentModal$commentInput}}" class="_e888540"/>
+  <view class="wx-popup _284a651 _849026a"  wx:if="{{$CurrentModal$flag}}">
+    <view class="popup-container _284a651">
+      <view class="wx-popup-con _284a651">
+        <textarea type="text" placeholder="{{$CurrentModal$placeholderText}}" bindinput="$CurrentModal$bindInput" value="{{$CurrentModal$commentInput}}" class="_284a651"/>
       </view>
-      <view class="wx-popup-btn _e888540">
-        <text class="btn-no _e888540" bindtap="$CurrentModal$cancelFn">{{$CurrentModal$cancelBtnText}}</text>
-        <text class="btn-ok _e888540" bindtap="$CurrentModal$sureFn">{{$CurrentModal$sureBtnText}}</text>
+      <view class="wx-popup-btn _284a651">
+        <text class="btn-no _284a651" bindtap="$CurrentModal$cancelFn">{{$CurrentModal$cancelBtnText}}</text>
+        <text class="btn-ok _284a651" bindtap="$CurrentModal$sureFn">{{$CurrentModal$sureBtnText}}</text>
       </view>
     </view>
   </view>
     
-  <view class="wx-popup _7d93963 _17dc948"  wx:if="{{$SelectModal$flag}}">
-    <view class="popup-container _7d93963">
-      <view class="wx-popup-con _7d93963">
-        <checkbox-group class="width80 _7d93963" bindchange="$SelectModal$pickerChange" id="type">
-          <label class="radio _7d93963" wx:for="{{$SelectModal$list}}">
-            <checkbox value="{{item.id}}" checked="{{item.checked}}" class="_7d93963"/>
+  <view class="wx-popup _3c6ee52 _849026a"  wx:if="{{$SelectModal$flag}}">
+    <view class="popup-container _3c6ee52">
+      <view class="wx-popup-con _3c6ee52">
+        <checkbox-group class="width80 _3c6ee52" bindchange="$SelectModal$pickerChange" id="type">
+          <label class="radio _3c6ee52" wx:for="{{$SelectModal$list}}">
+            <checkbox value="{{item.id}}" checked="{{item.checked}}" class="_3c6ee52"/>
             {{item.name}}
           </label>
         </checkbox-group>
       </view>
-      <view class="wx-popup-btn _7d93963">
-        <text class="btn-no _7d93963" bindtap="$SelectModal$cancelFn">取消</text>
-        <text class="btn-ok _7d93963" bindtap="$SelectModal$sureFn">确认</text>
+      <view class="wx-popup-btn _3c6ee52">
+        <text class="btn-no _3c6ee52" bindtap="$SelectModal$cancelFn">取消</text>
+        <text class="btn-ok _3c6ee52" bindtap="$SelectModal$sureFn">确认</text>
       </view>
     </view>
   </view>

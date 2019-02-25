@@ -22,7 +22,7 @@
     </view>
     <view class="flex-wrapper item last-one" style="align-items:center;">
       <text class="font-bold font-black sub-title" style="margin-right: 0;">逐出成员：</text>
-      <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @tap="addNew({{true}})" />
+      <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @tap="addNew({{true}}, 0, 'remove')" value="{{removeName}}"/>
       <button @tap="changeCode">确认</button>
     </view>
     <view class="font-black font-bold title">
@@ -77,7 +77,9 @@ export default class bindRelationship extends wepy.page {
     memberInfo: null,
     classInfo: {},
     studentList: [],
-    code: ''
+    code: '',
+    removeFlag: false,
+    removeName: ''
   }
   onLoad() {
     this.classInfo = wx.getStorageSync('classInfo')
@@ -99,7 +101,7 @@ export default class bindRelationship extends wepy.page {
         class_id: this.classInfo.id,
         join_key: this.code
       }).then(res => {
-        if(res.data.success) {
+        if (res.data.success) {
           this.classInfo.join_key = this.code
           wx.setStorageSync('classInfo', this.classInfo)
           this.code = ''
@@ -108,7 +110,7 @@ export default class bindRelationship extends wepy.page {
         }
       })
     },
-    bindForm(e){
+    bindForm(e) {
       this[e.currentTarget.id] = e.detail.value
       this.$apply()
     },
@@ -128,11 +130,26 @@ export default class bindRelationship extends wepy.page {
         }
       })
     },
-    selectStudent(studentId) {
-      authorizeReq.addAuth({
-        class_id: this.classInfo.id,
-        role_id: this.currentRoleId,
-        join_member_id: studentId
+    selectStudent(value) {
+      if (this.removeFlag) {
+        this.removeName = value.class_nickname
+        this.$apply()
+        authorizeReq.removeMember({
+          class_id: this.classInfo.id,
+          remove_member_id: value.id
+        }).then(res => {
+          if (res.data.success) {
+            showMsg('操作成功')
+            this.removeFlag = false
+            this.showAdd = false
+            this.$apply()
+          }
+        })
+      } else {
+        authorizeReq.addAuth({
+          class_id: this.classInfo.id,
+          role_id: this.currentRoleId,
+          join_member_id: value.id
       }).then(res => {
         if (res.data.success) {
           showMsg('添加成功')
@@ -141,14 +158,18 @@ export default class bindRelationship extends wepy.page {
           this.$apply()
         }
       })
+      }
     },
     cancel() {
       this.showAdd = false
       this.$apply()
     },
-    addNew(booleanValue, id) {
+    addNew(booleanValue, id, type) {
       this.showAdd = booleanValue
       this.currentRoleId = id
+      if(type === 'remove') {
+        this.removeFlag = true
+      }
       this.$apply()
     },
     sure(value) {
@@ -170,9 +191,11 @@ export default class bindRelationship extends wepy.page {
 <style lang="scss">
 @import '../styles/mixins.scss';
 .last-one {
-  @include border-bottom;
   padding-bottom: 40rpx;
   margin-bottom: 40rpx;
+  .sub-title {
+    width: 240rpx;
+  }
 }
 .qr-code {
   width:200rpx;

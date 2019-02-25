@@ -31,7 +31,7 @@
   text-align: center;
   width: 320rpx;
   background-color: #fff;
-  width: 320rpx;
+  width: 400rpx;
   font-size: 30rpx; }
 
 .code {

@@ -1,9 +1,10 @@
 @import "./../components/searchResult.wxss";
 @import "./../components/modal.wxss";
 .last-one {
-  border-bottom: 2rpx solid #d0d0d0;
   padding-bottom: 40rpx;
   margin-bottom: 40rpx; }
+  .last-one .sub-title {
+    width: 240rpx; }
 
 .qr-code {
   width: 200rpx;

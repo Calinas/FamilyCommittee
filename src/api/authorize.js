@@ -92,3 +92,19 @@ export function changeCode(params) {
     })
   })
 }
+
+// 逐出班级成员
+export function removeMember(params) {
+  return new Promise((resolve) => {
+    wepy.request({
+      url: '/class/removeMember',
+      data: Object.assign({}, commonParams(), {
+        class_id: params.class_id,
+        remove_member_id: params.remove_member_id
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

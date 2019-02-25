@@ -1,10 +1,10 @@
 <template lang="wxml" minapp="wepy">
   <view class="join-class common-container common-container-grey">
-    <!-- <view class="common-line">
-      重庆市第三中学xx小区2018级10班
-    </view> -->
     <view class="common-line">
-      <input type="text" placeholder="在此填入该班级验证码" @input="bindInput" id="joinKey" />
+      {{name}}
+    </view>
+    <view class="common-line">
+      <input type="text" placeholder="在此填入该班级验证码" @input="bindInput" id="key" />
     </view>
     <view class="common-line text-center font-green" @tap="joinNow">申请加入</view>
 
@@ -24,21 +24,24 @@ export default class JoinClass extends wepy.page {
     memberInfo: {},
     classInfo: {},
     classId: -1,
-    joinKey: '',
-    createClassInfo: {}
+    key: '',
+    createClassInfo: {},
+    name: '',
+    isShare: ''
   }
   onLoad(options) {
-    console.log(options)
-    this.classId = options.id
+    this.classId = options.classId
+    this.name = options.name
+    this.key = options.key
+    this.isShare = options.is_share
     this.memberInfo = wx.getStorageSync('memberInfo')
-    this.joinKey = options.key
-    if (this.joinKey && !this.memberInfo.member_id) {
+    this.$apply()
+    if (this.isShare && !this.memberInfo.member_id) {
       // 如果是从分享链接进入且没有注册，先走注册流程
       wx.redirectTo({
-        url: `login?key=${this.joinKey}`
+        url: `login?key=${this.key}`
       })
     }
-    this.$apply()
   }
   methods = {
     bindInput(e) {
@@ -46,16 +49,8 @@ export default class JoinClass extends wepy.page {
       this.$apply()
     },
     joinNow() {
-      joinClass({
-        class_id: this.classId,
-        join_key: this.joinKey
-      }).then(res => {
-        let data = res.data
-        setTimeout(() => {
-          wepy.navigateTo({
-            url: `bindRelationship?id=${data.class.id}`
-          })
-        }, 2000)
+      wepy.navigateTo({
+        url: `bindRelationship?id=${this.classId}&type=join&key=${this.key}`
       })
     }
   }

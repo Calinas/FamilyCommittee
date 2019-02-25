@@ -33,7 +33,7 @@
 <script>
 import wepy from 'wepy'
 import { getIdentityList, bindIdentity, identityList, bindTeacher } from '../api/user'
-import { addClass } from '../api/createClass'
+import { addClass, joinClass } from '../api/createClass'
 import { showMsg, isEmptyString } from '../utils/common'
 export default class bindRelationship extends wepy.page {
   config = {
@@ -52,6 +52,7 @@ export default class bindRelationship extends wepy.page {
     joinClassId: 0,
     classIdentityList: [],
     type: '',
+    key: '',
     currentType: 'parents',
     relationshipTypes: [
       {
@@ -74,7 +75,8 @@ export default class bindRelationship extends wepy.page {
   onLoad(e) {
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.classInfo = wx.getStorageSync('classInfo')
-    this.joinClassId = e.id
+    this.joinClassId = Number(e.id)
+    this.key = e.key
     this.type = e.type
     this.getRelationShip()
     this.$apply()
@@ -92,7 +94,20 @@ export default class bindRelationship extends wepy.page {
       item: filterList
     }).then(res => {
       if(res.data.success){
-        wx.navigateBack()
+        this.checkJoinKey()
+      }
+    })
+  }
+  checkJoinKey() {
+    joinClass({
+      class_id: this.joinClassId,
+      join_key: this.key
+    }).then(res => {
+      if(res.data.success) {
+        showMsg('成功加入班级');
+        setTimeout(() => {
+          wx.switchTab({url: 'zone'})
+        },2000)
       }
     })
   }
@@ -102,7 +117,7 @@ export default class bindRelationship extends wepy.page {
       name: this.teacherName
     }).then(res => {
       if(res.data.success) {
-        wx.navigateBack()
+        wx.switchTab({url: 'zone'})
       }
     })
   }
@@ -110,7 +125,7 @@ export default class bindRelationship extends wepy.page {
     if (res.data.success) {
       showMsg('班级创建成功')
       let data = res.data.data
-      let url = `createClassSuccess?name=${data.name}&code=${data.qr_code}&key=${data.join_key}`
+      let url = `createClassSuccess?name=${data.name}&code=${data.qr_code}&key=${data.join_key}&classId=${data.id}`
       this.$parent.globalData.classHasChange = true
       setTimeout(() => {
         wx.navigateTo({
@@ -134,7 +149,9 @@ export default class bindRelationship extends wepy.page {
           id: item.id
         }
       })
-      this.teacherName = teacherObj[0].teacher.name
+      if(this.teacherObj.length) {
+        this.teacherName = teacherObj[0].teacher.name
+      }
       this.$apply()
     })
   }
@@ -174,7 +191,7 @@ export default class bindRelationship extends wepy.page {
           student_name: item.value
         }
       })
-      if (this.type && this.currentType=== 'parents') { // 如果是直接修改身份绑定
+      if (this.type === 'edit' && this.currentType=== 'parents') { // 如果是直接修改身份绑定
         filterList = this.list.map(item => {
           return {
             identity_id: item.relationship[item.activeIndex].id,
@@ -183,9 +200,9 @@ export default class bindRelationship extends wepy.page {
           }
         })
         this.joinClassCallback(this.classInfo.id, filterList)
-      } else if(this.type && this.currentType === 'teacher') {
+      } else if(this.type === 'edit' && this.currentType === 'teacher') {// 如果是直接修改身份绑定
         this.teacherCallback()
-      } else if (!this.joinClassId) { // 如果是创建班级得
+      } else if ( this.type === 'create' && !this.joinClassId) { // 如果是创建班级得
         let createClassData = this.$parent.globalData.createClass
         let data = {
           school_id: createClassData.school_id,
@@ -194,7 +211,7 @@ export default class bindRelationship extends wepy.page {
           class: createClassData.class
         }
         this.addClassCallback(data, filterList)
-      } else { // 如果是加入班级
+      } else if(this.type === 'join'){ // 如果是加入班级
         this.joinClassId && this.joinClassCallback(this.joinClassId, filterList)
       }
     }
@@ -227,7 +244,7 @@ export default class bindRelationship extends wepy.page {
         activeIndex: 0
       }
       this.list.push(item)
-      this.type && this.getClassIdentity()
+      this.type === 'edit' && this.getClassIdentity()
       this.$apply()
     })
   }
