@@ -1,6 +1,6 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container common-container-grey">
-    <radio-group class="radio-group" @change="pickerChange" id="currentType" wx:if="{{type === 'edit'}}">
+    <radio-group class="radio-group" @change="pickerChange" id="currentType">
         <label class="radio" wx:for="{{relationshipTypes}}">
           <radio value="{{item.value}}" checked="{{item.checked}}" />
           {{item.label}}
@@ -178,7 +178,7 @@ export default class bindRelationship extends wepy.page {
       let filterList = this.list.map(item => {
         return {
           identity_id: item.relationship[item.activeIndex].id,
-          student_name: item.value
+          student_name: item.value,
         }
       })
       if (this.type === 'edit' && this.currentType=== 'parents') { // 如果是直接修改身份绑定
@@ -200,7 +200,19 @@ export default class bindRelationship extends wepy.page {
           year_class: createClassData.year,
           class: createClassData.class
         }
-        this.addClassCallback(data, filterList)
+        if (this.currentType === 'teacher') {
+          let item = {
+            type: 'teacher',
+            list: [{name: this.teacherName}]
+          }
+          this.addClassCallback(data, item)
+        } else {
+          let item = {
+            type: 'partiarch',
+            list: filterList
+          }
+          this.addClassCallback(data, item)
+        }
       } else if(this.type === 'join' && this.currentType === 'parents'){ // 如果是加入班级
         this.joinClassCallback(this.joinClassId, filterList)
       }
