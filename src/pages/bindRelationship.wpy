@@ -139,7 +139,7 @@ export default class bindRelationship extends wepy.page {
           id: item.id
         }
       })
-      if(this.teacherObj.length) {
+      if(this.teacherObj && this.teacherObj.length) {
         this.teacherName = teacherObj[0].teacher.name
       }
       this.$apply()
@@ -203,7 +203,7 @@ export default class bindRelationship extends wepy.page {
         this.addClassCallback(data, filterList)
       } else if(this.type === 'join' && this.currentType === 'parents'){ // 如果是加入班级
         this.joinClassCallback(this.joinClassId, filterList)
-      } 
+      }
     }
   }
   checkCanSubmit() {

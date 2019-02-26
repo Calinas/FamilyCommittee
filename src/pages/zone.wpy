@@ -53,7 +53,7 @@
           <view class="flex-wrapper font-grey font-small see-type">
             <text>{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
             <view class="flex-wrapper icon-wrapper">
-              <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.app_id}}, {{listIndex}})" wx:if="{{memberInfo.member_id === item.member.id}}"></view>
+              <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" wx:if="{{memberInfo.member_id === item.member.id}}"></view>
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle({{item.app_type}})"></view>
               <!-- <button open-type="share" class="font-grey iconfont icon-share text-right"></button> -->

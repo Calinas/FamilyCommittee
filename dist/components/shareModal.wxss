@@ -1,4 +1,4 @@
-.wx-popup._99385de {
+.wx-popup._9d46840 {
   position: fixed;
   left: 0;
   top: 0;
@@ -7,11 +7,11 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: 3; }
 
-.share-img._99385de {
+.share-img._9d46840 {
   padding-top: 40rpx;
   width: 100%; }
 
-.popup-container._99385de {
+.popup-container._9d46840 {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -23,19 +23,19 @@
   transform: translate(-50%, -50%);
   overflow: hidden;
   background: #fff; }
-  .popup-container input._99385de {
+  .popup-container input._9d46840 {
     padding-bottom: 40rpx;
     border-bottom: 2rpx solid #f2f2f2; }
 
-.wx-popup-con._99385de {
+.wx-popup-con._9d46840 {
   margin: 40rpx; }
 
-.wx-popup-btn._99385de {
+.wx-popup-btn._9d46840 {
   display: flex;
   justify-content: space-between;
   margin: 20px; }
 
-.wx-popup-btn text._99385de {
+.wx-popup-btn text._9d46840 {
   display: flex;
   align-items: center;
   justify-content: center;
