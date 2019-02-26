@@ -48,6 +48,8 @@ export default class cashflow extends wepy.page {
     navigationBarTitleText: '财务记账'
   }
   data = {
+    loading: false,
+    loadFinished: false,
     pn: 1,
     ps: 10,
     balance: 0,
@@ -70,6 +72,10 @@ export default class cashflow extends wepy.page {
     this.getInfo()
     this.$apply()
   }
+  onReachBottom() {
+    if (this.loading || this.loadFinished) return
+    this.getList()
+  }
   methods = {
     preview(urls) {
       previewImage(urls[0], urls)
@@ -81,6 +87,7 @@ export default class cashflow extends wepy.page {
     }
   }
   getList() {
+    this.loading = true
     getCircleList({
       see_type: 'class',
       class_id: this.classInfo.id,
@@ -88,7 +95,13 @@ export default class cashflow extends wepy.page {
       ps: this.ps,
       pn: this.pn
     }).then(res => {
-      this.list = res.data.list
+      let { list } = res.data
+      this.loading = false
+      this.pn++
+      if (list.length < this.ps) {
+        this.loadFinished = true
+      }
+      this.list = [...this.list, ...list]
       this.$apply()
     })
   }

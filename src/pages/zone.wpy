@@ -27,8 +27,8 @@
     </view>
 
     <view class="item-wrapper" wx:if="{{list.length}}">
-      <block wx:for="{{list}}">
-         <view class="item" wx:key="key" wx:for-index="listIndex">
+      <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
+         <view class="item">
           <view class="flex-wrapper center">
             <image src="{{item.member.head_img}}"  class="small-avatar" />
             <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
@@ -53,8 +53,10 @@
           <view class="flex-wrapper font-grey font-small see-type">
             <text>{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
             <view class="flex-wrapper icon-wrapper">
-              <button open-type="share" class="font-grey iconfont icon-share text-right"></button>
+              <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.app_id}}, {{listIndex}})" wx:if="{{memberInfo.member_id === item.member.id}}"></view>
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
+              <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle({{item.app_type}})"></view>
+              <!-- <button open-type="share" class="font-grey iconfont icon-share text-right"></button> -->
             </view>
           </view>
           <block wx:if="{{item.app_type === 'activity'}}">
@@ -181,6 +183,14 @@
       @sure.user="selectSure"
     >
     </SelectModal>
+    <shareModal
+      :flag.sync="showShareFlag"
+      :title.sync="shareTitle"
+      :imgSrc.sync="shareImg"
+      @cancel.user="cancelShareFn"
+      @sure.user="cancelShareFn"
+    >
+    </shareModal>
   </view>
 </template>
 
@@ -188,8 +198,9 @@
 import wepy from 'wepy'
 import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
+import shareModal from '../components/shareModal'
 import { showMsg, previewImage } from '../utils/common'
-import { getCircleList, addComment, joinActivity, getCommentList } from '../api/zone'
+import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle } from '../api/zone'
 import { addOrder, getPaymentParams } from '../api/finance'
 import { getAuth } from '../api/authorize'
 import { checkStudent } from '../api/user'
@@ -200,7 +211,8 @@ export default class Zone extends wepy.page {
   }
   components = {
     CurrentModal,
-    SelectModal
+    SelectModal,
+    shareModal
   }
   data = {
     menuList: [
@@ -210,7 +222,7 @@ export default class Zone extends wepy.page {
         src: '/images/icon/2.jpg'
       },
       {
-        text: '收费',
+        text: '收款',
         type: 'money',
         src: '/images/icon/money.jpg'
       },
@@ -241,6 +253,13 @@ export default class Zone extends wepy.page {
       notify: '通知',
       activity: '活动',
       account: '记账'
+    },
+    shareImgSrc: {
+      circles: '../images/share/circles.jpg',
+      collection: '../images/share/collection.jpg',
+      notify: '../images/share/notify.jpg',
+      activity: '../images/share/activity.jpg',
+      account: '../images/share/account.jpg'
     },
     pn: 1,
     ps: 10,
@@ -275,7 +294,9 @@ export default class Zone extends wepy.page {
     firstInit: true,
     paymentLocked: false,
     loadMoreCommentArray: [],
-    shareTitle: ''
+    shareTitle: '',
+    showShareFlag: false,
+    shareImg: ''
   }
   watch = {
     classInfo(newVal, oldVal) {
@@ -424,20 +445,58 @@ export default class Zone extends wepy.page {
   }
   findLoadmoreCommentInfo(arr, currentId) {
     let retObj = {}
-    for(let i = 0,len = arr.length; i < len; i++) {
-      if(arr[i].moment_id === currentId) {
-        retObj = Object.assign({},arr[i],{
+    for (let i = 0, len = arr.length; i < len; i++) {
+      if (arr[i].moment_id === currentId) {
+        retObj = Object.assign({}, arr[i], {
           index: i
         })
       }
     }
     return retObj
   }
+  getShareActionType(type) {
+    let action = '浏览'
+    switch (type) {
+      case 'activity':
+        action = '参加'
+        return action
+      case 'collection':
+        action = '缴费'
+        return action
+      default:
+        return action
+    }
+  }
+  getShareType(type) {
+    let category = ''
+    if (type === 'circles') {
+      category = '家长圈图文'
+    } else {
+      category = `家委会${this.type[type]}`
+    }
+    return category
+  }
   methods = {
-    // shareMsg(title) {
-    //   this.shareTitle = title
-    //   this.$apply()
-    // },
+    shareCircle(type) {
+      let shareActionType = this.getShareActionType(type)
+      let shareType = this.getShareType(type)
+      this.shareTitle = `${this.memberInfo.nickname}分享了一个${shareType}，点击${shareActionType}`
+      this.shareImg = this.shareImgSrc[type]
+      this.showShareFlag = true
+      this.$apply()
+    },
+    removeCircle(id, idx) {
+      deleteCircle({
+        moment_id: id,
+        class_id: this.classInfo.id
+      }).then(res => {
+        if (res.data.success) {
+          showMsg('成功删除')
+          this.list.splice(idx, 1)
+          this.$apply()
+        }
+      })
+    },
     pay(momentId, collectionId) {
       if (this.paymentLocked) {
         return
@@ -606,6 +665,10 @@ export default class Zone extends wepy.page {
       this.selectFlag = false
       this.$apply()
     },
+    cancelShareFn() {
+      this.showShareFlag = false
+      this.$apply()
+    },
     selectSure(value) {
       if (!value.length) {
         showMsg('请选择')
@@ -620,7 +683,8 @@ export default class Zone extends wepy.page {
   }
   onShareAppMessage(res) {
     return {
-      title: this.shareTitle
+      title: this.shareTitle,
+      imageUrl: this.shareImg
     }
   }
 }
@@ -641,18 +705,14 @@ export default class Zone extends wepy.page {
   justify-content: space-between;
   padding: 20rpx 0;
   & > .icon-wrapper {
-    justify-content:flex-end;
-    width:30%;
+    display: flex;
+    justify-content: space-between;
+    width:32%;
+    align-items:center;
     .icon-share {
-      line-height: 1;
-      background-color: transparent;
+      font-size: 32rpx;
     }
-    button::after {
-      display: none;
-    }
-    .icon-message {
-      // padding-left: 30%;
-    }
+
   }
 }
 .img-list {

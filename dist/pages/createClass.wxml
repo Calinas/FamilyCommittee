@@ -1,39 +1,39 @@
 
-  <view class="join-class common-container common-container-grey _c94d010">
-    <picker class="_c94d010" style="display: none;">
-      <view class="common-picker _c94d010">
-        <text class="_c94d010">重庆</text>
-        <text class="iconfont icon-arrow-right _c94d010"/>
+  <view class="join-class common-container common-container-grey _490fc7e">
+    <picker class="_490fc7e" style="display: none;">
+      <view class="common-picker _490fc7e">
+        <text class="_490fc7e">重庆</text>
+        <text class="iconfont icon-arrow-right _490fc7e"/>
       </view>
     </picker>
-    <picker class="_c94d010" mode="selector" value="{{schoolIndex}}" range="{{schoolList}}" range-key="name" bindchange="bindPicker" id="schoolIndex">
-      <view class="common-picker _c94d010">
-        <text class="_c94d010">{{schoolList[schoolIndex].name}}</text>
-        <text class="iconfont icon-arrow-right _c94d010"/>
+    <picker class="_490fc7e" mode="selector" value="{{schoolIndex}}" range="{{schoolList}}" range-key="name" bindchange="bindPicker" id="schoolIndex">
+      <view class="common-picker _490fc7e">
+        <text class="_490fc7e">{{schoolList[schoolIndex].name}}</text>
+        <text class="iconfont icon-arrow-right _490fc7e"/>
       </view>
     </picker>
-    <view class="class-select-wrapper flex-wrapper _c94d010">
-      <view class="item common-line {{index === activeClassType ? 'active' : ''}} _c94d010"  wx:for="{{classTypes}}" wx:key="{{index}}" bindtap="select" data-wpyselect-a="{{index}}">{{item.title}}</view>
+    <view class="class-select-wrapper flex-wrapper _490fc7e">
+      <view class="item common-line {{index === activeClassType ? 'active' : ''}} _490fc7e"  wx:for="{{classTypes}}" wx:key="{{index}}" bindtap="select" data-wpyselect-a="{{index}}">{{item.title}}</view>
     </view>
 
-    <view class="common-picker _c94d010" style="background-color: transparent;padding: 0;">
+    <view class="common-picker _490fc7e" style="background-color: transparent;padding: 0;">
       <!-- <text>2019年10班</text>
       <text class="iconfont icon-arrow-right"></text> -->
-      <view class="flex-wrapper center _c94d010" style="padding: 30rpx;background-color: #fff;margin-right: 20rpx">
-        <input type="number" placeholder="比如2021" id="gradeNumber" bindinput="bindInput" class="_c94d010"/>
-        <text class="_c94d010">级</text>
+      <view class="flex-wrapper center _490fc7e" style="padding: 30rpx;background-color: #fff;margin-right: 20rpx">
+        <input type="number" placeholder="比如2021" id="gradeNumber" bindinput="bindInput" class="_490fc7e"/>
+        <text class="_490fc7e">级</text>
       </view>
-      <view class="flex-wrapper center _c94d010" style="padding: 30rpx;background-color: #fff;">
-        <input type="number" placeholder="输入班级号" id="classNumber" bindinput="bindInput" class="_c94d010"/>
-        <text class="_c94d010">班</text>
+      <view class="flex-wrapper center _490fc7e" style="padding: 30rpx;background-color: #fff;">
+        <input type="number" placeholder="输入班级号" id="classNumber" bindinput="bindInput" class="_490fc7e"/>
+        <text class="_490fc7e">班</text>
       </view>
-      <view class="_c94d010"/>
+      <view class="_490fc7e"/>
     </view>
 
-    <view class="common-line text-center font-green submit-btn _c94d010" bindtap="submit">下一步</view>
+    <view class="common-line text-center font-green submit-btn _490fc7e" bindtap="submit">下一步</view>
 
-    <view class="flex-wrapper between bottom-buttons _c94d010" style="display: none;">
-      <button open-type="share" class="link _c94d010">邀请他人来创建班级</button>
-      <button class="link _c94d010">加入已有班级</button>
+    <view class="flex-wrapper between bottom-buttons _490fc7e" style="display: none;">
+      <button open-type="share" class="link _490fc7e">邀请他人来创建班级</button>
+      <button class="link _490fc7e">加入已有班级</button>
     </view>
   </view>

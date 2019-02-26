@@ -114,7 +114,7 @@
         </view>
       </repeat>
     </view>
-    <view class="fixed-bottom-btn top" @tap="submit">确认发布</view>
+    <view class="fixed-bottom-btn top right" @tap="submit">发表</view>
   </view>
 </template>
 

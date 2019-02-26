@@ -203,7 +203,8 @@ export function deleteCircle(data) {
     wepy.request({
       url: '/moment/delete',
       data: Object.assign({}, commonParams(), {
-        moment_id: data.moment_id
+        moment_id: data.moment_id,
+        class_id: data.class_id
       }),
       method: 'delete'
     }).then(res => {

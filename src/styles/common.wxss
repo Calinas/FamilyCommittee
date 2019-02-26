@@ -99,6 +99,16 @@ page {
 .fixed-bottom-btn.top {
   top: 0;
 }
+.fixed-bottom-btn.right {
+  left: auto;
+  right: 30rpx;
+  background-color:#07C160;
+  color:#fff;
+  border-radius:10rpx;
+  height:80rpx;
+  line-height:80rpx;
+  width: 16%;
+}
 .fixed-bottom-btn-2 > view{
   width: 50%;
 }

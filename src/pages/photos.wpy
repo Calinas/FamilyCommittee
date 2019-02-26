@@ -95,6 +95,7 @@ export default class bindRelationship extends wepy.page {
               icon: 'none'
             })
           }
+          wx.showLoading({title: '图片上传中'})
           res.tempFilePaths.forEach(path => {
             let upload = {}
             upload.path = path
@@ -110,9 +111,14 @@ export default class bindRelationship extends wepy.page {
               name: 'file',
               success: res => {
                 const data = JSON.parse(res.data)
-                const url = data.data.file_url
-                _this.imgList.push(url)
-                if(_this.imgList.length === length) {
+                if (data.data && data.data.file_url) {
+                  const url = data.data.file_url
+                  _this.imgList.push(url)
+                }
+                if (_this.imgList.length === length) {
+                  setTimeout(() => {
+                    wx.hideLoading()
+                  }, 2000)
                   _this.addPhotos()
                 }
                 _this.$apply()

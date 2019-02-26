@@ -25,11 +25,11 @@ export default class personCashflow extends wepy.page {
     list: [],
     classInfo: {}
   }
-  onLoad(e){
+  onLoad(e) {
     this.classInfo = wx.getStorageSync('classInfo')
     this.getList()
   }
-  getList(){
+  getList() {
     getPersonFinanceList({
       class_id: this.classInfo.id
     }).then(res => {
