@@ -114,3 +114,11 @@ export function previewImage(src, imgList) {
 export function getOnlyDate(timeStr) {
   return timeStr.split(' ')[0]
 }
+
+// 函数节流
+export function throttle(method, context = window) {
+  clearTimeout(method.tId)
+  method.tId = setTimeout(() => {
+    method.call(context)
+  }, 1000)
+}

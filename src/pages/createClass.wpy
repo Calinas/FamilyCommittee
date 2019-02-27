@@ -1,20 +1,33 @@
 
 <template lang="wxml" minapp="wepy">
   <view class="join-class common-container common-container-grey">
-    <picker class="" style="display: none;">
+    <picker class="">
       <view class="common-picker">
-        <text>重庆</text>
-        <text class="iconfont icon-arrow-right"></text>
-      </view>
-    </picker>
-    <picker class="" mode="selector" value="{{schoolIndex}}" range="{{schoolList}}" range-key="name" @change="bindPicker" id="schoolIndex" >
-      <view class="common-picker">
-        <text>{{schoolList[schoolIndex].name}}</text>
-        <text class="iconfont icon-arrow-right"></text>
+        <text>{{cityName}}</text>
+        <!-- <text class="iconfont icon-arrow-right"></text> -->
       </view>
     </picker>
     <view class="class-select-wrapper flex-wrapper">
       <view class="item common-line {{index === activeClassType ? 'active' : ''}}" wx:for="{{classTypes}}" wx:key="{{index}}" @tap="select({{index}})">{{item.title}}</view>
+    </view>
+    <!-- <picker class="" mode="selector" value="{{schoolIndex}}" range="{{schoolList}}" range-key="name" @change="bindPicker" id="schoolIndex" >
+      <view class="common-picker">
+        <text>{{schoolList[schoolIndex].name}}</text>
+        <text class="iconfont icon-arrow-right"></text>
+      </view>
+    </picker> -->
+
+    <view class="common-picker search-school-wrapper">
+      <input value="{{keywords}}" placeholder="请输入学校名称搜索" @input="bindInput" id="keywords"/>
+      <text class="iconfont icon-delete" @tap="deleteSchool"></text>
+      <scroll-view scroll-y class="{{showSchool ? 'show' : 'hide'}}">
+        <block wx:if="{{schoolList.length}}">
+          <view class="list" wx:for="{{schoolList}}" @tap="setSchool({{item}})">{{item.name}}</view>
+        </block>
+        <block wx:else>
+          <view class="text-center" style="padding-top: 60rpx;" @tap="hideSchool">没有找到学校!</view>
+        </block>
+      </scroll-view>
     </view>
 
     <view class="common-picker" style="background-color: transparent;padding: 0;">
@@ -42,16 +55,19 @@
 
 <script>
 import wepy from 'wepy'
-import { showMsg } from '../utils/common'
-import { schoolList, searchClass } from '../api/createClass'
+import { showMsg, throttle, isEmptyString } from '../utils/common'
+import { schoolList, searchClass, getCityInfo } from '../api/createClass'
 export default class joinClass extends wepy.page {
   config = {
     navigationBarTitleText: '创建班级'
   }
   data = {
+    latitude: '',
+    longitude: '',
     classNumber: 0,
     gradeNumber: 0,
     activeClassType: 0,
+    showSchool: false,
     classTypes: [
       {
         title: '小学',
@@ -76,13 +92,27 @@ export default class joinClass extends wepy.page {
     ],
     memberInfo: null,
     schoolList: [],
-    schoolIndex: 0,
-    type: ''
+    type: '',
+    cityName: '正在定位中',
+    keywords: '',
+    schoolId: 0
   }
-  checkClassExist(data){
+  getCity() {
+    return new Promise((resolve) => {
+      getCityInfo({
+        lat: this.latitude,
+        lng: this.longitude
+      }).then(res => {
+        this.cityName = res.data.data.regeocode.addressComponent.province
+        this.$apply()
+        resolve()
+      })
+    })
+  }
+  checkClassExist(data) {
     searchClass(data).then(res => {
       let data = res.data.data
-      if(data && data.id) {
+      if (data && data.id) {
         wepy.navigateTo({
           url: `joinClass?classId=${data.id}&name=${data.name}`
         })
@@ -91,15 +121,36 @@ export default class joinClass extends wepy.page {
       }
     })
   }
-  createClassCallback(data){
+  createClassCallback(data) {
     this.$parent.globalData.createClass = data
     wepy.navigateTo({
-        url: 'bindRelationship?type=create'
-      })
+      url: 'bindRelationship?type=create'
+    })
   }
   methods = {
+    deleteSchool() {
+      this.keywords = ''
+      this.schoolId = 0
+      this.$apply()
+    },
+    setSchool(obj) {
+      this.schoolId = obj.id
+      this.keywords = obj.name
+      this.showSchool = false
+      this.$apply()
+    },
+    hideSchool() {
+      this.showSchool = false
+      this.$apply()
+    },
     bindInput(e) {
-      this[e.currentTarget.id] = e.detail.value
+      const id = e.currentTarget.id
+      this[id] = e.detail.value
+      if (id === 'keywords' && !isEmptyString(this.keywords)) {
+        throttle(this.getSchoolList, this, 1000)
+      } else {
+        this.showSchool = false
+      }
       this.$apply()
     },
     select(index) {
@@ -119,8 +170,12 @@ export default class joinClass extends wepy.page {
         showMsg('请输入班级号')
         return
       }
+      if (!this.schoolId) {
+        showMsg('请输入学校名称')
+        return
+      }
       let data = {
-        school_id: this.schoolList[this.schoolIndex].id,
+        school_id: this.schoolId,
         grade: this.classTypes[this.activeClassType].value,
         year: Number(this.gradeNumber),
         class: Number(this.classNumber)
@@ -133,12 +188,25 @@ export default class joinClass extends wepy.page {
     this.type = params.type
     const globalData = this.$parent.globalData
     this.memberInfo = globalData.memberInfo
-    this.getSchoolList()
     this.$apply()
+    let _this = this
+    wx.getLocation({
+      type: 'wgs84',
+      success(res) {
+        _this.latitude = res.latitude
+        _this.longitude = res.longitude
+        _this.getCity()
+        _this.$apply()
+      }
+    })
   }
   getSchoolList() {
-    schoolList().then(res => {
+    schoolList({
+      keywords: this.keywords,
+      city_name: this.cityName
+    }).then(res => {
       this.schoolList = res.data.list
+      this.showSchool = true
       this.$apply()
     })
   }
@@ -147,6 +215,36 @@ export default class joinClass extends wepy.page {
 
 <style lang="scss" scoped>
 @import '../styles/buttons.wxss';
+.search-school-wrapper {
+  position: relative;
+  overflow: visible;
+  input {
+    text-align: left;
+  }
+  scroll-view {
+    position: absolute;
+    left: 0;
+    top: 114rpx;
+    width: 100%;
+    background-color: #fff;
+    z-index: 999;
+    transition: all .3s;
+    padding-left:40rpx;
+    box-sizing:border-box;
+    text-align: left;
+    .list {
+      height:80rpx;
+      line-height:80rpx;
+    }
+    &.show {
+      min-height: 200rpx;
+      max-height: 400rpx;
+    }
+    &.hide {
+      height: 0;
+    }
+  }
+}
 .class-select-wrapper {
   .item {
     flex: 1;

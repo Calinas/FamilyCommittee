@@ -117,7 +117,7 @@ export default class ClassList extends wepy.page {
       wx.redirectTo({
         url: `login?key=${this.key}`
       })
-    } else if(this.key && this.memberInfo.member_id){
+    } else if (this.key && this.memberInfo.member_id){
       wx.navigateTo({
         url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
       })

@@ -2,14 +2,15 @@ import wepy from 'wepy'
 import commonParams from './commonData'
 
 // 获取学校列表
-export function schoolList() {
+export function schoolList(params) {
   return new Promise((resolve, reject) => {
     wepy.request({
       url: '/school/index',
       data: Object.assign({}, commonParams(), {
-        keywords: '',
+        keywords: params.keywords,
         pn: 1,
-        ps: 10
+        ps: 100,
+        city_name: params.city_name
       })
     }).then(res => {
       resolve(res)
@@ -76,6 +77,21 @@ export function searchClass(params) {
         grade_type: params.grade,
         year_class: params.year,
         class: params.class
+      })
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 根据经纬度查询城市名称
+export function getCityInfo(params) {
+  return new Promise((resolve) => {
+    wepy.request({
+      url: '/system/regeocode',
+      data: Object.assign({}, commonParams(), {
+        lat: params.lat,
+        lng: params.lng
       })
     }).then(res => {
       resolve(res)

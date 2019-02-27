@@ -38,6 +38,11 @@ export default class extends wepy.app {
       'pages/joinClass',
       'pages/createClass'
     ],
+    permission: {
+      'scope.userLocation': {
+        desc: '你的位置信息将用于小程序位置接口的效果展示'
+      }
+    },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -82,10 +87,10 @@ export default class extends wepy.app {
       config(req) {
         // req.url = 'http://www.patriarch.cm:8080/api/v1' + req.url
         req.url = 'https://test.ctjwh.com/api/v1' + req.url
-        // wx.showLoading({
-        //   title: '加载中',
-        //   mask: true
-        // })
+        wx.showLoading({
+          title: '加载中',
+          mask: true
+        })
         return req
       },
       success(res) {

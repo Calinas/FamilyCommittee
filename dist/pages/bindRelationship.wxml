@@ -1,7 +1,7 @@
 
   <view class="common-container common-container-grey">
-    <radio-group class="radio-group" bindchange="pickerChange" id="currentType">
-        <label class="radio"  wx:for="{{relationshipTypes}}">
+    <radio-group class="radio-group" bindchange="pickerChange" id="currentType"  wx:if="{{type === 'edit'}}">
+        <label class="radio" wx:for="{{relationshipTypes}}">
           <radio value="{{item.value}}" checked="{{item.checked}}"/>
           {{item.label}}
         </label>
