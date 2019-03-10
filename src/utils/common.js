@@ -116,9 +116,9 @@ export function getOnlyDate(timeStr) {
 }
 
 // 函数节流
-export function throttle(method, context = window) {
+export function throttle(method, context = window, timer = 300) {
   clearTimeout(method.tId)
   method.tId = setTimeout(() => {
     method.call(context)
-  }, 1000)
+  }, timer)
 }
