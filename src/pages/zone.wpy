@@ -17,6 +17,16 @@
         <!-- <text class="school"></text> -->
         <text class="class">{{classInfo.name}}</text>
       </view>
+      <view class="buttons">
+        <view catchtap="jumpPage('member')" wx:if="{{auth.president}}" class="flex-wrapper center">
+          <image src="../images/icon/icon-member.png" class="small-avatar" mode="scaleToFill"></image>
+          <text>成员</text>
+        </view>
+        <view catchtap="jumpPage('photos')" wx:if="{{auth.photos}}" class="flex-wrapper center">
+          <image src="../images/icon/icon-photo.png" class="small-avatar"/>
+          <text>相册</text>
+        </view>
+      </view>
     </view>
     <!-- 筛选框 -->
     <view class="menu-wrapper flex-wrapper">
@@ -43,10 +53,16 @@
           <block wx:if="{{item.app_type === 'account'}}">
             <view class="tag-wrapper">
               <text class="tag tag-grey">{{item.info.type === 'in' ? '收入': '支出'}}</text>
-              <text class="tag tag-light-grey">{{item.info.money}}</text>
+              <text class="tag tag-light-grey">{{item.info.money}}元</text>
             </view>
             <view class="desc">
               事由：{{item.info.description}}
+            </view>
+            <view class="flex-wrapper center invoice-wrapper">
+              <text class="tag tag-empty" wx:if="{{item.info.balance}}">余额：{{item.info.balance}}元</text>
+              <view class="desc invoice" @tap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length}}">
+                查看记账凭证
+              </view>
             </view>
           </block>
 
@@ -693,6 +709,28 @@ export default class Zone extends wepy.page {
 <style lang="scss" scoped>
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
+.invoice-wrapper {
+  margin-top: 30rpx;
+  .tag {
+    margin-bottom:0 !important;
+  }
+}
+.buttons {
+  position:absolute;
+  right:40rpx;
+  bottom:30rpx;
+  display: flex;
+  .small-avatar {
+    width:50rpx;
+    height:50rpx;
+    margin-right: 10rpx;
+  }
+  & > view {
+    &:first-child {
+      margin-right: 40rpx;
+    }
+  }
+}
 .msg-card {
   background-color: #fff;
   margin-bottom: 30rpx;

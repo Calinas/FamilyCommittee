@@ -1,10 +1,10 @@
 
 <template lang="wxml" minapp="wepy">
   <view class="join-class common-container common-container-grey">
-    <picker class="">
+    <picker mode="selector" value="{{cityIndex}}" range="{{cityList}}" range-key="city_name" wx:key="{{index}}" @change="bindPicker" id="cityIndex">
       <view class="common-picker">
         <text>{{cityName}}</text>
-        <!-- <text class="iconfont icon-arrow-right"></text> -->
+        <text class="iconfont icon-arrow-right"></text>
       </view>
     </picker>
     <view class="class-select-wrapper flex-wrapper">
@@ -25,7 +25,7 @@
           <view class="list" wx:for="{{schoolList}}" @tap="setSchool({{item}})">{{item.name}}</view>
         </block>
         <block wx:else>
-          <view class="text-center" style="padding-top: 60rpx;" @tap="hideSchool">没有找到学校!</view>
+          <view class="text-center" style="padding-top: 60rpx;" @tap="hideSchool">没有找到学校，<text catchtap="createSchool" class="font-blue">点击此处创建该学校</text></view>
         </block>
       </scroll-view>
     </view>
@@ -56,7 +56,7 @@
 <script>
 import wepy from 'wepy'
 import { showMsg, throttle, isEmptyString } from '../utils/common'
-import { schoolList, searchClass, getCityInfo } from '../api/createClass'
+import { schoolList, searchClass, getCityInfo, getCityList, createSchool} from '../api/createClass'
 export default class joinClass extends wepy.page {
   config = {
     navigationBarTitleText: '创建班级'
@@ -95,7 +95,9 @@ export default class joinClass extends wepy.page {
     type: '',
     cityName: '正在定位中',
     keywords: '',
-    schoolId: 0
+    schoolId: 0,
+    cityList: [],
+    cityIndex: -1
   }
   getCity() {
     return new Promise((resolve) => {
@@ -107,6 +109,19 @@ export default class joinClass extends wepy.page {
         this.$apply()
         resolve()
       })
+    })
+  }
+  getCityList() {
+    const cityList = wx.getStorageSync('cityList')
+    if (cityList.length)  {
+      this.cityList = cityList
+      this.$apply()
+      return
+    }
+    getCityList().then(res => {
+      this.cityList = res.data.list
+      wx.setStorageSync('cityList', this.cityList)
+      this.$apply()
     })
   }
   checkClassExist(data) {
@@ -131,6 +146,7 @@ export default class joinClass extends wepy.page {
     deleteSchool() {
       this.keywords = ''
       this.schoolId = 0
+      this.showSchool = false
       this.$apply()
     },
     setSchool(obj) {
@@ -138,6 +154,17 @@ export default class joinClass extends wepy.page {
       this.keywords = obj.name
       this.showSchool = false
       this.$apply()
+    },
+    createSchool() {
+      createSchool({
+        name: this.keywords,
+        city_name: this.cityName
+      }).then(res => {
+        if(res.data.success) {
+          showMsg('学校创建成功')
+          this.hideSchool()
+        }
+      })
     },
     hideSchool() {
       this.showSchool = false
@@ -158,7 +185,12 @@ export default class joinClass extends wepy.page {
       this.$apply()
     },
     bindPicker(e) {
-      this[e.currentTarget.id] = e.detail.value
+      const id = e.currentTarget.id
+      const value = e.detail.value
+      this[id] = value
+      if(id === 'cityIndex') {
+        this.cityName = this.cityList[value].city_name
+      }
       this.$apply()
     },
     submit() {
@@ -192,11 +224,12 @@ export default class joinClass extends wepy.page {
     let _this = this
     wx.getLocation({
       type: 'wgs84',
-      success(res) {
+      complete(res) {
         _this.latitude = res.latitude
         _this.longitude = res.longitude
         _this.getCity()
         _this.$apply()
+        _this.getCityList()
       }
     })
   }

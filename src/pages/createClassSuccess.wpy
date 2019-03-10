@@ -10,6 +10,7 @@
       <input type="text" disabled value="{{key}}" />
       <view class="weui-btn weui-btn_primary btn" style="width: 320rpx" data-text="{{key}}" @tap="copyText">一键复制验证码</view>
     </view>
+    <button class="font-green btn-invite bg-white" @tap="back">回到首页</button>
     </view>
   </view>
 
@@ -44,6 +45,9 @@ export default class bindRelationship extends wepy.page {
           })
         }
       })
+    },
+    back() {
+      wx.switchTab({ url: 'zone' });
     }
   }
   onShareAppMessage(res) {

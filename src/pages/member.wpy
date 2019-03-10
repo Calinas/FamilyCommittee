@@ -1,0 +1,121 @@
+<template>
+  <view class="member">
+    <view class="font-black font-bold">加入老师</view>
+    <view class="flex-wrapper teacher">
+      <view class="person flex-wrapper center" wx:for="{{teacherList.list}}">
+        <image src="{{item.member.head_img}}" class="small-avatar">
+        <text>{{item.member.class_nickname}}</text>
+      </view>
+    </view>
+    <view class="member-wrapper">
+      <view class="font-black font-bold">班委会管理</view>
+      <view class="flex-wrapper center" wx:for="{{authList}}">
+        <text class="font-black">{{item.name}}：</text>
+        <text wx:for="{{item.member_list}}" wx:for-item="member">{{member.member.class_nickname}}
+        </text>
+      </view>
+    </view>
+    <view class="font-black text-right font-bold sum-total">本班家委会成员{{count}}人</view>
+    <!-- 成员列表 -->
+    <view class="list-wrapper">
+      <view class="item" wx:for="{{familyList.list}}">
+        <view class="capital">{{item.capital}}</view>
+        <view class="flex-wrapper">
+          <view class="person flex-wrapper center" wx:for="{{item.list}}" wx:for-item="member">
+            <image src="{{member.member.head_img}}" class="small-avatar">
+            <text>{{member.member.class_nickname}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { getMemberList } from '../api/user'
+export default class Member extends wepy.page {
+  config = {
+    navigationBarTitleText: '成员'
+  }
+  data = {
+    count: 0,
+    teacherList: [],
+    familyList: [],
+    authList: []
+  }
+  onLoad() {
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.getMemberList()
+  }
+  getMemberList() {
+    getMemberList({
+      class_id: this.classInfo.id
+    }).then(res => {
+      let data = res.data
+      this.familyList = data.family_list
+      // let list = data.family_list.list
+      // for(let i in list) {
+      //   this.familyList.push(data.family_list[i])
+      // }
+      this.teacherList = data.teacher_list
+      this.count = this.familyList.count + this.teacherList.count
+      this.authList = data.admin_list
+      this.$apply()
+    })
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.member {
+  padding: 30rpx;
+  background-color: #fff;
+  .teacher {
+    margin: 30rpx 0;
+  }
+}
+.sum-total {
+  padding: 20rpx 0;
+  padding-top: 40rpx;
+}
+.member-wrapper {
+  background-color: #f2f2f2;
+  padding: 20rpx;
+  & > .flex-wrapper {
+    padding: 10rpx 0;
+  }
+}
+.font-black {
+  color: #000;
+}
+.flex-wrapper {
+  flex-wrap: wrap;
+}
+.member {
+  color: #828282;
+  font-size: 28rpx;
+}
+.text-right {
+  text-align: right;
+}
+.person {
+  background-color:#F2F2F2;
+  border-radius:30rpx;
+  margin-right:20rpx;
+  padding: 10rpx;
+  margin-bottom: 20rpx;
+  .small-avatar {
+    width:40rpx;
+    height:40rpx;
+  }
+}
+.list-wrapper {
+  .item {
+    border-top: 2rpx solid #f2f2f2;
+  }
+  .capital {
+    padding: 30rpx 0;
+  }
+}
+</style>

@@ -123,3 +123,17 @@ export function identityList(data) {
     })
   })
 }
+
+// 获取班级人员列表
+export function getMemberList(data) {
+  return new Promise(resolve => {
+    wepy.request({
+      url: '/class/getMemberList',
+      data: Object.assign({}, commonParams(), {
+        class_id: data.class_id
+      })
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

@@ -98,3 +98,30 @@ export function getCityInfo(params) {
     })
   })
 }
+
+// 获取城市列表
+export const getCityList = () => {
+  return new Promise((resolve) => {
+    wepy.request({
+      url: '/system/getCityList'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
+// 创建学校
+export const createSchool = (params) => {
+  return new Promise((resolve) => {
+    wepy.request({
+      url: '/school/add',
+      data: Object.assign({}, {
+        name: params.name,
+        city_name: params.city_name
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

@@ -139,7 +139,7 @@ page {
 }
 .tag-light-grey {
   background-color: #F2F2F2;
-  color: #808080;
+  color: #000;
 }
 .small-avatar {
   display: inline-block;
