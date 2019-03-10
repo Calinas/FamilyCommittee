@@ -1,7 +1,7 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
     <block wx:for="{{list}}" wx:key="{{key}}">
-      <view class="photo-title font-black">{{item.upload_date}}{{item.upload_member.class_nickname}}上传</view>
+      <view class="photo-title font-black">{{item.upload_date}} {{item.upload_members}}上传</view>
       <view class="img-list flex-wrapper">
         <repeat for="{{item.img_list}}" index="index" item="imgSrc">
             <image @tap='preview({{imgSrc}}, {{item.img_list}})' class='img-item' src='{{imgSrc}}' />
@@ -53,7 +53,7 @@ export default class bindRelationship extends wepy.page {
         list[i] = {
           img_list: [],
           upload_date: returnList[i].upload_date,
-          upload_member: returnList[i].upload_member
+          upload_members: returnList[i].upload_members
         }
         for (let j = 0, len = returnList[i].img_list.length; j < len; j++) {
           let obj = returnList[i].img_list[j]

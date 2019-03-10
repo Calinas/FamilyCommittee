@@ -1,7 +1,7 @@
 
   <view class="common-container">
     <block  wx:for="{{list}}" wx:key="{{key}}">
-      <view class="photo-title font-black">{{item.upload_date}}{{item.upload_member.class_nickname}}上传</view>
+      <view class="photo-title font-black">{{item.upload_date}} {{item.upload_members}}上传</view>
       <view class="img-list flex-wrapper">
         <block wx:for="{{item.img_list}}" wx:for-index="index" wx:for-item="imgSrc" wx:key="key">
             <image bindtap="preview" class="img-item" src="{{imgSrc}}" data-wpypreview-a="{{imgSrc}}" data-wpypreview-b="{{item.img_list}}"/>

@@ -25,8 +25,11 @@
         <view class="desc">
           事由：{{item.info.description}}
         </view>
-        <view class="operate-btn" @tap="preview({{item.image}})">
-          <view class="font-small font-grey text-right">点击查看凭证</view>
+        <view class="flex-wrapper center invoice-wrapper">
+          <text class="tag tag-empty" wx:if="{{item.info.balance}}">余额：{{item.info.balance}}元</text>
+          <view class="operate-btn" @tap="preview({{item.image}})">
+            <view class="font-small font-grey text-right">点击查看凭证</view>
+          </view>
         </view>
       </view>
       </view>
@@ -120,6 +123,12 @@ export default class cashflow extends wepy.page {
 </script>
 
 <style lang="scss">
+.invoice-wrapper {
+  margin-top: 30rpx;
+  .tag {
+    margin-bottom:0 !important;
+  }
+}
 .info-wrapper {
   padding: 30rpx;
   text {
