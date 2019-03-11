@@ -1,12 +1,12 @@
-.msg-card._1a23d71 {
+.msg-card._d8ff260 {
   background-color: #fff;
   margin-bottom: 30rpx;
   padding: 30rpx; }
 
-.time._1a23d71 {
+.time._d8ff260 {
   text-align: right; }
 
-.btn-money._1a23d71 {
+.btn-money._d8ff260 {
   display: block;
   width: 40%;
   font-size: 40rpx;

@@ -1,0 +1,98 @@
+
+  <view class="common-container common-container-grey _eeb9055" style="padding: 0;position:relative" bindtap="closeToggle">
+    <view class="img-mask _eeb9055">
+      <image src="/images/banner1.jpg" mode="scaleToFill" class="bg-img _eeb9055"/>
+      <view class="mask _eeb9055"/>
+      <view class="btn btn-set flex-wrapper center _eeb9055" catchtap="toggleMenu" data-wpytogglemenu-a="setFlag">
+        <text class="iconfont icon-edit _eeb9055"/>
+        <navigator url="createClass?type=join" open-type="navigate" class="_eeb9055">
+        <text class="_eeb9055">加入班级</text>
+        </navigator>
+      </view>
+    </view>
+
+    <view class="item-wrapper _eeb9055"  wx:if="{{list.length}}">
+      <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex" class="_eeb9055">
+         <view class="item _eeb9055">
+          <view class="flex-wrapper justify-between center _eeb9055">
+            <view class="flex-wrapper center _eeb9055">
+              <image src="{{item.member.head_img}}" class="small-avatar _eeb9055"/>
+              <text class="_eeb9055">{{item.member.class_nickname}}</text>
+            </view>
+            <text class="font-small font-grey text-right _eeb9055">{{item.created_at}}</text>
+          </view>
+
+          <view class="item-desc _eeb9055">{{item.info.description}}</view>
+          <view class="img-list flex-wrapper _eeb9055" wx:if="{{item.image.length}}">
+            <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _eeb9055" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
+          </view>
+          <text class="font-grey font-small from-school _eeb9055">来自{{item.class.name}}</text>
+          <view class="flex-wrapper icon-container _eeb9055">
+            <view style="opacity: 0" class="_eeb9055">x</view>
+            <view class="flex-wrapper icon-wrapper _eeb9055">
+              <view class="font-grey iconfont icon-shanchu text-right _eeb9055" catchtap="removeCircle" wx:if="{{memberInfo.member_id === item.member.id}}" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/>
+              <view class="font-grey iconfont icon-message text-right _eeb9055" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
+              <view class="font-grey iconfont icon-share text-right _eeb9055" catchtap="shareCircle"/>
+            </view>
+          </view>
+          <!-- 留言结果 -->
+          <view class="comment-wrapper item-desc font-grey _eeb9055" wx:if="{{item.comment_list.count}}">
+            <view class="item _eeb9055" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
+              <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_eeb9055">
+                <text class="font-blue _eeb9055" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _eeb9055" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.to_member.id}}" data-wpyaddcomment-e="{{comment.to_member.class_nickname}}">{{comment.to_member.class_nickname}}：</text>
+              </block>
+              <block wx:else class="_eeb9055">
+                <text class="font-blue _eeb9055" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}: </text>
+              </block>
+              <text class="_eeb9055">{{comment.content}}<text class="font-grey _eeb9055">({{comment.class.school.name}})</text></text>
+            </view>
+            <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center _eeb9055" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}">
+              <text class="font-grey _eeb9055">加载更多评论</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+    
+  <view class="wx-popup _284a651 _eeb9055"  wx:if="{{$CurrentModal$flag}}">
+    <view class="popup-container _284a651">
+      <view class="wx-popup-con _284a651">
+        <textarea type="text" placeholder="{{$CurrentModal$placeholderText}}" bindinput="$CurrentModal$bindInput" value="{{$CurrentModal$commentInput}}" class="_284a651"/>
+      </view>
+      <view class="wx-popup-btn _284a651">
+        <text class="btn-no _284a651" bindtap="$CurrentModal$cancelFn">{{$CurrentModal$cancelBtnText}}</text>
+        <text class="btn-ok _284a651" bindtap="$CurrentModal$sureFn">{{$CurrentModal$sureBtnText}}</text>
+      </view>
+    </view>
+  </view>
+    
+  <view class="wx-popup _3c6ee52 _eeb9055"  wx:if="{{$SelectModal$flag}}">
+    <view class="popup-container _3c6ee52">
+      <view class="wx-popup-con _3c6ee52">
+        <checkbox-group class="width80 _3c6ee52" bindchange="$SelectModal$pickerChange" id="type">
+          <label class="radio _3c6ee52" wx:for="{{$SelectModal$list}}">
+            <checkbox value="{{item.id}}" checked="{{item.checked}}" class="_3c6ee52"/>
+            {{item.name}}
+          </label>
+        </checkbox-group>
+      </view>
+      <view class="wx-popup-btn _3c6ee52">
+        <text class="btn-no _3c6ee52" bindtap="$SelectModal$cancelFn">取消</text>
+        <text class="btn-ok _3c6ee52" bindtap="$SelectModal$sureFn">确认</text>
+      </view>
+    </view>
+  </view>
+    
+  <view class="wx-popup _99385de _eeb9055"  wx:if="{{$shareModal$flag}}">
+    <view class="popup-container _99385de">
+      <view class="wx-popup-con _99385de">
+        <text class="share-title _99385de">{{$shareModal$title}}</text>
+        <image src="{{$shareModal$imgSrc}}" class="share-img _99385de"/>
+      </view>
+      <view class="wx-popup-btn _99385de">
+        <button bindtap="$shareModal$cancelFn" class="_99385de">取消</button>
+        <button open-type="share" bindtap="$shareModal$sureFn" class="_99385de">确认分享</button>
+      </view>
+    </view>
+  </view>
+  </view>

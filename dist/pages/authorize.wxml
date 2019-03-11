@@ -41,31 +41,31 @@
     </view>
   </view>
   
-  <view class="wx-popup _8859a02"  wx:if="{{$Modal$flag}}">
-    <view class="popup-container _8859a02">
-      <view class="wx-popup-con _8859a02">
-        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" class="_8859a02"/>
+  <view class="wx-popup _4d5f1a4"  wx:if="{{$Modal$flag}}">
+    <view class="popup-container _4d5f1a4">
+      <view class="wx-popup-con _4d5f1a4">
+        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" class="_4d5f1a4"/>
       </view>
-      <view class="wx-popup-btn _8859a02">
-        <text class="btn-no _8859a02" bindtap="$Modal$cancelFn">{{$Modal$cancelBtnText}}</text>
-        <text class="btn-ok _8859a02" bindtap="$Modal$sureFn">{{$Modal$sureBtnText}}</text>
+      <view class="wx-popup-btn _4d5f1a4">
+        <text class="btn-no _4d5f1a4" bindtap="$Modal$cancelFn">{{$Modal$cancelBtnText}}</text>
+        <text class="btn-ok _4d5f1a4" bindtap="$Modal$sureFn">{{$Modal$sureBtnText}}</text>
       </view>
     </view>
   </view>
   
-  <view class="wx-popup _75fb637"  wx:if="{{$Search$flag}}">
-    <view class="popup-container _75fb637">
-      <text class="iconfont icon-delete _75fb637" bindtap="$Search$closeModal"/>
-      <view class="flex-wrapper _75fb637">
-        <input type="text" placeholder="请输入姓名" class="input _75fb637" id="input" value="{{$Search$input}}" bindinput="$Search$bindInput"/>
-        <view class="search-btn _75fb637" bindtap="$Search$sureFn">搜索</view>
+  <view class="wx-popup _daec1b0"  wx:if="{{$Search$flag}}">
+    <view class="popup-container _daec1b0">
+      <text class="iconfont icon-delete _daec1b0" bindtap="$Search$closeModal"/>
+      <view class="flex-wrapper _daec1b0">
+        <input type="text" placeholder="请输入姓名" class="input _daec1b0" id="input" value="{{$Search$input}}" bindinput="$Search$bindInput"/>
+        <view class="search-btn _daec1b0" bindtap="$Search$sureFn">搜索</view>
       </view>
-      <view class="list _75fb637">
-        <block wx:if="{{!$Search$studentList.length}}" class="_75fb637">
-          <text class="text-center no-remind _75fb637">暂无内容</text>
+      <view class="list _daec1b0">
+        <block wx:if="{{!$Search$studentList.length}}" class="_daec1b0">
+          <text class="text-center no-remind _daec1b0">暂无内容</text>
         </block>
-        <block wx:else class="_75fb637">
-          <view class="item _75fb637" wx:for="{{$Search$studentList}}" bindtap="$Search$select" data-wpyselect-a="{{item}}">{{item.class_nickname}}</view>
+        <block wx:else class="_daec1b0">
+          <view class="item _daec1b0" wx:for="{{$Search$studentList}}" bindtap="$Search$select" data-wpyselect-a="{{item}}">{{item.class_nickname}}</view>
         </block>
       </view>
     </view>

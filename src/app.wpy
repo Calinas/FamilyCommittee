@@ -37,7 +37,8 @@ export default class extends wepy.app {
       'pages/createClassSuccess',
       'pages/joinClass',
       'pages/createClass',
-      'pages/member'
+      'pages/member',
+      'pages/discovery'
     ],
     permission: {
       'scope.userLocation': {
@@ -59,14 +60,20 @@ export default class extends wepy.app {
         {
           pagePath: 'pages/zone',
           iconPath: 'images/tab/index.png',
-          text: '首页',
+          text: '最近班级',
           selectedIconPath: 'images/tab/index-active.png'
         },
         {
-          pagePath: 'pages/classList',
+          pagePath: 'pages/discovery',
           iconPath: 'images/tab/order.png',
-          text: '班级',
+          text: '家长圈子',
           selectedIconPath: 'images/tab/order-active.png'
+        },
+        {
+          pagePath: 'pages/classList',
+          iconPath: 'images/tab/my.png',
+          text: '我的班级',
+          selectedIconPath: 'images/tab/my-active.png'
         }
       ]
     }

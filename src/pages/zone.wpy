@@ -222,7 +222,7 @@ import { getAuth } from '../api/authorize'
 import { checkStudent } from '../api/user'
 export default class Zone extends wepy.page {
   config = {
-    navigationBarTitleText: '发现',
+    navigationBarTitleText: '最近班级',
     enablePullDownRefresh: true
   }
   components = {
