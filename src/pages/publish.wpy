@@ -193,6 +193,11 @@ export default class Publish extends wepy.page {
   }
   commonFn(res) {
     if (res.data.success) {
+      let pages = getCurrentPages();
+      let prevPage = pages[pages.length - 2];
+      prevPage.setData({
+        fromPublish: true
+      })
       showMsg('发布成功', 2000)
       setTimeout(() => {
         wx.navigateBack()

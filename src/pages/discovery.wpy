@@ -163,7 +163,6 @@ export default class Discovery extends wepy.page {
     this.$apply()
     const id = this.classInfo.id
     getCircleList({
-      class_id: id,
       see_type: 'all',
       type: 'circles',
       pn: this.pn,

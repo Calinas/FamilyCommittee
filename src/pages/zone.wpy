@@ -354,8 +354,15 @@ export default class Zone extends wepy.page {
     this.currerntSubActivityId = []
     this.classInfo = wx.getStorageSync('classInfo')
     this.$apply()
-    this.resetData()
-    this.getZoneList()
+    // 如果是从publish等页面返回，则需要刷新数据
+    let data = this.$wxpage.data;
+    if (data.fromPublish) {
+      this.resetData()
+      this.getZoneList()
+    }
+    this.setData({
+      fromPublish: false
+    })
   }
   onLoad() {
     if (!this.checkDataExist('memberInfo')) {

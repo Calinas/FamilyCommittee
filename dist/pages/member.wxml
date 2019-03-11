@@ -1,29 +1,29 @@
 
-  <view class="member _f721f79">
-    <view class="font-black font-bold _f721f79">加入老师</view>
-    <view class="flex-wrapper teacher _f721f79">
-      <view class="person flex-wrapper center _f721f79"  wx:for="{{teacherList.list}}">
-        <image src="{{item.member.head_img}}" class="small-avatar _f721f79"/>
-        <text class="_f721f79">{{item.member.class_nickname}}</text>
+  <view class="member _03a486c">
+    <view class="font-black font-bold _03a486c">加入老师</view>
+    <view class="flex-wrapper teacher _03a486c">
+      <view class="person flex-wrapper center _03a486c"  wx:for="{{teacherList.list}}">
+        <image src="{{item.member.head_img}}" class="small-avatar _03a486c"/>
+        <text class="_03a486c">{{item.member.class_nickname}}</text>
       </view>
     </view>
-    <view class="member-wrapper _f721f79">
-      <view class="font-black font-bold _f721f79">班委会管理</view>
-      <view class="flex-wrapper center _f721f79"  wx:for="{{authList}}">
-        <text class="font-black _f721f79">{{item.name}}：</text>
-        <text wx:for="{{item.member_list}}" wx:for-item="member" class="_f721f79">{{member.member.class_nickname}}
+    <view class="member-wrapper _03a486c">
+      <view class="font-black font-bold _03a486c">班委会管理</view>
+      <view class="flex-wrapper center _03a486c"  wx:for="{{authList}}">
+        <text class="font-black _03a486c">{{item.name}}：</text>
+        <text wx:for="{{item.member_list}}" wx:for-item="member" class="_03a486c">{{member.member.class_nickname}}
         </text>
       </view>
     </view>
-    <view class="font-black text-right font-bold sum-total _f721f79">本班家委会成员{{count}}人</view>
+    <view class="font-black text-right font-bold sum-total _03a486c">本班家委会成员{{count}}人</view>
     <!-- 成员列表 -->
-    <view class="list-wrapper _f721f79">
-      <view class="item _f721f79"  wx:for="{{familyList.list}}">
-        <view class="capital _f721f79">{{item.capital}}</view>
-        <view class="flex-wrapper _f721f79">
-          <view class="person flex-wrapper center _f721f79" wx:for="{{item.list}}" wx:for-item="member">
-            <image src="{{member.member.head_img}}" class="small-avatar _f721f79"/>
-            <text class="_f721f79">{{member.member.class_nickname}}</text>
+    <view class="list-wrapper _03a486c">
+      <view class="item _03a486c"  wx:for="{{familyList.list}}">
+        <view class="capital _03a486c">{{item.capital}}</view>
+        <view class="flex-wrapper _03a486c">
+          <view class="person flex-wrapper center _03a486c" wx:for="{{item.list}}" wx:for-item="member">
+            <image src="{{member.member.head_img}}" class="small-avatar _03a486c"/>
+            <text class="_03a486c">{{member.member.class_nickname}}</text>
           </view>
         </view>
       </view>
