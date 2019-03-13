@@ -162,6 +162,14 @@ page {
 .dot.dot-grey {
   background-color: #646464; }
 
+.clearfix:after {
+  content: " ";
+  /* Older browser do not support empty content */
+  visibility: hidden;
+  display: block;
+  height: 0;
+  clear: both; }
+
 @font-face {
   font-family: "iconfont";
   src: url("//at.alicdn.com/t/font_1013703_c3uyh6wb07h.eot?t=1551148358993");

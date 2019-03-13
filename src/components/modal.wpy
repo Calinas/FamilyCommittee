@@ -2,7 +2,7 @@
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="wx-popup-con">
-        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}">
+        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}" cursor-spacing='200'>
       </view>
       <view class="wx-popup-btn">
         <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>

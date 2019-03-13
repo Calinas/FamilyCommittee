@@ -2,8 +2,8 @@
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="wx-popup-con">
-        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}" id="input" style="margin-bottom: 40rpx">
-        <input type="digit" min="10" placeholder={{placeholderText2}} @input="bindInput" value="{{money}}" id="money">
+        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}" id="input" style="margin-bottom: 40rpx" cursor-spacing='100'>
+        <input type="digit" min="10" placeholder={{placeholderText2}} @input="bindInput" value="{{money}}" id="money" cursor-spacing='100'>
       </view>
       <view class="wx-popup-btn">
         <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>

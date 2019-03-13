@@ -31,11 +31,16 @@
     <!-- 会长权限 -->
     <view class="flex-wrapper item" wx:for="{{list}}">
       <view class="font-bold font-black sub-title">{{item.name}}</view>
-      <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member" @tap="del({{member.class_auth_id}})">
-        <text class="iconfont icon-delete"></text>
-        <text>{{member.member.class_nickname}}</text>
-      </view>
-      <view class="tag-wrapper">
+      <block wx:if="{{item.auth_list.length}}">
+        <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member" @tap="del({{member.class_auth_id}})">
+          <text class="iconfont icon-delete"></text>
+          <text>{{member.member.class_nickname}}</text>
+        </view>
+      </block>
+      <block wx:else>
+        <text class="font-grey" style="margin-right: 20rpx;">{{item.code === 'finance' ? '全体无权限' : '全体'}}</text>
+      </block>
+      <view class="tag-wrapper" wx:if="{{item.auth_list.length || item.code === 'finance'}}">
         <text class="tag tag-blue" @tap="addNew({{true}},{{item.id}})">添加</text>
       </view>
     </view>

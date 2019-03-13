@@ -11,8 +11,12 @@
       <view class="font-black font-bold">班委会管理</view>
       <view class="flex-wrapper center" wx:for="{{authList}}">
         <text class="font-black">{{item.name}}：</text>
-        <text wx:for="{{item.member_list}}" wx:for-item="member">{{member.member.class_nickname}}
-        </text>
+        <block wx:if="{{item.member_list.length}}">
+          <text wx:for="{{item.member_list}}" wx:for-item="member">{{member.member.class_nickname}}</text>
+        </block>
+        <block wx:else>
+          <text>全体无权限</text>
+        </block>
       </view>
     </view>
     <view class="font-black text-right font-bold sum-total">本班家委会成员{{count}}人</view>

@@ -2,7 +2,7 @@
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="wx-popup-con">
-        <textarea type="text" placeholder={{placeholderText}} @input="bindInput" value="{{commentInput}}"></textarea>
+        <textarea type="text" placeholder={{placeholderText}} @input="bindInput" value="{{commentInput}}" cursor-spacing='100'></textarea>
       </view>
       <view class="wx-popup-btn">
         <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>

@@ -47,10 +47,10 @@
               <block wx:else>
                 <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
               </block>
-              <text>{{comment.content}}<text class="font-grey">({{comment.class.school.name}})</text></text>
+              <text>{{comment.content}}<text class="font-grey font-small">(来自{{comment.class.school.name}})</text></text>
             </view>
             <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
-              <text class="font-grey">加载更多评论</text>
+              <text class="font-blue font-small">加载更多评论</text>
             </view>
           </view>
         </view>

@@ -82,14 +82,14 @@
     </block>
     
     
-  <view class="wx-popup _8859a02"  wx:if="{{$Modal$flag}}">
-    <view class="popup-container _8859a02">
-      <view class="wx-popup-con _8859a02">
-        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" class="_8859a02"/>
+  <view class="wx-popup _4d5f1a4"  wx:if="{{$Modal$flag}}">
+    <view class="popup-container _4d5f1a4">
+      <view class="wx-popup-con _4d5f1a4">
+        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" cursor-spacing="200" class="_4d5f1a4"/>
       </view>
-      <view class="wx-popup-btn _8859a02">
-        <text class="btn-no _8859a02" bindtap="$Modal$cancelFn">{{$Modal$cancelBtnText}}</text>
-        <text class="btn-ok _8859a02" bindtap="$Modal$sureFn">{{$Modal$sureBtnText}}</text>
+      <view class="wx-popup-btn _4d5f1a4">
+        <text class="btn-no _4d5f1a4" bindtap="$Modal$cancelFn">{{$Modal$cancelBtnText}}</text>
+        <text class="btn-ok _4d5f1a4" bindtap="$Modal$sureFn">{{$Modal$sureBtnText}}</text>
       </view>
     </view>
   </view>
@@ -97,8 +97,8 @@
   <view class="wx-popup"  wx:if="{{$Modal2$flag}}">
     <view class="popup-container">
       <view class="wx-popup-con">
-        <input type="text" placeholder="{{$Modal2$placeholderText}}" bindinput="$Modal2$bindInput" value="{{$Modal2$input}}" id="input" style="margin-bottom: 40rpx"/>
-        <input type="digit" min="10" placeholder="{{$Modal2$placeholderText2}}" bindinput="$Modal2$bindInput" value="{{$Modal2$money}}" id="money"/>
+        <input type="text" placeholder="{{$Modal2$placeholderText}}" bindinput="$Modal2$bindInput" value="{{$Modal2$input}}" id="input" style="margin-bottom: 40rpx" cursor-spacing="100"/>
+        <input type="digit" min="10" placeholder="{{$Modal2$placeholderText2}}" bindinput="$Modal2$bindInput" value="{{$Modal2$money}}" id="money" cursor-spacing="100"/>
       </view>
       <view class="wx-popup-btn">
         <text class="btn-no" bindtap="$Modal2$cancelFn">{{$Modal2$cancelBtnText}}</text>

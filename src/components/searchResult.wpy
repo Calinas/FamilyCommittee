@@ -3,7 +3,7 @@
     <view class='popup-container'>
       <text class="iconfont icon-delete" @tap="closeModal"></text>
       <view class="flex-wrapper">
-        <input type="text" placeholder="请输入姓名" class="input" id="input" value="{{input}}" @input="bindInput">
+        <input type="text" placeholder="请输入姓名" class="input" id="input" value="{{input}}" @input="bindInput" cursor-spacing='100'>
         <view class="search-btn" @tap="sureFn">搜索</view>
       </view>
       <view class="list">

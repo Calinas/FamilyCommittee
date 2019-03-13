@@ -14,8 +14,8 @@
         </view>
       </block>
       <view class="caption" wx:if="{{classInfo}}">
-        <!-- <text class="school"></text> -->
-        <text class="class">{{classInfo.name}}</text>
+        <text class="school">{{classInfo.school.name}}</text>
+        <text class="class">{{gradeType[classInfo.grade_type]}}{{classInfo.year_class}}级{{classInfo.class}}班</text>
       </view>
       <view class="buttons">
         <view catchtap="jumpPage('member')" wx:if="{{auth.president}}" class="flex-wrapper center">
@@ -69,7 +69,15 @@
           <view class="flex-wrapper font-grey font-small see-type">
             <text>{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
             <view class="flex-wrapper icon-wrapper">
-              <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" wx:if="{{memberInfo.member_id === item.member.id}}"></view>
+              <block wx:if="{{memberInfo.member_id === item.member.id}}">
+                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
+                <block wx:if="{{item.app_type !== 'collection'}}">
+                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
+                </block>
+                <block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}">
+                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
+                </block>
+              </block>
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle({{item.app_type}})"></view>
               <!-- <button open-type="share" class="font-grey iconfont icon-share text-right"></button> -->
@@ -80,7 +88,7 @@
               <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
             </view>
             <view class="tag-wrapper">
-              <text class="tag tag-blue" @tap="submitJoinActivity">选好了，报名</text>
+              <text class="tag tag-big tag-blue" @tap="submitJoinActivity">选好了，报名</text>
               <!-- <text class="tag tag-grey">已报名</text> -->
             </view>
             <!-- 报名结果 -->
@@ -88,7 +96,7 @@
               <view class="result-wrapper" wx:if="{{activity.student_list.length}}">
                 <view class="title item-tag">
                   <text class="tag tag-empty">{{activity.name}}</text>
-                  <text>{{activity.student_list.length}}人报名</text>
+                  <text>已有{{activity.student_list.length}}人报名</text>
                 </view>
                 <view class="person-list tag-wrapper">
                   <text class="tag tag-light-grey" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
@@ -143,7 +151,7 @@
               <text>{{comment.content}}</text>
             </view>
             <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
-              <text class="font-grey">加载更多评论</text>
+              <text class="font-blue font-small">加载更多评论</text>
             </view>
           </view>
         </view>
@@ -269,6 +277,12 @@ export default class Zone extends wepy.page {
       notify: '通知',
       activity: '活动',
       account: '记账'
+    },
+    gradeType: {
+      primary: '小学',
+      middle: '初中',
+      high: '高中',
+      university: '大学'
     },
     shareImgSrc: {
       circles: '../images/share/circles.jpg',
@@ -549,6 +563,10 @@ export default class Zone extends wepy.page {
       })
     },
     submitJoinActivity() {
+      if (this.currerntJoinAcitivytId <= 0) {
+        showMsg('请先选择活动项目');
+        return;
+      }
       joinActivity({
         class_id: this.classInfo.id,
         activity_item_id: this.currerntSubActivityId,
@@ -716,6 +734,9 @@ export default class Zone extends wepy.page {
 <style lang="scss" scoped>
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
+.tag-wrapper {
+  padding: 0;
+}
 .invoice-wrapper {
   margin-top: 30rpx;
   .tag {
