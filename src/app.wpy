@@ -120,6 +120,18 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
+    if (wx.getUpdateManager) {
+      const updateManager = wx.getUpdateManager()
+      updateManager.onUpdateReady(function () {
+        updateManager.applyUpdate()
+      })
+    } else {
+      wx.showModal({
+        showCancel: false,
+        title: '当前微信版本过低',
+        content: '部分功能可能无法使用，请升级到最新微信版本后重试。'
+      })
+    }
     this.testAsync()
   }
 

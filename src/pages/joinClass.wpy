@@ -31,13 +31,14 @@ export default class JoinClass extends wepy.page {
     list: []
   }
   onLoad(options) {
-    this.isShare = options.is_share
+    console.log(options)
+    console.log('ssss')
     this.classId = options.classId
     this.name = options.name
-    this.key = options.key
+    this.key = options.key   // 根据key是否存在来判断是分享加入 还是直接输入班级加入
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.$apply()
-    if (this.isShare) {
+    if (this.key) {
       if (!this.memberInfo.member_id) { // 如果是从分享链接进入且没有注册，先走注册流程
         wx.redirectTo({
           url: `login?classId=${this.classId}&name=${this.name}&key=${this.key}`
@@ -59,7 +60,6 @@ export default class JoinClass extends wepy.page {
       getClassList().then(res => {
         this.list = res.data.list
         this.$apply()
-        console.log(this.classId, this.list)
         resolve(checkHasJoinClass(this.classId, this.list))
       })
     })

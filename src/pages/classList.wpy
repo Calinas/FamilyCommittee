@@ -116,9 +116,9 @@ export default class ClassList extends wepy.page {
     if (this.key && !this.memberInfo.member_id) {
       // 如果是从分享链接进入且没有注册，先走注册流程
       wx.redirectTo({
-        url: `login?key=${this.key}`
+        url: `login?key=${this.key}classId=${this.classId}&name=${this.name}`
       })
-    } else if (this.key && this.memberInfo.member_id){
+    } else if (this.key && this.memberInfo.member_id) {
       wx.navigateTo({
         url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
       })

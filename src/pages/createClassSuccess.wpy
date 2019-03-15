@@ -53,7 +53,7 @@ export default class bindRelationship extends wepy.page {
   onShareAppMessage(res) {
     return {
       title: `${this.memberInfo.nickname}邀请您一起加入${this.name},验证码是${this.key}`,
-      path: `pages/createClassSuccess?classId=${this.classId}&name=${this.name}&key=${this.key}&is_share=true`
+      path: `pages/createClassSuccess?classId=${this.classId}&name=${this.name}&key=${this.key}`
     }
   }
   onLoad(params) {
@@ -68,7 +68,7 @@ export default class bindRelationship extends wepy.page {
       wx.redirectTo({
         url: `login?classId=${this.classId}&name=${this.name}&key=${this.key}`
       })
-    } else if(this.isShare && this.memberInfo.member_id){
+    } else if (this.isShare && this.memberInfo.member_id) {
       wx.redirectTo({
         url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
       })
