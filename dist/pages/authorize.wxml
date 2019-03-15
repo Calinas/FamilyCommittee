@@ -14,6 +14,7 @@
     <view class="flex-wrapper item last-one">
       <text class="font-bold font-black sub-title">班委会二维码：</text>
       <image src="{{classInfo.qr_code}}" class="qr-code"/>
+      <button open-type="share" class="font-green btn-invite bg-white" bindtap="share">点击按钮邀请其他家长加入</button>
     </view>
     <view class="flex-wrapper item last-one" style="align-items:center;">
       <text class="font-bold font-black sub-title" style="margin-right: 0;">修改班级验证码：</text>

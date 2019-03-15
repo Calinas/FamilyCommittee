@@ -47,12 +47,12 @@ export default class bindRelationship extends wepy.page {
       })
     },
     back() {
-      wx.switchTab({ url: 'zone' });
+      wx.switchTab({ url: 'zone' })
     }
   }
   onShareAppMessage(res) {
     return {
-      title: `${this.memberInfo.nickname}邀请您一起加入${this.name}`,
+      title: `${this.memberInfo.nickname}邀请您一起加入${this.name},验证码是${this.key}`,
       path: `pages/createClassSuccess?classId=${this.classId}&name=${this.name}&key=${this.key}&is_share=true`
     }
   }

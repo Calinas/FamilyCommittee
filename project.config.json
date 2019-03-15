@@ -12,5 +12,34 @@
 	"appid": "wx109e9c2ac74ce211",
 	"projectname": "committee",
 	"miniprogramRoot": "dist/",
-	"condition": {}
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
+			"list": [
+				{
+					"id": 0,
+					"name": "测试加入班级",
+					"pathName": "pages/joinClass",
+					"query": "classId=45&name=重庆八中小学2022级11班&key=678905&is_share=true",
+					"scene": 1036,
+					"referrerInfo": {}
+				}
+			]
+		}
+	}
 }

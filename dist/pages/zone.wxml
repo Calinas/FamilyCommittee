@@ -39,9 +39,20 @@
     <view class="item-wrapper _849026a" wx:if="{{list.length}}">
       <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex" class="_849026a">
          <view class="item _849026a">
-          <view class="flex-wrapper center _849026a">
-            <image src="{{item.member.head_img}}" class="small-avatar _849026a"/>
-            <text class="_849026a">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+          <view class="flex-wrapper center between _849026a">
+            <view class="_849026a">
+              <image src="{{item.member.head_img}}" class="small-avatar _849026a"/>
+              <text class="_849026a">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+            </view>
+            <block wx:if="{{memberInfo.member_id === item.member.id}}" class="_849026a">
+                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
+                <block wx:if="{{item.app_type !== 'collection'}}" class="_849026a">
+                  <view class="font-grey iconfont icon-shanchu text-right _849026a" catchtap="removeCircle" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/>
+                </block>
+                <block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}" class="_849026a">
+                  <view class="font-grey iconfont icon-shanchu text-right _849026a" catchtap="removeCircle" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/>
+                </block>
+              </block>
           </view>
           <view class="font-small font-grey text-right _849026a">{{item.created_at}}</view>
           <block wx:if="{{item.app_type !== 'account'}}" class="_849026a">
@@ -69,15 +80,6 @@
           <view class="flex-wrapper font-grey font-small see-type _849026a">
             <text class="_849026a">{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
             <view class="flex-wrapper icon-wrapper _849026a">
-              <block wx:if="{{memberInfo.member_id === item.member.id}}" class="_849026a">
-                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
-                <block wx:if="{{item.app_type !== 'collection'}}" class="_849026a">
-                  <view class="font-grey iconfont icon-shanchu text-right _849026a" catchtap="removeCircle" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/>
-                </block>
-                <block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}" class="_849026a">
-                  <view class="font-grey iconfont icon-shanchu text-right _849026a" catchtap="removeCircle" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/>
-                </block>
-              </block>
               <view class="font-grey iconfont icon-message text-right _849026a" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
               <view class="font-grey iconfont icon-share text-right _849026a" catchtap="shareCircle" data-wpysharecircle-a="{{item.app_type}}"/>
               <!-- <button open-type="share" class="font-grey iconfont icon-share text-right"></button> -->
@@ -116,7 +118,7 @@
           <!-- 收款 -->
           <block wx:if="{{item.app_type === 'collection'}}" class="_849026a">
             <view class="tag-wrapper item-tag _849026a" wx:if="{{item.info.item.length}}">
-              <text class="tag-big tag tag-empty _849026a" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}}：¥{{collection.money}}</text>
+              <text class="tag-big tag tag-empty _849026a" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">点击缴费：{{collection.name}}¥{{collection.money}}</text>
             </view>
             <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" class="_849026a">
               <view class="result-wrapper _849026a" wx:if="{{collection.student_list.length}}">
@@ -229,6 +231,18 @@
       <view class="wx-popup-btn _99385de">
         <button bindtap="$shareModal$cancelFn" class="_99385de">取消</button>
         <button open-type="share" bindtap="$shareModal$sureFn" class="_99385de">确认分享</button>
+      </view>
+    </view>
+  </view>
+    
+  <view class="wx-popup _7b8b319 _849026a"  wx:if="{{$SureModal$flag}}">
+    <view class="popup-container _7b8b319">
+      <view class="wx-popup-con _7b8b319">
+        <text class="_7b8b319">{{$SureModal$title}}</text>
+      </view>
+      <view class="wx-popup-btn _7b8b319">
+        <text class="btn-no _7b8b319" bindtap="$SureModal$cancelFn">取消</text>
+        <text class="btn-ok _7b8b319" bindtap="$SureModal$sureFn">确认</text>
       </view>
     </view>
   </view>

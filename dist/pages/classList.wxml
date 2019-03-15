@@ -19,13 +19,13 @@
         </block>
         <block wx:if="{{!classInfo}}">
           <view class="text-center font-bold">
-            暂未选择班级
+            点击班级名直接进入班级家委会
           </view>
         </block>
         <view class="flex-wrapper center between" wx:for="{{list}}" wx:key="key" wx:for-index="idx" bindtap="setClass" data-wpysetclass-a="{{idx}}">
           <!-- <text class="dot dot-grey"></text> -->
           <text>{{item.class.name}}</text>
-          <text class="iconfont icon-arrow-right" style="font-size: 30rpx;"/>
+          <text class="font-bold" style="font-size: 20rpx;">点击进去班级</text>
         </view>
       </block>
       <block  wx:else>

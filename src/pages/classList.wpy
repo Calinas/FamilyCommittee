@@ -19,13 +19,13 @@
         </block>
         <block wx:if="{{!classInfo}}">
           <view class="text-center font-bold">
-            暂未选择班级
+            点击班级名直接进入班级家委会
           </view>
         </block>
         <view class="flex-wrapper center between" wx:for="{{list}}" wx:key="key" wx:for-index="idx" @tap="setClass({{idx}})">
           <!-- <text class="dot dot-grey"></text> -->
           <text>{{item.class.name}}</text>
-          <text class="iconfont icon-arrow-right" style="font-size: 30rpx;"></text>
+          <text class="font-bold" style="font-size: 20rpx;">点击进去班级</text>
         </view>
       </block>
       <block wx:else>
@@ -64,7 +64,7 @@ export default class ClassList extends wepy.page {
     list: [],
     key: '',
     name: '',
-    clasId: -1
+    classId: -1
   }
   getClassList() {
     getClassList().then(res => {
@@ -74,7 +74,7 @@ export default class ClassList extends wepy.page {
   }
   onShareAppMessage(res) {
     return {
-      title: `${this.memberInfo.nickname}邀请您一起加入${this.classInfo.name}`,
+      title: `${this.memberInfo.nickname}邀请您一起加入${this.classInfo.name},验证码是${this.classInfo.join_key}`,
       path: `pages/classList?classId=${this.classInfo.id}&name=${this.classInfo.name}&key=${this.classInfo.join_key}`
     }
   }
@@ -101,6 +101,7 @@ export default class ClassList extends wepy.page {
   }
   onShow() {
     if (this.$parent.globalData.classHasChange) {
+      this.classInfo = wx.getStorageSync('classInfo')
       this.getClassList()
       this.$parent.globalData.classHasChange = false
     }
@@ -177,7 +178,7 @@ export default class ClassList extends wepy.page {
   .flex-wrapper {
     line-height:100rpx;
     border-bottom:1px solid #f2f2f2;
-    width:70%;
+    width:86%;
     margin:auto;
   }
   .dot {

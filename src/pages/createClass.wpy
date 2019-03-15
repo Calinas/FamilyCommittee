@@ -218,6 +218,9 @@ export default class joinClass extends wepy.page {
   }
   onLoad(params) {
     this.type = params.type
+    wx.setNavigationBarTitle({
+      title: this.type === 'join' ? '加入班级' : '创建班级'
+    })
     const globalData = this.$parent.globalData
     this.memberInfo = globalData.memberInfo
     this.$apply()

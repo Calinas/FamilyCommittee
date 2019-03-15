@@ -6,7 +6,7 @@
         {{item.title}}
       </label>
     </radio-group>
-    <input type="number" placeholder="请输入金额" class="money-input width80" @input="pickerChange" id="money"/>
+    <input type="digit" placeholder="请输入金额" class="money-input width80" @input="pickerChange" id="money" />
     <textarea class="money-desc" placeholder="请输入详情描述" @input="pickerChange" id="msg"></textarea>
     <text class="font-black font-bold upload-text">上传凭证</text>
     <view class="img-list flex-wrapper">
@@ -184,6 +184,7 @@ export default class recordCashflow extends wepy.page {
 .money-desc {
   border:1px solid #f1f1f1;
   padding:20rpx;
+  height: 200rpx;
   width: calc(100% - 40rpx);
 }
 .img-list {

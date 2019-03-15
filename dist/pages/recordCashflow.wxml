@@ -6,7 +6,7 @@
         {{item.title}}
       </label>
     </radio-group>
-    <input type="number" placeholder="请输入金额" class="money-input width80 _2c23631" bindinput="pickerChange" id="money"/>
+    <input type="digit" placeholder="请输入金额" class="money-input width80 _2c23631" bindinput="pickerChange" id="money"/>
     <textarea class="money-desc _2c23631" placeholder="请输入详情描述" bindinput="pickerChange" id="msg"/>
     <text class="font-black font-bold upload-text _2c23631">上传凭证</text>
     <view class="img-list flex-wrapper _2c23631">

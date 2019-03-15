@@ -36,7 +36,7 @@ export default class SelectModal extends wepy.component {
       this.$apply()
     },
     cancelFn () {
-      this.$emit('cancel')
+      this.$emit('cancel', 'selectFlag', false)
     },
     sureFn () {
       this.$emit('sure', this.ids)

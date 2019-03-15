@@ -122,3 +122,8 @@ export function throttle(method, context = window, timer = 300) {
     method.call(context)
   }, timer)
 }
+
+export function checkHasJoinClass(classId, classList) {
+  let returnArray = classList.filter(item => Number(item.class.id) === Number(classId))
+  return !!returnArray.length
+}

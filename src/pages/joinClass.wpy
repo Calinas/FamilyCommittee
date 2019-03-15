@@ -6,19 +6,19 @@
     <view class="common-line">
       <input type="text" placeholder="在此填入该班级验证码" @input="bindInput" id="key" />
     </view>
-    <view class="common-line text-center font-green" @tap="joinNow">申请加入</view>
-
+    <view class="common-line text-center font-green" @tap="joinNow" style="margin-bottom: 30rpx;">申请加入</view>
+    <view class="common-line text-center font-green" @tap="back">回到首页</view>
     <!-- <view class="create-btn font-grey text-right">我要创建班级</view> -->
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import { joinClass } from '../api/createClass'
-import { showMsg } from '../utils/common'
+import { joinClass, getClassList } from '../api/createClass'
+import { showMsg, checkHasJoinClass } from '../utils/common'
 export default class JoinClass extends wepy.page {
   config = {
-    navigationBarTitleText: '创建班级'
+    navigationBarTitleText: '申请加入班级'
   }
   data = {
     memberInfo: {},
@@ -27,23 +27,45 @@ export default class JoinClass extends wepy.page {
     key: '',
     createClassInfo: {},
     name: '',
-    isShare: ''
+    isShare: '',
+    list: []
   }
   onLoad(options) {
+    this.isShare = options.is_share
     this.classId = options.classId
     this.name = options.name
     this.key = options.key
-    this.isShare = options.is_share
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.$apply()
-    if (this.isShare && !this.memberInfo.member_id) {
-      // 如果是从分享链接进入且没有注册，先走注册流程
-      wx.redirectTo({
-        url: `login?classId=${this.classId}&name=${this.name}&key=${this.key}`
-      })
+    if (this.isShare) {
+      if (!this.memberInfo.member_id) { // 如果是从分享链接进入且没有注册，先走注册流程
+        wx.redirectTo({
+          url: `login?classId=${this.classId}&name=${this.name}&key=${this.key}`
+        })
+      } else { // 如果已经注册了，判断是否已经加入过了
+        this.getClassListInfo().then(res => {
+          if (res) { // 如果已经加入班级，那么自动跳转到首页
+            showMsg('您已经加入该班级，将自动跳转到首页')
+            setTimeout(() => {
+              wx.switchTab({url: 'zone'})
+            }, 2000)
+          }
+        })
+      }
     }
   }
+  getClassListInfo() {
+    return new Promise(resolve => {
+      getClassList().then(res => {
+        this.list = res.data.list
+        resolve(checkHasJoinClass(this.classId, this.list))
+      })
+    })
+  }
   methods = {
+    back() {
+      wx.switchTab({ url: 'zone' })
+    },
     bindInput(e) {
       this[e.currentTarget.id] = e.detail.value
       this.$apply()
@@ -53,15 +75,16 @@ export default class JoinClass extends wepy.page {
         class_id: this.classId,
         join_key: this.key
       }).then(res => {
-        if(res.data.success) {
+        if (res.data.success) {
           showMsg('成功加入班级')
+          this.$parent.globalData.classHasChange = true
           wx.setStorage({
             key: 'classInfo',
             data: res.data.class
           })
           setTimeout(() => {
             wepy.navigateTo({url: `bindRelationship?id=${this.classId}&type=join&key=${this.key}`})
-          },2000)
+          }, 2000)
         }
       })
     }

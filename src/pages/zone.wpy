@@ -39,9 +39,20 @@
     <view class="item-wrapper" wx:if="{{list.length}}">
       <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
          <view class="item">
-          <view class="flex-wrapper center">
-            <image src="{{item.member.head_img}}"  class="small-avatar" />
-            <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+          <view class="flex-wrapper center between">
+            <view>
+              <image src="{{item.member.head_img}}"  class="small-avatar" />
+              <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+            </view>
+            <block wx:if="{{memberInfo.member_id === item.member.id}}">
+                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
+                <block wx:if="{{item.app_type !== 'collection'}}">
+                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
+                </block>
+                <block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}">
+                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
+                </block>
+              </block>
           </view>
           <view class="font-small font-grey text-right">{{item.created_at}}</view>
           <block wx:if="{{item.app_type !== 'account'}}">
@@ -69,15 +80,6 @@
           <view class="flex-wrapper font-grey font-small see-type">
             <text>{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
             <view class="flex-wrapper icon-wrapper">
-              <block wx:if="{{memberInfo.member_id === item.member.id}}">
-                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
-                <block wx:if="{{item.app_type !== 'collection'}}">
-                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
-                </block>
-                <block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}">
-                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
-                </block>
-              </block>
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle({{item.app_type}})"></view>
               <!-- <button open-type="share" class="font-grey iconfont icon-share text-right"></button> -->
@@ -116,7 +118,7 @@
           <!-- 收款 -->
           <block wx:if="{{item.app_type === 'collection'}}">
             <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-              <text class="tag-big tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}}：¥{{collection.money}}</text>
+              <text class="tag-big tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">点击缴费：{{collection.name}}¥{{collection.money}}</text>
             </view>
             <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key">
               <view class="result-wrapper" wx:if="{{collection.student_list.length}}">
@@ -203,7 +205,7 @@
     <SelectModal
       :flag.sync="selectFlag"
       :list.sync="payMemberList"
-      @cancel.user="selectCancel"
+      @cancel.user="toggleFlag"
       @sure.user="selectSure"
     >
     </SelectModal>
@@ -211,10 +213,17 @@
       :flag.sync="showShareFlag"
       :title.sync="shareTitle"
       :imgSrc.sync="shareImg"
-      @cancel.user="cancelShareFn"
-      @sure.user="cancelShareFn"
+      @cancel.user="toggleFlag"
+      @sure.user="toggleFlag"
     >
     </shareModal>
+    <SureModal
+      :flag.sync="showSureFlag"
+      :title.sync="removeCircleTitle"
+      @cancel.user="toggleFlag"
+      @sure.user="toggleFlag"
+    >
+    </SureModal>
   </view>
 </template>
 
@@ -222,6 +231,7 @@
 import wepy from 'wepy'
 import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
+import SureModal from '../components/sureModal'
 import shareModal from '../components/shareModal'
 import { showMsg, previewImage } from '../utils/common'
 import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle } from '../api/zone'
@@ -236,20 +246,11 @@ export default class Zone extends wepy.page {
   components = {
     CurrentModal,
     SelectModal,
-    shareModal
+    shareModal,
+    SureModal
   }
   data = {
     menuList: [
-      {
-        text: '家长圈',
-        type: 'zone',
-        src: '/images/icon/2.jpg'
-      },
-      {
-        text: '收款',
-        type: 'money',
-        src: '/images/icon/money.jpg'
-      },
       {
         text: '通知',
         type: 'notice',
@@ -261,11 +262,22 @@ export default class Zone extends wepy.page {
         src: '/images/icon/5.jpg'
       },
       {
+        text: '家长圈',
+        type: 'zone',
+        src: '/images/icon/2.jpg'
+      },
+      {
+        text: '收款',
+        type: 'money',
+        src: '/images/icon/money.jpg'
+      },
+      {
         text: '记账',
         type: 'account',
         src: '/images/icon/photos.jpg'
       }
     ],
+    showSureFlag: false,
     commentFlag: false,
     selectFlag: false,
     activeType: 'all',
@@ -326,7 +338,10 @@ export default class Zone extends wepy.page {
     loadMoreCommentArray: [],
     shareTitle: '',
     showShareFlag: false,
-    shareImg: ''
+    shareImg: '',
+    removeCircleTitle: '您确认要删除吗？',
+    currentRemoveMomentId: -1,
+    currentRemoveMomentIdx: -1
   }
   watch = {
     classInfo(newVal, oldVal) {
@@ -347,6 +362,8 @@ export default class Zone extends wepy.page {
   resetData() {
     this.loadMoreCommentArray = []
     this.commentLoadFinished = false
+    this.currentRemoveMomentId = -1
+    this.currentRemoveMomentIdx = -1
     this.commentPn = 2
     this.commentPs = 6
     this.studentIds = []
@@ -391,6 +408,18 @@ export default class Zone extends wepy.page {
       this.$apply()
       this.getZoneList()
     }
+  }
+  removeCircleFn(id, idx) {
+    deleteCircle({
+      moment_id: id,
+      class_id: this.classInfo.id
+    }).then(res => {
+      if (res.data.success) {
+        showMsg('成功删除')
+        this.list.splice(idx, 1)
+        this.$apply()
+      }
+    })
   }
   getAuthList() {
     getAuth({
@@ -514,6 +543,14 @@ export default class Zone extends wepy.page {
     return category
   }
   methods = {
+    toggleFlag(flag, booleanValue) {
+      this[flag] = booleanValue
+      if (flag === 'showSureFlag' && booleanValue) {
+        this[flag] = false
+        this.removeCircleFn(this.currentRemoveMomentId, this.currentRemoveMomentIdx)
+      }
+      this.$apply()
+    },
     shareCircle(type) {
       let shareActionType = this.getShareActionType(type)
       let shareType = this.getShareType(type)
@@ -523,16 +560,10 @@ export default class Zone extends wepy.page {
       this.$apply()
     },
     removeCircle(id, idx) {
-      deleteCircle({
-        moment_id: id,
-        class_id: this.classInfo.id
-      }).then(res => {
-        if (res.data.success) {
-          showMsg('成功删除')
-          this.list.splice(idx, 1)
-          this.$apply()
-        }
-      })
+      this.showSureFlag = true
+      this.currentRemoveMomentId = id
+      this.currentRemoveMomentIdx = idx
+      this.$apply()
     },
     pay(momentId, collectionId) {
       if (this.paymentLocked) {
@@ -564,8 +595,8 @@ export default class Zone extends wepy.page {
     },
     submitJoinActivity() {
       if (this.currerntJoinAcitivytId <= 0) {
-        showMsg('请先选择活动项目');
-        return;
+        showMsg('请先选择活动项目')
+        return
       }
       joinActivity({
         class_id: this.classInfo.id,
@@ -702,14 +733,6 @@ export default class Zone extends wepy.page {
     preview(img, imgList) {
       previewImage(img, imgList)
     },
-    selectCancel() {
-      this.selectFlag = false
-      this.$apply()
-    },
-    cancelShareFn() {
-      this.showShareFlag = false
-      this.$apply()
-    },
     selectSure(value) {
       if (!value.length) {
         showMsg('请选择')
@@ -773,7 +796,7 @@ export default class Zone extends wepy.page {
   & > .icon-wrapper {
     display: flex;
     justify-content: space-between;
-    width:32%;
+    width: 26%;
     align-items:center;
     .icon-share {
       font-size: 32rpx;

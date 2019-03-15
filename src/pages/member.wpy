@@ -58,10 +58,6 @@ export default class Member extends wepy.page {
     }).then(res => {
       let data = res.data
       this.familyList = data.family_list
-      // let list = data.family_list.list
-      // for(let i in list) {
-      //   this.familyList.push(data.family_list[i])
-      // }
       this.teacherList = data.teacher_list
       this.count = this.familyList.count + this.teacherList.count
       this.authList = data.admin_list

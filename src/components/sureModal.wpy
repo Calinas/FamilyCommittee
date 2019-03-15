@@ -2,12 +2,11 @@
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="wx-popup-con">
-        <text class="share-title">{{title}}</text>
-        <image src="{{imgSrc}}" class="share-img"/>
+        <text>{{title}}</text>
       </view>
       <view class="wx-popup-btn">
-        <button @tap="cancelFn">取消</button>
-        <button open-type="share" @tap="sureFn">确认分享</button>
+        <text class="btn-no" @tap='cancelFn'>取消</text>
+        <text class="btn-ok" @tap='sureFn'>确认</text>
       </view>
     </view>
   </view>
@@ -15,28 +14,23 @@
 
 <script>
 import wepy from 'wepy'
-export default class CurrentModal extends wepy.component {
+export default class SureModal extends wepy.component {
   props = {
     flag: Boolean,
-    title: String,
-    imgSrc: String
-  }
-  onLoad() {
-
+    title: String
   }
   methods = {
     cancelFn () {
-      this.$emit('cancel', 'showShareFlag', false)
+      this.$emit('cancel', 'showSureFlag', false)
     },
     sureFn () {
-      this.$emit('sure', 'showShareFlag', false)
+      this.$emit('sure', 'showSureFlag', true)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/mixins.scss';
 .wx-popup {
   position: fixed;
   left: 0;
@@ -45,10 +39,6 @@ export default class CurrentModal extends wepy.component {
   height: 100%;
   background: rgba(0, 0, 0, .5);
   z-index: 3;
-}
-.share-img {
-  padding-top: 40rpx;
-  width: 100%;
 }
 .popup-container {
   position: absolute;
@@ -68,12 +58,13 @@ export default class CurrentModal extends wepy.component {
   }
 }
 .wx-popup-con {
-  margin: 40rpx;
+  margin: 60rpx;
+  text-align:center;
 }
 .wx-popup-btn {
-  display:flex;
-  justify-content:space-between;
-  margin:20px;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 40rpx;
 }
 .wx-popup-btn text {
   display: flex;
