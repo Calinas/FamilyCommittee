@@ -58,6 +58,8 @@ export default class JoinClass extends wepy.page {
     return new Promise(resolve => {
       getClassList().then(res => {
         this.list = res.data.list
+        this.$apply()
+        console.log(this.classId, this.list)
         resolve(checkHasJoinClass(this.classId, this.list))
       })
     })

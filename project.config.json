@@ -35,7 +35,7 @@
 					"id": 0,
 					"name": "测试加入班级",
 					"pathName": "pages/joinClass",
-					"query": "classId=45&name=重庆八中小学2022级11班&key=678905&is_share=true",
+					"query": "classId=102&name=重庆枫叶国际学校小学2011级1班&key=260138&is_share=true",
 					"scene": 1036,
 					"referrerInfo": {}
 				}

@@ -90,7 +90,7 @@ export default class login extends wepy.page {
       wx.setStorageSync('memberInfo', memberInfo)
       if (this.joinKey) {
         wx.reLaunch({
-          url: `joinClass?classId=${this.classId}&name=${this.name}`
+          url: `joinClass?classId=${this.classId}&name=${this.name}&is_share=true`
         })
       } else {
         wx.reLaunch({
