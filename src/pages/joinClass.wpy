@@ -31,8 +31,6 @@ export default class JoinClass extends wepy.page {
     list: []
   }
   onLoad(options) {
-    console.log(options)
-    console.log('ssss')
     this.classId = options.classId
     this.name = options.name
     this.key = options.key   // 根据key是否存在来判断是分享加入 还是直接输入班级加入

@@ -120,6 +120,7 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
+    console.log(2)
     if (wx.getUpdateManager) {
       const updateManager = wx.getUpdateManager()
       updateManager.onUpdateReady(function () {
