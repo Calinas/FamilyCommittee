@@ -172,7 +172,7 @@
         <view catchtap="jumpPage('bindRelationship?type=edit')" wx:if="{{classInfo.id}}">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
         <view catchtap="jumpPage('cashflow')" wx:if="{{auth.finance}}">财务记账</view>
-        <view catchtap="jumpPage('personalCashflow')">财务流水</view>
+        <view catchtap="jumpPage('personalCashflow')" wx:if="{{auth.finance}}">财务流水</view>
         <!-- <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view> -->
         <view catchtap="jumpPage('authorize')" wx:if="{{auth.president}}">家委会管理</view>
         </view>
@@ -434,8 +434,8 @@ export default class Zone extends wepy.page {
     })
     this.$apply()
   }
-  formatSingleAuth(name) {
-    this.auth[name] = true
+  formatSingleAuth(name, booleanValue) {
+    this.auth[name] = booleanValue
     this.$apply()
   }
   checkAuth(list) {
@@ -445,7 +445,8 @@ export default class Zone extends wepy.page {
         this.formatAllAuth(this.auth)
         break
       } else {
-        isAuth && this.formatSingleAuth(code)
+        isAuth && this.formatSingleAuth(code, true)
+        !isAuth && this.formatSingleAuth(code, false)
       }
     }
   }

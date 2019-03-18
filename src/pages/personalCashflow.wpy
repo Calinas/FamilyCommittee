@@ -4,7 +4,7 @@
       <view class="msg-card font-black" wx:for="{{list}}">
         <view class="flex-wrapper center">
           <image src="" class="small-avatar"/>
-          <text>我通过{{item.member.nickname}}发布的收s款信息支付了</text>
+          <text>我通过{{item.info.member.class_nickname}}发布的收款信息支付了</text>
         </view>
         <view class="btn-money">{{item.pay_amount}}元</view>
         <view class="font-grey font-small time">{{item.updated_at}}</view>
