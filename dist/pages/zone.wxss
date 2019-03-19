@@ -72,9 +72,9 @@
 
 .img-list._849026a {
   margin-bottom: 0; }
-  .img-list.one-img image._849026a {
-    width: 300rpx;
-    height: 300rpx; }
+  .img-list.one-img .img-item._849026a {
+    width: 400rpx;
+    height: 225rpx; }
 
 .menu-wrapper._849026a {
   background-color: #fff;
@@ -169,7 +169,10 @@
     color: #000; }
 
 .comment-wrapper._849026a {
-  line-height: 50rpx; }
+  line-height: 50rpx;
+  margin-bottom: 20rpx; }
+  .comment-wrapper .item._849026a {
+    padding-left: 10rpx; }
 
 .sidebar._849026a {
   position: fixed;

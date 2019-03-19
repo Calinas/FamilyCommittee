@@ -57,8 +57,11 @@
           <view class="font-small font-grey text-right create-time _849026a">{{item.created_at}}</view>
           <block wx:if="{{item.app_type !== 'account'}}" class="_849026a">
             <view class="item-desc font-36 _849026a">{{item.info.description}}</view>
-            <view class="img-list flex-wrapper {{item.image.length === 1 ? 'one-img' : ''}} _849026a" wx:if="{{item.image.length}}">
-              <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
+            <view class="img-list flex-wrapper one-img _849026a" wx:if="{{item.image.length === 1}}">
+              <image mode="widthFix" src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load="lazy-load" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
+            </view>
+            <view class="img-list flex-wrapper _849026a" wx:else>
+              <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" wx:key="keyIndex" lazy-load="lazy-load" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
             </view>
           </block>
           <block wx:if="{{item.app_type === 'account'}}" class="_849026a">

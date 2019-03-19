@@ -2,7 +2,6 @@
   <view class="common-container common-container-grey" style="position:relative" @tap="closeToggle">
     <view class="img-mask">
       <image src="/images/banner3.jpg" mode="scaleToFill" class="bg-img"/>
-      <view class="mask"></view>
       <view class="btn btn-set flex-wrapper center" catchtap="toggleMenu('setFlag')">
         <text class="iconfont icon-edit"></text>
         <navigator
@@ -32,14 +31,16 @@
                 </block>
               </block>
           </view>
-
-          <view class="item-desc">{{item.info.description}}</view>
-          <view class="img-list flex-wrapper {{item.image.length === 1 ? 'one-img' : ''}}" wx:if="{{item.image.length}}">
-            <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
+          <view class="item-desc font-36">{{item.info.description}}</view>
+          <view class="img-list flex-wrapper one-img" wx:if="{{item.image.length === 1}}">
+            <image mode="widthFix" src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" wx:key="keyIndex" lazy-load wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
           </view>
-          <text class="font-grey font-small from-school">来自{{item.class.name}}</text>
+          <view class="img-list flex-wrapper" wx:else>
+            <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" wx:key="keyIndex" lazy-load wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
+          </view>
+          
           <view class="flex-wrapper icon-container">
-            <view style="opacity: 0">x</view>
+            <text class="font-grey font-small from-school">来自{{item.class.name}}</text>
             <view class="flex-wrapper icon-wrapper">
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle"></view>

@@ -4,7 +4,7 @@
       <view class="photo-title font-black">{{item.upload_date}} {{item.upload_members}}上传</view>
       <view class="img-list flex-wrapper">
         <repeat for="{{item.img_list}}" index="index" item="imgSrc">
-            <image @tap='preview({{imgSrc}}, {{item.img_list}})' class='img-item' src='{{imgSrc}}' />
+            <image @tap='preview({{imgSrc}}, {{item.img_list}})' class='img-item' src="{{imgSrc+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load />
             <!-- <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/> -->
         </repeat>
       </view>
@@ -157,12 +157,12 @@ textarea {
   flex-wrap: wrap;
   .img-item {
     position: relative;
-    width: 150rpx;
-    margin-right: 20rpx;
-    height: 150rpx;
+    width: 30%;
+    margin-right:5%;
+    margin-bottom:40rpx;
+    height:200rpx;
     overflow: hidden;
-    margin-bottom: 40rpx;
-    &:nth-child( 4n+4 ) {
+    &:nth-child( 3n+3 ) {
       margin-right: 0;
     }
     .close-btn {

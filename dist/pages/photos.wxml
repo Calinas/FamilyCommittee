@@ -4,7 +4,7 @@
       <view class="photo-title font-black">{{item.upload_date}} {{item.upload_members}}上传</view>
       <view class="img-list flex-wrapper">
         <block wx:for="{{item.img_list}}" wx:for-index="index" wx:for-item="imgSrc" wx:key="key">
-            <image bindtap="preview" class="img-item" src="{{imgSrc}}" data-wpypreview-a="{{imgSrc}}" data-wpypreview-b="{{item.img_list}}"/>
+            <image bindtap="preview" class="img-item" src="{{imgSrc+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load="lazy-load" data-wpypreview-a="{{imgSrc}}" data-wpypreview-b="{{item.img_list}}"/>
             <!-- <image src='../../images/close-white.png' bindtap="closeImg" class="close-btn"/> -->
         </block>
       </view>

@@ -57,8 +57,11 @@
           <view class="font-small font-grey text-right create-time">{{item.created_at}}</view>
           <block wx:if="{{item.app_type !== 'account'}}">
             <view class="item-desc font-36">{{item.info.description}}</view>
-            <view class="img-list flex-wrapper {{item.image.length === 1 ? 'one-img' : ''}}" wx:if="{{item.image.length}}">
-              <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
+            <view class="img-list flex-wrapper one-img" wx:if="{{item.image.length === 1}}">
+              <image mode="widthFix" src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
+            </view>
+            <view class="img-list flex-wrapper" wx:else>
+              <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" wx:key="keyIndex" lazy-load wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
             </view>
           </block>
           <block wx:if="{{item.app_type === 'account'}}">
@@ -822,9 +825,9 @@ export default class Zone extends wepy.page {
 .img-list {
   margin-bottom: 0;
   &.one-img {
-    image {
-      width: 300rpx;
-      height: 300rpx;
+    .img-item {
+      width: 400rpx;
+      height: 225rpx;
     }
   }
 }
@@ -910,7 +913,6 @@ export default class Zone extends wepy.page {
     background-color:#fff;
     border-radius:20rpx;
     overflow:hidden;
-    // width:calc(94% - 60rpx);
     margin:30rpx auto;
   }
 }
@@ -943,6 +945,10 @@ export default class Zone extends wepy.page {
 }
 .comment-wrapper {
   line-height: 50rpx;
+  margin-bottom: 20rpx;
+  .item {
+    padding-left: 10rpx;
+  }
 }
 .sidebar {
   position: fixed;
