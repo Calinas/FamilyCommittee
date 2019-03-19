@@ -1,6 +1,6 @@
 
   <view class="common-container">
-    <view class="font-black font-bold title">
+    <view class="font-black font-bold font-36">
       <text>班级信息</text>
     </view>
     <view class="flex-wrapper item">
@@ -26,7 +26,7 @@
       <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" bindtap="addNew" value="{{removeName}}" data-wpyaddnew-a="{{true}}" data-wpyaddnew-b="0" data-wpyaddnew-c="remove"/>
       <button bindtap="remove">确认</button>
     </view>
-    <view class="font-black font-bold title">
+    <view class="font-black font-bold font-36">
       <text>权限管理</text>
     </view>
     <!-- 会长权限 -->
@@ -34,7 +34,7 @@
       <view class="font-bold font-black sub-title">{{item.name}}</view>
       <block wx:if="{{item.auth_list.length}}">
         <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member" bindtap="del" data-wpydel-a="{{member.class_auth_id}}">
-          <text class="iconfont icon-delete"/>
+          <text class="iconfont icon-delete font-24"/>
           <text>{{member.member.class_nickname}}</text>
         </view>
       </block>
@@ -50,7 +50,7 @@
   <view class="wx-popup _4d5f1a4"  wx:if="{{$Modal$flag}}">
     <view class="popup-container _4d5f1a4">
       <view class="wx-popup-con _4d5f1a4">
-        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" cursor-spacing="200" class="_4d5f1a4"/>
+        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" cursor-spacing="100" focus class="_4d5f1a4"/>
       </view>
       <view class="wx-popup-btn _4d5f1a4">
         <text class="btn-no _4d5f1a4" bindtap="$Modal$cancelFn">{{$Modal$cancelBtnText}}</text>

@@ -16,6 +16,25 @@
 .weui-btn_primary._490fc7e {
   background-color: #2DB200; }
 
+.navigation-bar .item._490fc7e {
+  color: #fff;
+  background-color: #464646;
+  padding: 20rpx 10rpx;
+  text-align: center;
+  font-size: 26rpx;
+  flex: 1; }
+  .navigation-bar .item.active._490fc7e {
+    background-color: #A11717; }
+  .navigation-bar .item.middle._490fc7e {
+    border-left: 2rpx solid #fff;
+    border-right: 2rpx solid #fff; }
+  .navigation-bar .item.first._490fc7e {
+    border-top-left-radius: 40rpx;
+    border-bottom-left-radius: 40rpx; }
+  .navigation-bar .item.right._490fc7e {
+    border-top-right-radius: 40rpx;
+    border-bottom-right-radius: 40rpx; }
+
 .search-school-wrapper._490fc7e {
   position: relative;
   overflow: visible; }
@@ -58,8 +77,7 @@
   padding-left: 0;
   padding-right: 0;
   margin-left: 0;
-  margin-right: 0;
-  font-size: 30rpx; }
+  margin-right: 0; }
   .bottom-buttons .link._490fc7e::after {
     display: none; }
 

@@ -8,7 +8,7 @@
       <text class="title">班级财务余额</text>
       <view>
         <text>CNY</text>
-        <text class="price">{{balance}}</text>
+        <text class="price font-60">{{balance}}</text>
       </view>
     </view>
     <scroll-view class="scroll-container" wx:if="{{list.length}}">

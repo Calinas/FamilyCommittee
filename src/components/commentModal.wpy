@@ -2,7 +2,8 @@
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="wx-popup-con">
-        <textarea type="text" placeholder={{placeholderText}} @input="bindInput" value="{{commentInput}}" cursor-spacing='100'></textarea>
+        <!-- <textarea type="text" placeholder={{placeholderText}} @input="bindInput" value="{{commentInput}}"></textarea> -->
+        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{commentInput}}" cursor-spacing="100" />
       </view>
       <view class="wx-popup-btn">
         <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>
@@ -76,7 +77,8 @@ export default class CurrentModal extends wepy.component {
 .wx-popup-con {
   margin: 40rpx;
   border:2rpx solid #d0d0d0;
-  textarea {
+  input {
+    line-height: 1.6;
     padding: 20rpx;
     width: calc(100% - 40rpx);
   }

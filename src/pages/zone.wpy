@@ -1,7 +1,7 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container common-container-grey" style="padding: 0;position:relative" @tap="closeToggle">
+  <view class="common-container common-container-grey" style="position:relative" @tap="closeToggle">
     <view class="img-mask">
-      <image src="/images/banner1.jpg" mode="scaleToFill" class="bg-img"/>
+      <image src="/images/banner2.jpg" mode="scaleToFill" class="bg-img"/>
       <view class="mask"></view>
       <block>
         <view class="btn btn-set flex-wrapper center" catchtap="toggleMenu('setFlag')">
@@ -14,8 +14,8 @@
         </view>
       </block>
       <view class="caption" wx:if="{{classInfo}}">
-        <text class="school">{{classInfo.school.name}}</text>
-        <text class="class">{{gradeType[classInfo.grade_type]}}{{classInfo.year_class}}级{{classInfo.class}}班</text>
+        <text class="school font-36 font-bold">{{classInfo.school.name}}</text>
+        <text class="class font-30">{{gradeType[classInfo.grade_type]}}{{classInfo.year_class}}级{{classInfo.class}}班</text>
       </view>
       <view class="buttons">
         <view catchtap="jumpPage('member')" wx:if="{{auth.president}}" class="flex-wrapper center">
@@ -40,9 +40,9 @@
       <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
          <view class="item">
           <view class="flex-wrapper center between">
-            <view>
+            <view class="flex-wrapper center">
               <image src="{{item.member.head_img}}"  class="small-avatar" />
-              <text>{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+              <text class="font-32">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
             </view>
             <block wx:if="{{memberInfo.member_id === item.member.id}}">
                 <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
@@ -54,35 +54,37 @@
                 </block>
               </block>
           </view>
-          <view class="font-small font-grey text-right">{{item.created_at}}</view>
+          <view class="font-small font-grey text-right create-time">{{item.created_at}}</view>
           <block wx:if="{{item.app_type !== 'account'}}">
-            <view class="item-desc">{{item.info.description}}</view>
-            <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
+            <view class="item-desc font-36">{{item.info.description}}</view>
+            <view class="img-list flex-wrapper {{item.image.length === 1 ? 'one-img' : ''}}" wx:if="{{item.image.length}}">
               <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
             </view>
           </block>
           <block wx:if="{{item.app_type === 'account'}}">
-            <view class="tag-wrapper">
+            <view class="tag-wrapper flex-wrapper">
               <text class="tag tag-grey">{{item.info.type === 'in' ? '收入': '支出'}}</text>
-              <text class="tag tag-light-grey">{{item.info.money}}元</text>
-            </view>
-            <view class="desc">
-              事由：{{item.info.description}}
-            </view>
-            <view class="flex-wrapper center invoice-wrapper">
+              <text class="tag tag-empty">{{item.info.money}}元</text>
               <text class="tag tag-empty" wx:if="{{item.info.balance}}">余额：{{item.info.balance}}元</text>
+            </view>
+            <view class="tag-wrapper flex-wrapper no-padding">
+              <text class="tag tag-grey">事由</text>
+              <text class="tag tag-empty">{{item.info.description}}</text>
+            </view>
+            <!-- <view class="flex-wrapper center invoice-wrapper">
               <view class="desc invoice" @tap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length}}">
                 查看记账凭证
               </view>
-            </view>
+            </view> -->
           </block>
 
-          <view class="flex-wrapper font-grey font-small see-type">
-            <text>{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
+          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}}">
+            <text wx:if="{{item.app_type === 'circles' && item.see_type === 'all'}}">全部可见</text>
+            <text wx:if="{{item.app_type === 'circles' && item.see_type === 'class'}}">仅班级可见</text>
+            <text @tap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length && item.app_type === 'account'}}">查看记账凭证</text>
             <view class="flex-wrapper icon-wrapper">
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle({{item.app_type}})"></view>
-              <!-- <button open-type="share" class="font-grey iconfont icon-share text-right"></button> -->
             </view>
           </view>
           <block wx:if="{{item.app_type === 'activity'}}">
@@ -118,7 +120,8 @@
           <!-- 收款 -->
           <block wx:if="{{item.app_type === 'collection'}}">
             <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-              <text class="tag-big tag tag-empty" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">点击缴费：{{collection.name}}¥{{collection.money}}</text>
+              点击缴费：
+              <text class="tag-big tag tag-blue" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}} : ¥{{collection.money}}</text>
             </view>
             <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key">
               <view class="result-wrapper" wx:if="{{collection.student_list.length}}">
@@ -142,7 +145,7 @@
             </block>
           </block>
           <!-- 留言结果 -->
-          <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">
+          <view class="comment-wrapper font-grey" wx:if="{{item.comment_list.count}}">
             <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
               <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
                 <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
@@ -758,8 +761,11 @@ export default class Zone extends wepy.page {
 <style lang="scss" scoped>
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
-.tag-wrapper {
-  padding: 0;
+.result-wrapper {
+  font-size: 28rpx !important;
+}
+.create-time {
+  margin-top: 20rpx;
 }
 .invoice-wrapper {
   margin-top: 30rpx;
@@ -790,14 +796,22 @@ export default class Zone extends wepy.page {
 }
 .tag-wrapper {
   padding: 20rpx 0;
+  &.no-padding {
+    padding: 0;
+  }
 }
 .see-type {
-  justify-content: space-between;
+  &.between {
+    justify-content: space-between;
+  }
+  &.right {
+    justify-content: flex-end;
+  }
   padding: 20rpx 0;
   & > .icon-wrapper {
     display: flex;
     justify-content: space-between;
-    width: 26%;
+    width: 20%;
     align-items:center;
     .icon-share {
       font-size: 32rpx;
@@ -807,11 +821,21 @@ export default class Zone extends wepy.page {
 }
 .img-list {
   margin-bottom: 0;
+  &.one-img {
+    image {
+      width: 300rpx;
+      height: 300rpx;
+    }
+  }
 }
 .menu-wrapper {
-  background-color: #fff;
-  padding: 40rpx;
-  color: #000;
+  background-color:#fff;
+  padding:40rpx;
+  color:#000;
+  // width:calc(94% - 80rpx);
+  margin:40rpx auto;
+  border-radius:20rpx;
+  overflow:hidden;
   & > view {
     width: 20%;
     text-align: center;
@@ -829,9 +853,11 @@ export default class Zone extends wepy.page {
   }
 }
 .img-mask {
-  position: relative;
-  color: #fff;
-  height: 360rpx;
+  position:relative;
+  color:#fff;
+  height:360rpx;
+  border-radius:20rpx;
+  overflow:hidden;
   .iconfont {
     margin-right: 10rpx;
   }
@@ -848,6 +874,7 @@ export default class Zone extends wepy.page {
     top: 0;
     width: 100%;
     height: 100%;
+    border-radius: 20rpx;
     background:rgba(0,0,0,.4);
   }
   .btn {
@@ -864,11 +891,9 @@ export default class Zone extends wepy.page {
     position: absolute;
     bottom: 30rpx;
     left: 40rpx;
+    line-height: 2;
     text {
       display: block;
-    }
-    .school {
-      font-size: 24rpx;
     }
     .class {
       font-size: 30rpx;
@@ -883,6 +908,10 @@ export default class Zone extends wepy.page {
     margin-bottom:20rpx;
     padding:30rpx;
     background-color:#fff;
+    border-radius:20rpx;
+    overflow:hidden;
+    // width:calc(94% - 60rpx);
+    margin:30rpx auto;
   }
 }
 .item {
@@ -893,8 +922,12 @@ export default class Zone extends wepy.page {
     border-radius: 12rpx;
     overflow: hidden;
     margin: 40rpx 0;
+    line-height: 1.4;
     &.comment-wrapper {
       margin-top: 0;
+    }
+    &.no-bg {
+      background-color: transparent;
     }
   }
   &-tag {

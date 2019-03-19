@@ -1,18 +1,19 @@
 <template>
   <view class="member">
     <view class="font-black font-bold">加入老师</view>
-    <view class="flex-wrapper teacher">
+    <view class="flex-wrapper teacher" wx:if="{{teacherList.length}}">
       <view class="person flex-wrapper center" wx:for="{{teacherList.list}}">
         <image src="{{item.member.head_img}}" class="small-avatar">
-        <text>{{item.member.class_nickname}}</text>
+        <text class="font-30">{{item.member.class_nickname}}</text>
       </view>
     </view>
+    <view class="text-center font-grey no-remind" wx:else>暂无老师加入</view>
     <view class="member-wrapper">
       <view class="font-black font-bold">班委会管理</view>
       <view class="flex-wrapper center" wx:for="{{authList}}">
-        <text class="font-black">{{item.name}}：</text>
+        <text class="font-black font-32">{{item.name}}：</text>
         <block wx:if="{{item.member_list.length}}">
-          <text wx:for="{{item.member_list}}" wx:for-item="member">{{member.member.class_nickname}}</text>
+          <text wx:for="{{item.member_list}}" wx:for-item="member" class="margin-right">{{member.member.class_nickname}}</text>
         </block>
         <block wx:else>
           <text>全体无权限</text>
@@ -27,7 +28,7 @@
         <view class="flex-wrapper">
           <view class="person flex-wrapper center" wx:for="{{item.list}}" wx:for-item="member">
             <image src="{{member.member.head_img}}" class="small-avatar">
-            <text>{{member.member.class_nickname}}</text>
+            <text class="font-30">{{member.member.class_nickname}}</text>
           </view>
         </view>
       </view>
@@ -68,6 +69,9 @@ export default class Member extends wepy.page {
 </script>
 
 <style lang="scss" scoped>
+.no-remind {
+  padding: 20rpx 0;
+}
 .member {
   padding: 30rpx;
   background-color: #fff;
@@ -84,6 +88,9 @@ export default class Member extends wepy.page {
   padding: 20rpx;
   & > .flex-wrapper {
     padding: 10rpx 0;
+  }
+  .margin-right {
+    margin-right: 20rpx;
   }
 }
 .font-black {

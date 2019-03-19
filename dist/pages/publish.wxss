@@ -21,6 +21,35 @@
       width: 40rpx;
       height: 40rpx; }
 
+.choose-see {
+  width: 52%; }
+  .choose-see-btn {
+    height: 80rpx;
+    line-height: 80rpx;
+    display: inline-block;
+    padding: 0 20rpx;
+    border-radius: 20rpx;
+    font-size: 28rpx; }
+    .choose-see-btn-active {
+      color: #1F5985;
+      font-size: 32rpx; }
+
+.submit-btn {
+  background-color: #07C160;
+  color: #fff;
+  border-radius: 10rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  width: 16%; }
+
+.fixed-bottom-circle {
+  background-color: #fff; }
+
+.top-select {
+  width: 90%;
+  margin: 0 auto;
+  color: #000; }
+
 .common-container {
   padding-bottom: 100rpx; }
 
@@ -30,15 +59,25 @@
   margin-left: 20rpx; }
 
 textarea {
-  width: calc(100% - 40rpx);
+  width: calc(100% - 80rpx);
   border: 2rpx solid #f1f1f1;
   margin-bottom: 40rpx;
-  padding: 20rpx; }
+  padding: 40rpx;
+  line-height: 1.6;
+  border-radius: 20rpx; }
+
+textarea::-webkit-input-placeholder {
+  color: #9c9c9c; }
 
 .select-common-picker {
-  margin-top: 40rpx;
   padding-bottom: 30rpx;
-  border-bottom: 2rpx solid #d0d0d0; }
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 40rpx;
+  border-bottom: 2rpx solid #f2f2f2; }
+  .select-common-picker.fixed {
+    margin-top: 0;
+    width: 40%; }
 
 .icon-user {
   margin-right: 10rpx; }

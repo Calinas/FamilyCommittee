@@ -1,3 +1,6 @@
+.no-remind._f721f79 {
+  padding: 20rpx 0; }
+
 .member._f721f79 {
   padding: 30rpx;
   background-color: #fff; }
@@ -13,6 +16,8 @@
   padding: 20rpx; }
   .member-wrapper > .flex-wrapper._f721f79 {
     padding: 10rpx 0; }
+  .member-wrapper .margin-right._f721f79 {
+    margin-right: 20rpx; }
 
 .font-black._f721f79 {
   color: #000; }

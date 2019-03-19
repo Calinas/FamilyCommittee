@@ -4,8 +4,7 @@
     <view class="img-mask">
       <image src="/images/banner.jpg" mode="scaleToFill" class="bg-img"/>
       <view class="caption">
-        <text class="class">{{memberInfo.nickname}}</text>
-        <!-- <text class="school">共加入3个班级</text> -->
+        <text class="class font-30">{{memberInfo.nickname}}</text>
       </view>
     </view>
     <image src="{{memberInfo.avatar}}" mode="scaleToFill" class="avatar"/>
@@ -13,8 +12,8 @@
     <view class="class-list font-grey">
       <block  wx:if="{{list.length}}">
         <block wx:if="{{classInfo && classInfo.name}}">
-          <view class="text-center font-bold">
-            当前选中班级：{{classInfo.name}}
+          <view class="text-center font-bold guide-text font-blue">
+            点击标题直接进入班级
           </view>
         </block>
         <block wx:if="{{!classInfo}}">
@@ -25,7 +24,8 @@
         <view class="flex-wrapper center between" wx:for="{{list}}" wx:key="key" wx:for-index="idx" bindtap="setClass" data-wpysetclass-a="{{idx}}">
           <!-- <text class="dot dot-grey"></text> -->
           <text>{{item.class.name}}</text>
-          <text class="font-bold" style="font-size: 20rpx;">点击进去班级</text>
+          <text class="font-bold font-20">点击进入</text>
+          <!-- <text class="iconfont icon-arrow-right"></text> -->
         </view>
       </block>
       <block  wx:else>

@@ -1,7 +1,7 @@
 
-  <view class="common-container common-container-grey _849026a" style="padding: 0;position:relative" bindtap="closeToggle">
+  <view class="common-container common-container-grey _849026a" style="position:relative" bindtap="closeToggle">
     <view class="img-mask _849026a">
-      <image src="/images/banner1.jpg" mode="scaleToFill" class="bg-img _849026a"/>
+      <image src="/images/banner2.jpg" mode="scaleToFill" class="bg-img _849026a"/>
       <view class="mask _849026a"/>
       <block class="_849026a">
         <view class="btn btn-set flex-wrapper center _849026a" catchtap="toggleMenu" data-wpytogglemenu-a="setFlag">
@@ -14,8 +14,8 @@
         </view>
       </block>
       <view class="caption _849026a"  wx:if="{{classInfo}}">
-        <text class="school _849026a">{{classInfo.school.name}}</text>
-        <text class="class _849026a">{{gradeType[classInfo.grade_type]}}{{classInfo.year_class}}级{{classInfo.class}}班</text>
+        <text class="school font-36 font-bold _849026a">{{classInfo.school.name}}</text>
+        <text class="class font-30 _849026a">{{gradeType[classInfo.grade_type]}}{{classInfo.year_class}}级{{classInfo.class}}班</text>
       </view>
       <view class="buttons _849026a">
         <view catchtap="jumpPage"  wx:if="{{auth.president}}" class="flex-wrapper center _849026a" data-wpyjumppage-a="member">
@@ -40,9 +40,9 @@
       <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex" class="_849026a">
          <view class="item _849026a">
           <view class="flex-wrapper center between _849026a">
-            <view class="_849026a">
+            <view class="flex-wrapper center _849026a">
               <image src="{{item.member.head_img}}" class="small-avatar _849026a"/>
-              <text class="_849026a">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+              <text class="font-32 _849026a">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
             </view>
             <block wx:if="{{memberInfo.member_id === item.member.id}}" class="_849026a">
                 <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
@@ -54,35 +54,37 @@
                 </block>
               </block>
           </view>
-          <view class="font-small font-grey text-right _849026a">{{item.created_at}}</view>
+          <view class="font-small font-grey text-right create-time _849026a">{{item.created_at}}</view>
           <block wx:if="{{item.app_type !== 'account'}}" class="_849026a">
-            <view class="item-desc _849026a">{{item.info.description}}</view>
-            <view class="img-list flex-wrapper _849026a" wx:if="{{item.image.length}}">
+            <view class="item-desc font-36 _849026a">{{item.info.description}}</view>
+            <view class="img-list flex-wrapper {{item.image.length === 1 ? 'one-img' : ''}} _849026a" wx:if="{{item.image.length}}">
               <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
             </view>
           </block>
           <block wx:if="{{item.app_type === 'account'}}" class="_849026a">
-            <view class="tag-wrapper _849026a">
+            <view class="tag-wrapper flex-wrapper _849026a">
               <text class="tag tag-grey _849026a">{{item.info.type === 'in' ? '收入': '支出'}}</text>
-              <text class="tag tag-light-grey _849026a">{{item.info.money}}元</text>
-            </view>
-            <view class="desc _849026a">
-              事由：{{item.info.description}}
-            </view>
-            <view class="flex-wrapper center invoice-wrapper _849026a">
+              <text class="tag tag-empty _849026a">{{item.info.money}}元</text>
               <text class="tag tag-empty _849026a" wx:if="{{item.info.balance}}">余额：{{item.info.balance}}元</text>
-              <view class="desc invoice _849026a" bindtap="preview" wx:if="{{item.image.length}}" data-wpypreview-a="{{item.image}}" data-wpypreview-b="{{item.image}}">
+            </view>
+            <view class="tag-wrapper flex-wrapper no-padding _849026a">
+              <text class="tag tag-grey _849026a">事由</text>
+              <text class="tag tag-empty _849026a">{{item.info.description}}</text>
+            </view>
+            <!-- <view class="flex-wrapper center invoice-wrapper">
+              <view class="desc invoice" bindtap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length}}">
                 查看记账凭证
               </view>
-            </view>
+            </view> -->
           </block>
 
-          <view class="flex-wrapper font-grey font-small see-type _849026a">
-            <text class="_849026a">{{item.see_type === 'all' ? '全部可见' : '仅班级可见'}}</text>
+          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}} _849026a">
+            <text wx:if="{{item.app_type === 'circles' && item.see_type === 'all'}}" class="_849026a">全部可见</text>
+            <text wx:if="{{item.app_type === 'circles' && item.see_type === 'class'}}" class="_849026a">仅班级可见</text>
+            <text bindtap="preview" wx:if="{{item.image.length && item.app_type === 'account'}}" class="_849026a" data-wpypreview-a="{{item.image}}" data-wpypreview-b="{{item.image}}">查看记账凭证</text>
             <view class="flex-wrapper icon-wrapper _849026a">
               <view class="font-grey iconfont icon-message text-right _849026a" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
               <view class="font-grey iconfont icon-share text-right _849026a" catchtap="shareCircle" data-wpysharecircle-a="{{item.app_type}}"/>
-              <!-- <button open-type="share" class="font-grey iconfont icon-share text-right"></button> -->
             </view>
           </view>
           <block wx:if="{{item.app_type === 'activity'}}" class="_849026a">
@@ -118,7 +120,8 @@
           <!-- 收款 -->
           <block wx:if="{{item.app_type === 'collection'}}" class="_849026a">
             <view class="tag-wrapper item-tag _849026a" wx:if="{{item.info.item.length}}">
-              <text class="tag-big tag tag-empty _849026a" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">点击缴费：{{collection.name}}¥{{collection.money}}</text>
+              点击缴费：
+              <text class="tag-big tag tag-blue _849026a" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}} : ¥{{collection.money}}</text>
             </view>
             <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" class="_849026a">
               <view class="result-wrapper _849026a" wx:if="{{collection.student_list.length}}">
@@ -142,7 +145,7 @@
             </block>
           </block>
           <!-- 留言结果 -->
-          <view class="comment-wrapper item-desc font-grey _849026a" wx:if="{{item.comment_list.count}}">
+          <view class="comment-wrapper font-grey _849026a" wx:if="{{item.comment_list.count}}">
             <view class="item _849026a" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
               <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_849026a">
                 <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.to_member.id}}" data-wpyaddcomment-e="{{comment.to_member.class_nickname}}">{{comment.to_member.class_nickname}}：</text>
@@ -196,7 +199,8 @@
   <view class="wx-popup _284a651 _849026a"  wx:if="{{$CurrentModal$flag}}">
     <view class="popup-container _284a651">
       <view class="wx-popup-con _284a651">
-        <textarea type="text" placeholder="{{$CurrentModal$placeholderText}}" bindinput="$CurrentModal$bindInput" value="{{$CurrentModal$commentInput}}" cursor-spacing="100" class="_284a651"/>
+        <!-- <textarea type="text" placeholder={{placeholderText}} bindinput="bindInput" value="{{commentInput}}"></textarea> -->
+        <input type="text" placeholder="{{$CurrentModal$placeholderText}}" bindinput="$CurrentModal$bindInput" value="{{$CurrentModal$commentInput}}" cursor-spacing="100" class="_284a651"/>
       </view>
       <view class="wx-popup-btn _284a651">
         <text class="btn-no _284a651" bindtap="$CurrentModal$cancelFn">{{$CurrentModal$cancelBtnText}}</text>

@@ -16,6 +16,9 @@
 .weui-btn_primary {
   background-color: #2DB200; }
 
+.guide-text {
+  margin: 20rpx 0; }
+
 .no-remind {
   display: block;
   width: 100%;
@@ -37,10 +40,6 @@
     transform: translate(-50%); }
     .img-mask .caption text {
       display: block; }
-    .img-mask .caption .school {
-      font-size: 24rpx; }
-    .img-mask .caption .class {
-      font-size: 30rpx; }
 
 .avatar {
   overflow: hidden;
@@ -65,6 +64,7 @@
 .fixed-bottom {
   width: 80%;
   margin: 0 auto;
-  margin-top: 100rpx; }
+  margin-top: 40rpx;
+  margin-bottom: 40rpx; }
   .fixed-bottom .weui-btn {
     padding: 20rpx 80rpx; }

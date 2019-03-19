@@ -12,19 +12,10 @@
         <image mode="widthFix" class='img' src='/images/add-img.png'/>
       </view>
     </view>
-    <picker class="select-common-picker" mode="selector" value="{{seeType}}" range="{{type}}" range-key="title" id="seeType" @change="bindChange" wx:if="{{activeType === 'zone' || activeType === 'notice'}}">
-      <view class="flex-wrapper between">
-        <view>
-          <text class="iconfont icon-user font-black"></text>
-          <text class="font-black">{{activeType === 'zone' ? '谁可以看' : '谁会收到通知'}}</text>
-        </view>
-        <text>{{type[seeType].title}}</text>
-      </view>
-    </picker>
     <block wx:if="{{activeType === 'notice'}}">
       <picker class="select-common-picker" mode="selector" value="{{isRemind}}" range="{{remindType}}" range-key="title" id="isRemind" @change="bindChange">
         <view class="flex-wrapper between">
-          <view>
+        <view>
             <text class="iconfont icon-user font-black"></text>
             <text class="font-black">是否发推送消息提醒</text>
           </view>
@@ -34,7 +25,7 @@
     </block>
     <!-- 收款 -->
     <block wx:if="{{activeType === 'money'}}">
-      <view class="flex-wrapper between select-common-picker">
+      <view class="flex-wrapper between select-common-picker" style="display: none;">
         <view>
           <text class="iconfont icon-user font-black"></text>
           <text class="font-black">向谁收款</text>
@@ -51,7 +42,7 @@
     </block>
     <!-- 活动 -->
     <block wx:if="{{activeType === 'activity'}}">
-      <view class="flex-wrapper between select-common-picker">
+      <view class="flex-wrapper between select-common-picker" style="display: none;">
         <view>
           <text class="iconfont icon-user font-black"></text>
           <text class="font-black">谁可以报名</text>
@@ -114,7 +105,15 @@
         </view>
       </repeat>
     </view>
-    <view class="fixed-bottom-btn top right" @tap="submit">发表</view>
+    <view class="fixed-bottom-btn top fixed-bottom-circle" wx:if="{{activeType === 'zone'}}">
+      <view class="flex-wrapper center between top-select">
+        <view class="choose-see flex-wrapper center between">
+          <text wx:for="{{type}}" wx-key="key" @tap="selectSeeType({{item.id}})" class="choose-see-btn {{item.id === seeType ? 'choose-see-btn-active' : ''}}">{{item.title}}</text>
+        </view>
+        <view @tap="submit" class="submit-btn">发表</view>
+      </view>
+    </view>
+    <view class="fixed-bottom-btn top right" @tap="submit" wx:else>发表</view>
   </view>
 </template>
 
@@ -163,12 +162,12 @@ export default class Publish extends wepy.page {
     ],
     type: [
       {
-        id: 1,
+        id: 0,
         title: '班级可见',
         type: 'class'
       },
       {
-        id: 0,
+        id: 1,
         title: '全部可见',
         type: 'all'
       }
@@ -286,6 +285,10 @@ export default class Publish extends wepy.page {
     }
   }
   methods = {
+    selectSeeType(id) {
+      this.seeType = id
+      this.$apply()
+    },
     chooseImage() {
       if (this.img.length > this.maxPhotoCount) {
         showMsg('最多上传9张图')
@@ -396,6 +399,37 @@ export default class Publish extends wepy.page {
 <style lang="scss">
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
+.choose-see {
+  width: 52%;
+  &-btn {
+    height:80rpx;
+    line-height:80rpx;
+    display: inline-block;
+    padding: 0 20rpx;
+    border-radius: 20rpx;
+    font-size: 28rpx;
+    &-active {
+      color: #1F5985;
+      font-size: 32rpx;
+    }
+  }
+}
+.submit-btn {
+  background-color:#07C160;
+  color:#fff;
+  border-radius:10rpx;
+  height:80rpx;
+  line-height:80rpx;
+  width:16%;
+}
+.fixed-bottom-circle {
+  background-color: #fff;
+}
+.top-select {
+  width:90%;
+  margin:0 auto;
+  color:#000;
+}
 .common-container {
   padding-bottom: 100rpx;
 }
@@ -405,16 +439,27 @@ export default class Publish extends wepy.page {
   margin-left: 20rpx;
 }
 textarea {
- width:calc(100% - 40rpx);
- border:2rpx solid #f1f1f1;
- margin-bottom:40rpx;
- padding:20rpx;
+  width:calc(100% - 80rpx);
+  border:2rpx solid #f1f1f1;
+  margin-bottom:40rpx;
+  padding:40rpx;
+  line-height:1.6;
+  border-radius:20rpx;
 }
 
+textarea::-webkit-input-placeholder {
+  color: #9c9c9c;
+}
 .select-common-picker {
-  margin-top:40rpx;
   padding-bottom:30rpx;
+  width:90%;
+  margin:0 auto;
+  margin-top:40rpx;
   @include border-bottom;
+  &.fixed {
+    margin-top: 0;
+    width: 40%;
+  }
 }
 .icon-user {
   margin-right: 10rpx;

@@ -6,8 +6,11 @@
         {{item.title}}
       </label>
     </radio-group>
-    <input type="digit" placeholder="请输入金额" class="money-input width80" @input="pickerChange" id="money" />
-    <textarea class="money-desc" placeholder="请输入详情描述" @input="pickerChange" id="msg"></textarea>
+    <view class="flex-wrapper input-wrapper center between">
+      <input type="digit" placeholder="请输入金额" class="money-desc" @input="pickerChange" id="money" style="margin-right: 20rpx;"/>
+      <!-- <textarea class="money-desc" placeholder="请输入详情描述" @input="pickerChange" id="msg"></textarea> -->
+      <input type="text" placeholder="请输入详情描述" class="money-desc desc" @input="pickerChange"  id="msg" />
+    </view>
     <text class="font-black font-bold upload-text">上传凭证</text>
     <view class="img-list flex-wrapper">
       <repeat for="{{img}}" index="index" item="item">
@@ -31,7 +34,6 @@
     </picker>
     <view class="fixed-bottom-btn top" @tap="submit">记一笔</view>
   </view>
-
 </template>
 
 <script>
@@ -130,6 +132,12 @@ export default class recordCashflow extends wepy.page {
 
 <style lang="scss" scoped>
 @import '../styles/mixins.scss';
+.input-wrapper {
+  margin-top: 20rpx;
+  .desc {
+    width: 90%;
+  }
+}
 .common-container {
   padding-bottom: 160rpx;
 }
@@ -138,13 +146,13 @@ export default class recordCashflow extends wepy.page {
   font-size: 32rpx;
 }
 .img-list {
-  margin-bottom: 100rpx;
+  margin-bottom: 40rpx;
   flex-wrap: wrap;
   .img-item {
     position: relative;
-    width: 150rpx;
+    width: 100rpx;
     margin-right: 20rpx;
-    height: 150rpx;
+    height: 100rpx;
     overflow: hidden;
     margin-bottom: 40rpx;
     & > .img {
@@ -175,17 +183,16 @@ export default class recordCashflow extends wepy.page {
 }
 .money-input {
   font-size: 50rpx;
-  margin:100rpx auto;
-  @include border-bottom;
+  margin:20rpx auto;
   text-align:center;
   padding: 20rpx;
   height: 2rem;
 }
 .money-desc {
   border:1px solid #f1f1f1;
-  padding:20rpx;
-  height: 200rpx;
-  width: calc(100% - 40rpx);
+  padding-left:20rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
 }
 .img-list {
   margin-top: 40rpx;

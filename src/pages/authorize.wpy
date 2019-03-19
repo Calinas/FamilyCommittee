@@ -1,6 +1,6 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
-    <view class="font-black font-bold title">
+    <view class="font-black font-bold font-36">
       <text>班级信息</text>
     </view>
     <view class="flex-wrapper item">
@@ -26,7 +26,7 @@
       <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @tap="addNew({{true}}, 0, 'remove')" value="{{removeName}}"/>
       <button @tap="remove">确认</button>
     </view>
-    <view class="font-black font-bold title">
+    <view class="font-black font-bold font-36">
       <text>权限管理</text>
     </view>
     <!-- 会长权限 -->
@@ -34,7 +34,7 @@
       <view class="font-bold font-black sub-title">{{item.name}}</view>
       <block wx:if="{{item.auth_list.length}}">
         <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member" @tap="del({{member.class_auth_id}})">
-          <text class="iconfont icon-delete"></text>
+          <text class="iconfont icon-delete font-24"></text>
           <text>{{member.member.class_nickname}}</text>
         </view>
       </block>
@@ -208,7 +208,7 @@ export default class bindRelationship extends wepy.page {
     addNew(booleanValue, id, type) {
       this.showAdd = booleanValue
       this.currentRoleId = id
-      if(type === 'remove') {
+      if (type === 'remove') {
         this.removeFlag = true
       }
       this.$apply()
@@ -245,9 +245,6 @@ export default class bindRelationship extends wepy.page {
 .sub-title {
   margin-right: 20rpx;
 }
-.title {
-  font-size: 36rpx;
-}
 .item {
   flex-wrap: wrap;
   margin-top: 40rpx;
@@ -256,7 +253,6 @@ export default class bindRelationship extends wepy.page {
     margin-bottom: 20rpx;
   }
   .icon-delete {
-    font-size: 24rpx;
     color: red;
     position: absolute;
     right:0rpx;

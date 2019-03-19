@@ -23,5 +23,5 @@
   .item .operate-btn {
     margin-top: 40rpx; }
     .item .operate-btn > input {
-      border-bottom: 2rpx solid #d0d0d0;
+      border-bottom: 2rpx solid #f2f2f2;
       padding-left: 20rpx; }

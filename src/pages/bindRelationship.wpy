@@ -11,7 +11,7 @@
         <input type="text" placeholder="请输入孩子姓名" id="studentName" @input="bindForm" id="value" data-idx="{{idx}}" value="{{item.value}}"/>
         <picker class="picker" mode="selector" value="{{item.activeIndex}}" range="{{item.relationship}}" range-key="name" @change="bindForm" data-idx="{{idx}}" id="activeIndex">
           <text>的{{item.relationship[item.activeIndex].name}}</text>
-          <text class="iconfont icon-arrow-right" style="font-size: 30rpx;"></text>
+          <text class="iconfont icon-arrow-right font-30"></text>
         </picker>
         <view class="icon-wrapper" @tap="delete({{idx}})">
           <text class="iconfont icon-delete" wx:if="{{idx > 0}}"></view>

@@ -1,7 +1,7 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container common-container-grey" style="padding: 0;position:relative" @tap="closeToggle">
+  <view class="common-container common-container-grey" style="position:relative" @tap="closeToggle">
     <view class="img-mask">
-      <image src="/images/banner1.jpg" mode="scaleToFill" class="bg-img"/>
+      <image src="/images/banner3.jpg" mode="scaleToFill" class="bg-img"/>
       <view class="mask"></view>
       <view class="btn btn-set flex-wrapper center" catchtap="toggleMenu('setFlag')">
         <text class="iconfont icon-edit"></text>
@@ -17,29 +17,35 @@
     <view class="item-wrapper" wx:if="{{list.length}}">
       <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
          <view class="item">
-          <view class="flex-wrapper justify-between center">
+          <view class="flex-wrapper center between">
             <view class="flex-wrapper center">
               <image src="{{item.member.head_img}}"  class="small-avatar" />
-              <text>{{item.member.class_nickname}}</text>
+              <text class="font-32">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
             </view>
-            <text class="font-small font-grey text-right">{{item.created_at}}</text>
+            <block wx:if="{{memberInfo.member_id === item.member.id}}">
+                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
+                <block wx:if="{{item.app_type !== 'collection'}}">
+                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
+                </block>
+                <block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}">
+                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
+                </block>
+              </block>
           </view>
 
           <view class="item-desc">{{item.info.description}}</view>
-          <view class="img-list flex-wrapper" wx:if="{{item.image.length}}">
+          <view class="img-list flex-wrapper {{item.image.length === 1 ? 'one-img' : ''}}" wx:if="{{item.image.length}}">
             <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/300x300'}}" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
           </view>
           <text class="font-grey font-small from-school">来自{{item.class.name}}</text>
           <view class="flex-wrapper icon-container">
             <view style="opacity: 0">x</view>
             <view class="flex-wrapper icon-wrapper">
-              <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" wx:if="{{memberInfo.member_id === item.member.id}}"></view>
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle"></view>
             </view>
           </view>
-          <!-- 留言结果 -->
-          <view class="comment-wrapper item-desc font-grey" wx:if="{{item.comment_list.count}}">
+          <view class="comment-wrapper font-grey" wx:if="{{item.comment_list.count}}">
             <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
               <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
                 <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
@@ -47,7 +53,7 @@
               <block wx:else>
                 <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
               </block>
-              <text>{{comment.content}}<text class="font-grey font-small">(来自{{comment.class.school.name}})</text></text>
+              <text>{{comment.content}}</text>
             </view>
             <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
               <text class="font-blue font-small">加载更多评论</text>
@@ -157,6 +163,9 @@ export default class Discovery extends wepy.page {
     this.$parent.globalData.userData = this.memberInfo
     this.$apply()
     this.getZoneList()
+  }
+  onShow() {
+    this.classInfo = wx.getStorageSync('classInfo')
   }
   getZoneList() {
     this.loading = true
@@ -309,7 +318,7 @@ export default class Discovery extends wepy.page {
 .icon-wrapper {
   display: flex;
   justify-content: space-between;
-  width:32%;
+  width:20%;
   .iconfont {
     padding:0 4%;
   }
@@ -322,11 +331,19 @@ export default class Discovery extends wepy.page {
 }
 .img-list {
   margin-bottom: 0;
+  &.one-img {
+    image {
+      width: 300rpx;
+      height: 300rpx;
+    }
+  }
 }
 .img-mask {
   position: relative;
   color: #fff;
   height: 360rpx;
+  border-radius:20rpx;
+  overflow:hidden;
   .iconfont {
     margin-right: 10rpx;
   }
@@ -344,6 +361,8 @@ export default class Discovery extends wepy.page {
     width: 100%;
     height: 100%;
     background:rgba(0,0,0,.4);
+    border-radius:20rpx;
+    overflow:hidden;
   }
   .btn {
     position: absolute;
@@ -378,10 +397,11 @@ export default class Discovery extends wepy.page {
     margin-bottom:20rpx;
     padding:30rpx;
     background-color:#fff;
+    border-radius:20rpx;
+    overflow:hidden;
   }
 }
 .item {
-  overflow: hidden;
   &-desc {
     background-color: #f1f1f1;
     color: #000;
@@ -389,8 +409,12 @@ export default class Discovery extends wepy.page {
     border-radius: 12rpx;
     overflow: hidden;
     margin: 40rpx 0;
+    line-height: 1.4;
     &.comment-wrapper {
       margin-top: 0;
+    }
+    &.no-bg {
+      background-color: transparent;
     }
   }
   &-tag {

@@ -26,7 +26,8 @@
 .wx-popup-con._284a651 {
   margin: 40rpx;
   border: 2rpx solid #d0d0d0; }
-  .wx-popup-con textarea._284a651 {
+  .wx-popup-con input._284a651 {
+    line-height: 1.6;
     padding: 20rpx;
     width: calc(100% - 40rpx); }
 

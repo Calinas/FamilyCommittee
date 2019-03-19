@@ -13,9 +13,6 @@
 .sub-title {
   margin-right: 20rpx; }
 
-.title {
-  font-size: 36rpx; }
-
 .item {
   flex-wrap: wrap;
   margin-top: 40rpx; }
@@ -23,7 +20,6 @@
     position: relative;
     margin-bottom: 20rpx; }
   .item .icon-delete {
-    font-size: 24rpx;
     color: red;
     position: absolute;
     right: 0rpx;

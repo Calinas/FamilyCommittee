@@ -12,19 +12,10 @@
         <image mode="widthFix" class="img" src="/images/add-img.png"/>
       </view>
     </view>
-    <picker class="select-common-picker" mode="selector" value="{{seeType}}" range="{{type}}" range-key="title" id="seeType" bindchange="bindChange"  wx:if="{{activeType === 'zone' || activeType === 'notice'}}">
-      <view class="flex-wrapper between">
-        <view>
-          <text class="iconfont icon-user font-black"/>
-          <text class="font-black">{{activeType === 'zone' ? '谁可以看' : '谁会收到通知'}}</text>
-        </view>
-        <text>{{type[seeType].title}}</text>
-      </view>
-    </picker>
-    <block wx:if="{{activeType === 'notice'}}">
+    <block  wx:if="{{activeType === 'notice'}}">
       <picker class="select-common-picker" mode="selector" value="{{isRemind}}" range="{{remindType}}" range-key="title" id="isRemind" bindchange="bindChange">
         <view class="flex-wrapper between">
-          <view>
+        <view>
             <text class="iconfont icon-user font-black"/>
             <text class="font-black">是否发推送消息提醒</text>
           </view>
@@ -34,7 +25,7 @@
     </block>
     <!-- 收款 -->
     <block wx:if="{{activeType === 'money'}}">
-      <view class="flex-wrapper between select-common-picker">
+      <view class="flex-wrapper between select-common-picker" style="display: none;">
         <view>
           <text class="iconfont icon-user font-black"/>
           <text class="font-black">向谁收款</text>
@@ -51,7 +42,7 @@
     </block>
     <!-- 活动 -->
     <block wx:if="{{activeType === 'activity'}}">
-      <view class="flex-wrapper between select-common-picker">
+      <view class="flex-wrapper between select-common-picker" style="display: none;">
         <view>
           <text class="iconfont icon-user font-black"/>
           <text class="font-black">谁可以报名</text>
@@ -85,7 +76,7 @@
   <view class="wx-popup _4d5f1a4"  wx:if="{{$Modal$flag}}">
     <view class="popup-container _4d5f1a4">
       <view class="wx-popup-con _4d5f1a4">
-        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" cursor-spacing="200" class="_4d5f1a4"/>
+        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" cursor-spacing="100" focus class="_4d5f1a4"/>
       </view>
       <view class="wx-popup-btn _4d5f1a4">
         <text class="btn-no _4d5f1a4" bindtap="$Modal$cancelFn">{{$Modal$cancelBtnText}}</text>
@@ -97,7 +88,7 @@
   <view class="wx-popup"  wx:if="{{$Modal2$flag}}">
     <view class="popup-container">
       <view class="wx-popup-con">
-        <input type="text" placeholder="{{$Modal2$placeholderText}}" bindinput="$Modal2$bindInput" value="{{$Modal2$input}}" id="input" style="margin-bottom: 40rpx" cursor-spacing="100"/>
+        <input type="text" placeholder="{{$Modal2$placeholderText}}" bindinput="$Modal2$bindInput" value="{{$Modal2$input}}" id="input" style="margin-bottom: 40rpx" cursor-spacing="100" focus/>
         <input type="digit" min="10" placeholder="{{$Modal2$placeholderText2}}" bindinput="$Modal2$bindInput" value="{{$Modal2$money}}" id="money" cursor-spacing="100"/>
       </view>
       <view class="wx-popup-btn">
@@ -123,5 +114,13 @@
         </view>
       </block>
     </view>
-    <view class="fixed-bottom-btn top right" bindtap="submit">发表</view>
+    <view class="fixed-bottom-btn top fixed-bottom-circle" wx:if="{{activeType === 'zone'}}">
+      <view class="flex-wrapper center between top-select">
+        <view class="choose-see flex-wrapper center between">
+          <text wx:for="{{type}}" wx-key="key" bindtap="selectSeeType" class="choose-see-btn {{item.id === seeType ? 'choose-see-btn-active' : ''}}" data-wpyselectseetype-a="{{item.id}}">{{item.title}}</text>
+        </view>
+        <view bindtap="submit" class="submit-btn">发表</view>
+      </view>
+    </view>
+    <view class="fixed-bottom-btn top right" bindtap="submit" wx:else>发表</view>
   </view>
