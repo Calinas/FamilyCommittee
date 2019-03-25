@@ -76,7 +76,7 @@ export default class joinClass extends wepy.page {
       {
         title: '幼儿园',
         id: 0,
-        value: 'university'
+        value: 'kindergarten'
       },
       {
         title: '小学',
@@ -159,7 +159,7 @@ export default class joinClass extends wepy.page {
           url: 'classList'
         })
       }
-    },  
+    },
     deleteSchool() {
       this.keywords = ''
       this.schoolId = 0
@@ -177,9 +177,12 @@ export default class joinClass extends wepy.page {
         name: this.keywords,
         city_name: this.cityName
       }).then(res => {
-        if(res.data.success) {
+        let data = res.data
+        if (data.success) {
           showMsg('学校创建成功')
-          this.hideSchool()
+          this.schoolId = data.data.school_id
+          this.showSchool = false
+          this.$apply()
         }
       })
     },

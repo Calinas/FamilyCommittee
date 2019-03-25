@@ -29,11 +29,12 @@
 .icon-wrapper._eeb9055 {
   display: flex;
   justify-content: space-between;
-  width: 20%; }
+  width: 30%; }
   .icon-wrapper .iconfont._eeb9055 {
-    padding: 0 4%; }
-  .icon-wrapper .icon-share._eeb9055 {
+    padding: 0 4%;
     font-size: 32rpx; }
+  .icon-wrapper .icon-message._eeb9055 {
+    font-size: 40rpx; }
 
 .flex-wrapper.justify-between._eeb9055 {
   justify-content: space-between; }

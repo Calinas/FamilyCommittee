@@ -137,3 +137,17 @@ export function getMemberList(data) {
     })
   })
 }
+
+// 获取会员信息
+export function memberInfo(data) {
+  return new Promise(resolve => {
+    wepy.request({
+      url: '/member/info',
+      data: Object.assign({}, commonParams(), {
+        class_id: data.class_id
+      })
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

@@ -53,6 +53,7 @@
 <script>
 import wepy from 'wepy'
 import { getClassList } from '../api/createClass'
+import { memberInfo } from '../api/user'
 export default class ClassList extends wepy.page {
   config = {
     navigationBarTitleText: '我的班级'
@@ -65,6 +66,19 @@ export default class ClassList extends wepy.page {
     key: '',
     name: '',
     classId: -1
+  }
+  getMemberInfo() {
+    memberInfo({
+      class_id: this.classInfo.id
+    }).then(res => {
+      let classNickname = res.data.data.class_nickname
+      let memberInfo = wx.getStorageSync('memberInfo')
+      let info = Object.assign({}, {
+        class_nickname: classNickname
+      }, memberInfo)
+      console.log(info)
+      wx.setStorageSync('memberInfo', info)
+    })
   }
   getClassList() {
     getClassList().then(res => {
@@ -94,6 +108,7 @@ export default class ClassList extends wepy.page {
         success: res => {
           this.classInfo = this.list[index].class
           wx.switchTab({url: 'zone'})
+          this.getMemberInfo()
           this.$apply()
         }
       })

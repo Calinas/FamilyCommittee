@@ -103,7 +103,8 @@ export function getCityInfo(params) {
 export const getCityList = () => {
   return new Promise((resolve) => {
     wepy.request({
-      url: '/system/getCityList'
+      url: '/system/getCityList',
+      data: Object.assign({}, commonParams())
     }).then(res => {
       resolve(res)
     })
@@ -118,7 +119,7 @@ export const createSchool = (params) => {
       data: Object.assign({}, {
         name: params.name,
         city_name: params.city_name
-      }),
+      }, commonParams()),
       method: 'post'
     }).then(res => {
       resolve(res)

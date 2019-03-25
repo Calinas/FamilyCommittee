@@ -127,3 +127,20 @@ export function checkHasJoinClass(classId, classList) {
   let returnArray = classList.filter(item => Number(item.class.id) === Number(classId))
   return !!returnArray.length
 }
+
+export const filterArrayByValue = (keyName, arr, booleanValue, newObj) => {
+  let currentIdx = -1
+  for (let i = 0, len = arr.length; i < len; i++) {
+    if (arr[i].member_id === keyName) {
+      currentIdx = i
+      break
+    }
+  }
+  if (booleanValue) {
+    console.log(booleanValue, currentIdx, arr)
+    console.log(arr.splice(currentIdx, 1))
+    return arr.splice(currentIdx, 1)
+  } else {
+    return arr.concat(newObj)
+  }
+}

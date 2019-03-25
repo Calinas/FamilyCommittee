@@ -106,10 +106,10 @@ export default class recordCashflow extends wepy.page {
         showMsg('请输入描述')
         return
       }
-      if (this.img.length <= 0) {
-        showMsg('请上传凭证')
-        return
-      }
+      // if (this.img.length <= 0) {
+      //   showMsg('请上传凭证')
+      //   return
+      // }
 
       addAccount({
         class_id: this.classInfo.id,

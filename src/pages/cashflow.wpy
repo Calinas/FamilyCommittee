@@ -27,7 +27,7 @@
         </view>
         <view class="flex-wrapper center invoice-wrapper">
           <text class="tag tag-empty" wx:if="{{item.info.balance}}">余额：{{item.info.balance}}元</text>
-          <view class="operate-btn" @tap="preview({{item.image}})">
+          <view class="operate-btn" @tap="preview({{item.image}})" wx:if="{{item.image.length}}">
             <view class="font-small font-grey text-right">点击查看凭证</view>
           </view>
         </view>

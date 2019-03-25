@@ -212,3 +212,19 @@ export function deleteCircle(data) {
     })
   })
 }
+
+// 点赞
+export function addLike(data) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/moment/like',
+      data: Object.assign({}, commonParams(), {
+        moment_id: data.moment_id,
+        class_id: data.class_id
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

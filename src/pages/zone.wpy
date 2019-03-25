@@ -44,7 +44,7 @@
               <image src="{{item.member.head_img}}"  class="small-avatar" />
               <text class="font-32">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
             </view>
-            <block wx:if="{{memberInfo.member_id === item.member.id}}">
+            <block wx:if="{{memberInfo.member_id === item.member.id || auth.president}}">
                 <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
                 <block wx:if="{{item.app_type !== 'collection'}}">
                   <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
@@ -81,23 +81,29 @@
             </view> -->
           </block>
 
-          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}}">
+          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' ? 'between' : 'right'}}">
             <text wx:if="{{item.app_type === 'circles' && item.see_type === 'all'}}">全部可见</text>
             <text wx:if="{{item.app_type === 'circles' && item.see_type === 'class'}}">仅班级可见</text>
             <text @tap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length && item.app_type === 'account'}}">查看记账凭证</text>
             <view class="flex-wrapper icon-wrapper">
+              <view class="font-grey iconfont icon-dianzan text-right" catchtap="addLike({{item.id}},{{listIndex}},{{item.is_like}})"></view>
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle({{item.app_type}})"></view>
             </view>
           </view>
+          <view class="font-grey" wx:if="{{item.like_list.count}}">
+            <text wx:for="{{item.like_list.list}}" wx:for-item="like">{{like.member.class_nickname}}</text>共{{item.like_list.count}}人觉得很赞
+          </view>
           <block wx:if="{{item.app_type === 'activity'}}">
-            <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
-              <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
-            </view>
-            <view class="tag-wrapper">
-              <text class="tag tag-big tag-blue" @tap="submitJoinActivity">选好了，报名</text>
-              <!-- <text class="tag tag-grey">已报名</text> -->
-            </view>
+            <block wx:if="{{!item.is_apply}}">
+              <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
+                <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }}" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" @tap="joinActivity({{item.activity_id}},{{item.id}},{{listIndex}},{{activityIndex}})">{{item.name}}</text>
+              </view>
+              <view class="tag-wrapper">
+                <text class="tag tag-big tag-blue" @tap="submitJoinActivity">选好了，报名</text>
+              </view>
+            </block>
+            <text class="tag tag-grey" wx:else style="margin-top: 30rpx;">已报名</text>
             <!-- 报名结果 -->
             <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key">
               <view class="result-wrapper" wx:if="{{activity.student_list.length}}">
@@ -122,12 +128,12 @@
           </block>
           <!-- 收款 -->
           <block wx:if="{{item.app_type === 'collection'}}">
-            <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length}}">
+            <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length && !item.is_apply}}">
               点击缴费：
               <text class="tag-big tag tag-blue" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}} : ¥{{collection.money}}</text>
             </view>
             <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key">
-              <view class="result-wrapper" wx:if="{{collection.student_list.length}}">
+              <view class="result-wrapper" wx:if="{{collection.student_list.length}}" style="{{item.is_apply ? 'margin-top: 30rpx;': ''}}">
                 <view class="title item-tag">
                   <text>{{collection.student_list.length}}人缴费{{collection.money}}</text>
                 </view>
@@ -151,10 +157,10 @@
           <view class="comment-wrapper font-grey" wx:if="{{item.comment_list.count}}">
             <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
               <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
-                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
+                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.root_id}},{{comment.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.root_id}},{{comment.to_comment_id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
               </block>
               <block wx:else>
-                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
+                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
               </block>
               <text>{{comment.content}}</text>
             </view>
@@ -239,8 +245,8 @@ import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
 import SureModal from '../components/sureModal'
 import shareModal from '../components/shareModal'
-import { showMsg, previewImage } from '../utils/common'
-import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle } from '../api/zone'
+import { showMsg, previewImage, filterArrayByValue } from '../utils/common'
+import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle, addLike } from '../api/zone'
 import { addOrder, getPaymentParams } from '../api/finance'
 import { getAuth } from '../api/authorize'
 import { checkStudent } from '../api/user'
@@ -347,7 +353,8 @@ export default class Zone extends wepy.page {
     shareImg: '',
     removeCircleTitle: '您确认要删除吗？',
     currentRemoveMomentId: -1,
-    currentRemoveMomentIdx: -1
+    currentRemoveMomentIdx: -1,
+    currentToCommentId: -1
   }
   watch = {
     classInfo(newVal, oldVal) {
@@ -356,6 +363,8 @@ export default class Zone extends wepy.page {
         this.resetData()
         this.getAuthList()
         this.getZoneList()
+        this.memberInfo = wx.getStorageSync('memberInfo')
+        this.$parent.globalData.userData = this.memberInfo
       }
     },
     currentJoinActivityId(newVal, oldVal) {
@@ -366,10 +375,13 @@ export default class Zone extends wepy.page {
     }
   }
   resetData() {
+    this.loading = false
+    this.loadFinished = false
     this.loadMoreCommentArray = []
     this.commentLoadFinished = false
     this.currentRemoveMomentId = -1
     this.currentRemoveMomentIdx = -1
+    this.currentToCommentId = -1
     this.commentPn = 2
     this.commentPs = 6
     this.studentIds = []
@@ -399,6 +411,9 @@ export default class Zone extends wepy.page {
     }
     this.setData({
       fromPublish: false
+    })
+    wx.pageScrollTo({
+      scrollTop: 0
     })
   }
   onLoad() {
@@ -550,6 +565,30 @@ export default class Zone extends wepy.page {
     return category
   }
   methods = {
+    addLike(momentId, idx, isLiked) {
+      addLike({
+        class_id: this.classInfo.id,
+        moment_id: momentId
+      }).then(res => {
+        if (res.data.success) {
+          if (isLiked) {
+            showMsg('取消点赞成功')
+            this.list[idx].like_list.count--
+          } else {
+            showMsg('点赞成功')
+            this.list[idx].like_list.count++
+          }
+          this.list[idx].is_like = !isLiked
+          const newObj = {
+            moment_id: momentId,
+            member_id: this.memberInfo.member_id,
+            member: this.memberInfo
+          }
+          this.list[idx].like_list.list = filterArrayByValue(this.memberInfo.member_id, this.list[idx].like_list.list, isLiked, newObj)
+          this.$apply()
+        }
+      })
+    },
     toggleFlag(flag, booleanValue) {
       this[flag] = booleanValue
       if (flag === 'showSureFlag' && booleanValue) {
@@ -674,6 +713,7 @@ export default class Zone extends wepy.page {
       this.commentFlag = true
       this.currentReplyId = id
       this.currentReplyRootId = type === 'add' ? 0 : rootId
+      this.currentToCommentId = toCommentId
       if (name !== undefined) {
         this.commentInput = `@${name}:`
       } else {
@@ -692,7 +732,7 @@ export default class Zone extends wepy.page {
         moment_id: this.currentReplyId,
         content: this.currentReplyId > 0 ? this.commentInput.replace(/^@.+:/, '') : this.commentInput,
         root_id: this.currentReplyRootId,
-        to_comment_id: this.currentReplyRootId
+        to_comment_id: this.currentToCommentId
       }).then(res => {
         if (res.data.success) {
           this.commentInput = ''
@@ -814,12 +854,13 @@ export default class Zone extends wepy.page {
   & > .icon-wrapper {
     display: flex;
     justify-content: space-between;
-    width: 20%;
-    align-items:center;
-    .icon-share {
+    width: 30%;
+    .iconfont {
       font-size: 32rpx;
     }
-
+    .icon-message {
+      font-size: 40rpx;
+    }
   }
 }
 .img-list {
