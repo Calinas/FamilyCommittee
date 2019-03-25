@@ -311,7 +311,7 @@ export default class Publish extends wepy.page {
             upload.path = path
             upload.error = false
             upload.uploadProgress = wx.uploadFile({
-              url: 'https://test.ctjwh.com/api/v1/file/uploadPic',
+              url: `${this.globalData.url}/file/uploadPic`,
               filePath: path,
               formData: {
                 'member_id': this.memberInfo.member_id,
