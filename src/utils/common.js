@@ -1,8 +1,8 @@
 import wepy from 'wepy'
 
 export function checkMobile(phone) {
-  let patrn = /^[1][345789]\d{9}$/
-  if (!patrn.exec(phone)) return false
+  let pattern = /^[1][345789]\d{9}$/
+  if (!pattern.exec(phone)) return false
   return true
 }
 
