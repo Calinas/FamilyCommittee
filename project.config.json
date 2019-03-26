@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 2,
+			"current": 3,
 			"list": [
 				{
 					"id": 0,
@@ -50,6 +50,13 @@
 					"id": 2,
 					"name": "测试加入班级",
 					"pathName": "pages/createClass",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "转账",
+					"pathName": "pages/withdraw",
 					"query": "",
 					"scene": null
 				}

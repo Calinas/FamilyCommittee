@@ -1,0 +1,42 @@
+.money-desc {
+  border: 1px solid #ccc;
+  padding-left: 20rpx;
+  height: 80rpx;
+  border-radius: 20rpx; }
+
+.width60 {
+  width: 60%; }
+
+.width100 {
+  width: 100%; }
+
+.input-wrapper {
+  margin: 40rpx 0; }
+
+.common-container {
+  padding-bottom: 160rpx; }
+
+.submit-btn {
+  border: none;
+  background-color: #1F9E3C;
+  color: #fff;
+  border-radius: 10rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  width: 30%; }
+
+.current-money {
+  margin: 80rpx auto;
+  width: 90%;
+  font-size: 40rpx; }
+  .current-money .btn {
+    padding: 0 40rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    border-radius: 40rpx; }
+    .current-money .btn-grey {
+      background-color: #919191;
+      color: #fff; }
+    .current-money .btn-light {
+      background-color: #F2F2F2;
+      color: #000; }

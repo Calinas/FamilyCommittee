@@ -186,6 +186,7 @@
         <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="cashflow">财务记账</view>
         <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="personalCashflow">财务流水</view>
         <!-- <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view> -->
+        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="withdraw">申请提现</view>
         <view catchtap="jumpPage" wx:if="{{auth.president}}" class="_849026a" data-wpyjumppage-a="authorize">家委会管理</view>
         </view>
     </view>

@@ -1,0 +1,100 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container" style="padding: 30rpx;">
+    <view class="font-black">请填写用户提现的银行卡信息</view>
+    <view class="flex-wrapper input-wrapper center between">
+      <input type="text" placeholder="填写开户行" class="money-desc width60" @input="pickerChange" id="bankAccount" style="margin-right: 20rpx;"/>
+      <input type="text" placeholder="填写户名" class="money-desc" @input="pickerChange"  id="bankUser" />
+    </view>
+    <view class="flex-wrapper input-wrapper center between">
+      <input type="digit" placeholder="填写银行卡号" class="money-desc width100%" @input="pickerChange"  id="bankNumber" />
+    </view>
+    <view class="flex-wrapper input-wrapper center between">
+      <input type="digit" placeholder="填写银行预留手机号" class="money-desc width100" @input="pickerChange"  id="bankPhone" />
+    </view>
+    <button class="submit-btn" @tap="saveInfo">保存</button>
+    <view class="flex-wrapper between current-money">
+      <text class="btn btn-grey">当前提现额度</text>
+      <text class="btn btn-light">1258元</text>
+    </view>
+    <button class="submit-btn">申请提现</button>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class cashflow extends wepy.page {
+  config = {
+    navigationBarTitleText: '申请提现'
+  }
+  data = {
+    classInfo: {},
+    memberInfo: {},
+    bankAccount: '',
+    bankUser: '',
+    bankNumber: '',
+    bankPhone: ''
+  }
+  onLoad() {
+    this.classInfo = wx.getStorageSync('classInfo')
+    this.memberInfo = wx.getStorageSync('memberInfo')
+    this.$apply()
+  }
+  methods = {
+    pickerChange(e) {
+      this[e.currentTarget.id] = e.detail.value
+      this.$apply()
+    },
+    saveInfo() {
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.money-desc {
+  border:1px solid #ccc;
+  padding-left:20rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+}
+.width60 {
+  width: 60%;
+}
+.width100 {
+  width: 100%;
+}
+.input-wrapper {
+  margin: 40rpx 0;
+}
+.common-container {
+  padding-bottom: 160rpx;
+}
+.submit-btn {
+  border: none;
+  background-color:#1F9E3C;
+  color:#fff;
+  border-radius:10rpx;
+  height:80rpx;
+  line-height:80rpx;
+  width:30%;
+}
+.current-money {
+  margin:80rpx auto;
+  width:90%;
+  font-size:40rpx;
+  .btn {
+    padding: 0 40rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    border-radius: 40rpx;
+    &-grey {
+      background-color: #919191;
+      color: #fff;
+    }
+    &-light {
+      background-color: #F2F2F2;
+      color: #000;
+    }
+  }
+}
+</style>

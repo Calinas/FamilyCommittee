@@ -186,6 +186,7 @@
         <view catchtap="jumpPage('cashflow')" wx:if="{{auth.finance}}">财务记账</view>
         <view catchtap="jumpPage('personalCashflow')" wx:if="{{auth.finance}}">财务流水</view>
         <!-- <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view> -->
+        <view catchtap="jumpPage('withdraw')" wx:if="{{auth.finance}}">申请提现</view>
         <view catchtap="jumpPage('authorize')" wx:if="{{auth.president}}">家委会管理</view>
         </view>
     </view>

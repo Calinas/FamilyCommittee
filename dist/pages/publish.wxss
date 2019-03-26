@@ -35,7 +35,7 @@
       font-size: 32rpx; }
 
 .submit-btn {
-  background-color: #07C160;
+  background-color: #1F9E3C;
   color: #fff;
   border-radius: 10rpx;
   height: 80rpx;
