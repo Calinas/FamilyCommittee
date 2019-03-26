@@ -21,7 +21,15 @@
   padding-bottom: 40rpx;
   margin-bottom: 40rpx; }
   .item .operate-btn {
+    width: 80%;
+    margin: auto;
     margin-top: 40rpx; }
-    .item .operate-btn > input {
-      border-bottom: 2rpx solid #f2f2f2;
-      padding-left: 20rpx; }
+    .item .operate-btn > view {
+      border-radius: 10rpx; }
+
+.btn-money {
+  padding: 7px 16px;
+  background-color: #F2F2F2;
+  color: #6C6C73;
+  width: 40%;
+  text-align: center; }

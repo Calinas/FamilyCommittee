@@ -4,10 +4,10 @@
       <view class="msg-card font-black" wx:for="{{list}}">
         <view class="flex-wrapper center">
           <image src="" class="small-avatar"/>
-          <text>我通过{{item.info.member.class_nickname}}发布的收款信息支付了</text>
+          <text>我通过{{item.class_nickname}}发布的收款信息支付了</text>
         </view>
-        <view class="btn-money">{{item.pay_amount}}元</view>
-        <view class="font-grey font-small time">{{item.updated_at}}</view>
+        <view class="btn-money">{{item.money}}元</view>
+        <view class="font-grey font-small time">{{item.time}}</view>
       </view>
       </view>
     </scroll-view>
@@ -17,23 +17,24 @@
 <script>
 import wepy from 'wepy'
 import { getPersonFinanceList } from '../api/finance'
+import { personalCashflowObj } from '../utils/normalize'
 export default class personCashflow extends wepy.page {
   config = {
     navigationBarTitleText: '个人财务流水'
   };
   data = {
     list: [],
-    classInfo: {}
+    classId: 0
   }
   onLoad(e) {
-    this.classInfo = wx.getStorageSync('classInfo')
+    this.classId = wx.getStorageSync('classInfo').id
     this.getList()
   }
   getList() {
     getPersonFinanceList({
-      class_id: this.classInfo.id
+      class_id: this.classId
     }).then(res => {
-      this.list = res.data.list
+      this.list = res.data.list.map(personalCashflowObj)
       this.$apply()
     })
   }

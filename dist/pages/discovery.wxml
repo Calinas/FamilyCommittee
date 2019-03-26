@@ -39,7 +39,7 @@
           <view class="flex-wrapper icon-container _eeb9055">
             <text class="font-grey font-small from-school _eeb9055">来自{{item.class.name}}</text>
             <view class="flex-wrapper icon-wrapper _eeb9055">
-              <view class="font-grey iconfont icon-dianzan text-right _eeb9055" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
+              <view class="font-grey iconfont icon-dianzan text-right _eeb9055"/>
               <view class="font-grey iconfont icon-message text-right _eeb9055" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
               <view class="font-grey iconfont icon-share text-right _eeb9055" catchtap="shareCircle"/>
             </view>

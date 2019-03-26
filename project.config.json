@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 3,
+			"current": 4,
 			"list": [
 				{
 					"id": 0,
@@ -57,6 +57,13 @@
 					"id": -1,
 					"name": "转账",
 					"pathName": "pages/withdraw",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "转账2",
+					"pathName": "pages/cashWithdraw",
 					"query": "",
 					"scene": null
 				}

@@ -1,10 +1,10 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
-    <view class="font-black item" wx:for="{{list}}">
-      <text>{{item.desc}}</text>
+    <view class="font-black item" wx:for="{{list}}" wx:key="key">
+      <text>{{item.desc}}元</text>
       <view class="operate-btn flex-wrapper center">
-        <input type="number" placeholder="请输入提现金额" @input="bindInput">
-        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" @tap="submit({{item.id}})">申请提现</view>
+        <view class="btn-money" style="padding: 14rpx 30rpx">{{item.money}}元</view>
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" @tap="tempSubmit({{item.id}}, {{item.money}})" wx:if="{{item.money > 0}}">申请提现</view>
       </view>
     </view>
   </view>
@@ -15,12 +15,12 @@ import wepy from 'wepy'
 import { getCircleList } from '../api/zone'
 import { withdrawCash } from '../api/finance'
 import { getOnlyDate, showMsg } from '../utils/common'
+import { cashWithdrawObj } from '../utils/normalize'
 export default class CashWithdrawal extends wepy.page {
   config = {
     navigationBarTitleText: '收款提现'
   }
   data = {
-    money: '',
     memberInfo: null,
     classInfo: null,
     pn: 1,
@@ -28,21 +28,21 @@ export default class CashWithdrawal extends wepy.page {
     list: []
   }
   methods = {
-    bindInput(e) {
-      this.money = e.detail.value
-      this.$apply()
-    },
     submit(id) {
       withdrawCash({
         class_id: this.classInfo.id,
-        collection_id: id,
+        collection_id: Number(id),
         amount: this.money
       }).then(res => {
         if (res.data.success) {
           showMsg('操作成功')
-          this.money = ''
           this.$apply()
         }
+      })
+    },
+    tempSubmit(id, money) {
+      wx.navigateTo({
+        url: `withdraw?id=${id}&money=${money}`
       })
     }
   }
@@ -59,10 +59,10 @@ export default class CashWithdrawal extends wepy.page {
       see_type: id ? '' : 'all',
       type: 'collection',
       pn: this.pn,
-      ps: this.ps,
+      ps: this.ps
     }).then(res => {
       let { list } = res.data
-      list = this.normalizeList(list)
+      list = list.map(cashWithdrawObj)
       this.loading = false
       this.pn++
       this.list = [...this.list, ...list]
@@ -71,15 +71,6 @@ export default class CashWithdrawal extends wepy.page {
       }
       this.$apply()
     })
-  }
-  normalizeList(list) {
-    let ret = list.map(item => {
-      return {
-        desc: `${getOnlyDate(item.created_at)},您发起了一个收款，共收到${item.info.total_money}`,
-        id: item.info.id
-      }
-    })
-    return ret
   }
 }
 </script>
@@ -92,11 +83,19 @@ export default class CashWithdrawal extends wepy.page {
   padding-bottom:40rpx;
   margin-bottom:40rpx;
   .operate-btn {
+    width:80%;
+    margin:auto;
     margin-top: 40rpx;
-    & > input {
-      @include border-bottom;
-      padding-left: 20rpx;
+    & > view {
+      border-radius: 10rpx;
     }
   }
+}
+.btn-money {
+  padding:7px 16px;
+  background-color:#F2F2F2;
+  color:#6C6C73;
+  width:40%;
+  text-align: center;
 }
 </style>

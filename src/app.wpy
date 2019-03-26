@@ -94,7 +94,7 @@ export default class extends wepy.app {
     this.intercept('request', {
 
       config(req) {
-        // req.url = 'http://www.patriarch.cm:8080/api/v1' + req.url
+        // req.url = 'http://www.patriarch.cm/api/v1' + req.url
         req.url = 'https://test.ctjwh.com/api/v1' + req.url
         wx.showLoading({
           title: '加载中',
@@ -113,7 +113,7 @@ export default class extends wepy.app {
             icon: 'none',
             duration: 2000
           })
-          if (Number(code) === 100010 || Number()) {
+          if (Number(code) === 100010 ) {
             wx.reLaunch({url: 'login'})
           }
         }

@@ -1,10 +1,10 @@
 
   <view class="common-container">
-    <view class="font-black item"  wx:for="{{list}}">
-      <text>{{item.desc}}</text>
+    <view class="font-black item"  wx:for="{{list}}" wx:key="key">
+      <text>{{item.desc}}元</text>
       <view class="operate-btn flex-wrapper center">
-        <input type="number" placeholder="请输入提现金额" bindinput="bindInput"/>
-        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" bindtap="submit" data-wpysubmit-a="{{item.id}}">申请提现</view>
+        <view class="btn-money" style="padding: 14rpx 30rpx">{{item.money}}元</view>
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" bindtap="tempSubmit" wx:if="{{item.money > 0}}" data-wpytempsubmit-a="{{item.id}}" data-wpytempsubmit-b="{{item.money}}">申请提现</view>
       </view>
     </view>
   </view>

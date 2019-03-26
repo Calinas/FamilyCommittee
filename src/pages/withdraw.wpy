@@ -2,49 +2,94 @@
   <view class="common-container" style="padding: 30rpx;">
     <view class="font-black">请填写用户提现的银行卡信息</view>
     <view class="flex-wrapper input-wrapper center between">
-      <input type="text" placeholder="填写开户行" class="money-desc width60" @input="pickerChange" id="bankAccount" style="margin-right: 20rpx;"/>
-      <input type="text" placeholder="填写户名" class="money-desc" @input="pickerChange"  id="bankUser" />
+      <input type="text" placeholder="填写开户行" class="money-desc width60" @input="pickerChange" id="bankName" style="margin-right: 20rpx;" value="{{card.bank_name}}" />
+      <input type="text" placeholder="填写户名" class="money-desc" @input="pickerChange"  id="bankReservedName" value="{{card.bank_reserved_name}}" />
     </view>
     <view class="flex-wrapper input-wrapper center between">
-      <input type="digit" placeholder="填写银行卡号" class="money-desc width100%" @input="pickerChange"  id="bankNumber" />
+      <input type="digit" placeholder="填写银行卡号" class="money-desc width100%" @input="pickerChange"  id="bankCard" value="{{card.bank_card}}" />
     </view>
     <view class="flex-wrapper input-wrapper center between">
-      <input type="digit" placeholder="填写银行预留手机号" class="money-desc width100" @input="pickerChange"  id="bankPhone" />
+      <input type="digit" placeholder="填写银行预留手机号" class="money-desc width100" @input="pickerChange"  id="bankMobile" value="{{card.bank_mobile}}" />
     </view>
-    <button class="submit-btn" @tap="saveInfo">保存</button>
+    <button class="submit-btn" @tap="saveBankInfo">{{card.bank_name ? '更新' : '保存'}}</button>
     <view class="flex-wrapper between current-money">
       <text class="btn btn-grey">当前提现额度</text>
-      <text class="btn btn-light">1258元</text>
+      <text class="btn btn-light">{{money}}元</text>
     </view>
-    <button class="submit-btn">申请提现</button>
+    <button class="submit-btn" @tap="submit">申请提现</button>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-export default class cashflow extends wepy.page {
+import { withdrawCash, saveBankInfo } from '../api/finance'
+import { showMsg } from '../utils/common'
+import { memberInfo } from '../api/user'
+export default class Withdraw extends wepy.page {
   config = {
     navigationBarTitleText: '申请提现'
   }
   data = {
     classInfo: {},
     memberInfo: {},
-    bankAccount: '',
-    bankUser: '',
-    bankNumber: '',
-    bankPhone: ''
+    bankName: '',
+    bankReservedName: '',
+    bankCard: '',
+    bankMobile: '',
+    card: {},
+    money: 0,
+    id: 0
   }
-  onLoad() {
+  onLoad(options) {
     this.classInfo = wx.getStorageSync('classInfo')
     this.memberInfo = wx.getStorageSync('memberInfo')
+    this.id = options.id
+    this.money = options.money
+    this.card = this.memberInfo.card_info
     this.$apply()
+  }
+  getMemberInfo() {
+    memberInfo({
+      class_id: this.classInfo.id
+    }).then(res => {
+      let data = res.data.data
+      let cardInfo = data.member_extend
+      let memberInfo = wx.getStorageSync('memberInfo')
+      let info = Object.assign({}, {
+        card_info: cardInfo
+      }, memberInfo)
+      wx.setStorageSync('memberInfo', info)
+    })
   }
   methods = {
     pickerChange(e) {
       this[e.currentTarget.id] = e.detail.value
       this.$apply()
     },
-    saveInfo() {
+    saveBankInfo() {
+      saveBankInfo({
+        bankName: this.bankName ? this.bankName : this.card.bank_name,
+        bankReservedName: this.bankReservedName ? this.bankReservedName : this.card.bank_reserved_name,
+        bankCard: this.bankCard ? this.bandCard : this.card.bank_card,
+        bankMobile: this.bankMobile ? this.bankMobile : this.card.bank_mobile
+      }).then(res => {
+        if (res.data.success) {
+          this.getMemberInfo()
+          showMsg('操作成功')
+        }
+      })
+    },
+    submit() {
+      withdrawCash({
+        class_id: this.classInfo.id,
+        collection_id: this.id,
+        amount: this.money
+      }).then(res => {
+        if (res.data.success) {
+          showMsg('操作成功')
+          this.$apply()
+        }
+      })
     }
   }
 }

@@ -71,10 +71,13 @@ export default class ClassList extends wepy.page {
     memberInfo({
       class_id: this.classInfo.id
     }).then(res => {
-      let classNickname = res.data.data.class_nickname
+      let data = res.data.data
+      let classNickname = data.class_nickname
+      let cardInfo = data.member_extend
       let memberInfo = wx.getStorageSync('memberInfo')
       let info = Object.assign({}, {
-        class_nickname: classNickname
+        class_nickname: classNickname,
+        card_info: cardInfo
       }, memberInfo)
       console.log(info)
       wx.setStorageSync('memberInfo', info)

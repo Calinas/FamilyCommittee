@@ -2,19 +2,19 @@
   <view class="common-container" style="padding: 30rpx;">
     <view class="font-black">请填写用户提现的银行卡信息</view>
     <view class="flex-wrapper input-wrapper center between">
-      <input type="text" placeholder="填写开户行" class="money-desc width60" bindinput="pickerChange" id="bankAccount" style="margin-right: 20rpx;"/>
-      <input type="text" placeholder="填写户名" class="money-desc" bindinput="pickerChange" id="bankUser"/>
+      <input type="text" placeholder="填写开户行" class="money-desc width60" bindinput="pickerChange" id="bankName" style="margin-right: 20rpx;" value="{{card.bank_name}}"/>
+      <input type="text" placeholder="填写户名" class="money-desc" bindinput="pickerChange" id="bankReservedName" value="{{card.bank_reserved_name}}"/>
     </view>
     <view class="flex-wrapper input-wrapper center between">
-      <input type="digit" placeholder="填写银行卡号" class="money-desc width100%" bindinput="pickerChange" id="bankNumber"/>
+      <input type="digit" placeholder="填写银行卡号" class="money-desc width100%" bindinput="pickerChange" id="bankCard" value="{{card.bank_card}}"/>
     </view>
     <view class="flex-wrapper input-wrapper center between">
-      <input type="digit" placeholder="填写银行预留手机号" class="money-desc width100" bindinput="pickerChange" id="bankPhone"/>
+      <input type="digit" placeholder="填写银行预留手机号" class="money-desc width100" bindinput="pickerChange" id="bankMobile" value="{{card.bank_mobile}}"/>
     </view>
-    <button class="submit-btn" bindtap="saveInfo">保存</button>
+    <button class="submit-btn" bindtap="saveBankInfo">{{card.bank_name ? '更新' : '保存'}}</button>
     <view class="flex-wrapper between current-money">
       <text class="btn btn-grey">当前提现额度</text>
-      <text class="btn btn-light">1258元</text>
+      <text class="btn btn-light">{{money}}元</text>
     </view>
-    <button class="submit-btn">申请提现</button>
+    <button class="submit-btn" bindtap="submit">申请提现</button>
   </view>

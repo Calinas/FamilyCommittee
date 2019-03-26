@@ -96,3 +96,21 @@ export function withdrawCash(data) {
     })
   })
 }
+
+// 保存银行信息
+export const saveBankInfo = data => {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/member/addBank',
+      data: Object.assign({}, commonParams(), {
+        bank_name: data.bankName,
+        bank_reserved_name: data.bankReservedName,
+        bank_card: data.bankCard,
+        bank_mobile: data.bankMobile
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
