@@ -1,5 +1,5 @@
 
-  <view class="common-container common-container-grey">
+  <view class="common-container common-container-grey" style="padding-top:120rpx;">
     <radio-group class="radio-group" bindchange="pickerChange" id="currentType">
         <label class="radio"  wx:for="{{relationshipTypes}}">
           <radio value="{{item.value}}" checked="{{item.checked}}"/>
@@ -14,9 +14,9 @@
           <text class="iconfont icon-arrow-right font-30"/>
         </picker>
         <view class="icon-wrapper" bindtap="delete" data-wpydelete-a="{{idx}}">
-          <text class="iconfont icon-delete" wx:if="{{idx > 0}}"/></view>
+          <text class="iconfont icon-delete" wx:if="{{idx > 0}}"/>
         </view>
-      
+      </view>
     </block>
     <block wx:if="{{currentType === 'teacher'}}">
       <view class="flex-wrapper center choose-item">
@@ -24,7 +24,7 @@
       </view>
     </block>
   </view>
-  <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
-    <view class="btn-white" bindtap="addNew"  wx:if="{{currentType === 'parents'}}">新增一项</view>
+  <view class="fixed-bottom-btn top flex-wrapper fixed-bottom-btn-1">
+    <view class="btn-white" bindtap="addNew"  wx:if="{{currentType === 'parents'}}">增加多胞胎学生</view>
     <view bindtap="submit">确认提交</view>
   </view>

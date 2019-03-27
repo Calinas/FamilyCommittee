@@ -42,10 +42,13 @@
           <view class="flex-wrapper icon-container">
             <text class="font-grey font-small from-school">来自{{item.class.name}}</text>
             <view class="flex-wrapper icon-wrapper">
-              <view class="font-grey iconfont icon-dianzan text-right"></view>
+              <view class="font-grey iconfont icon-dianzan text-right" catchtap="addLike({{item.id}},{{listIndex}},{{item.is_like}})"></view>
               <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle"></view>
             </view>
+          </view>
+          <view class="font-grey" wx:if="{{item.like_list.count}}">
+            <text wx:for="{{item.like_list.list}}" wx:for-item="like">{{like.member.nickname}}</text>共{{item.like_list.count}}人觉得很赞
           </view>
           <view class="comment-wrapper font-grey" wx:if="{{item.comment_list.count}}">
             <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
@@ -94,11 +97,11 @@
 
 <script>
 import wepy from 'wepy'
+import { showMsg, previewImage, filterArrayByValue } from '../utils/common'
 import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
 import shareModal from '../components/shareModal'
-import { showMsg, previewImage } from '../utils/common'
-import { getCircleList, addComment, getCommentList, deleteCircle } from '../api/zone'
+import { getCircleList, addComment, getCommentList, deleteCircle, addLike } from '../api/zone'
 export default class Discovery extends wepy.page {
   config = {
     navigationBarTitleText: '家长圈子',
@@ -208,6 +211,34 @@ export default class Discovery extends wepy.page {
     }
   }
   methods = {
+    addLike(momentId, idx, isLiked) {
+      if (!this.classInfo) {
+        showMsg('请先选择班级')
+        return
+      }
+      addLike({
+        class_id: this.classInfo.id,
+        moment_id: momentId
+      }).then(res => {
+        if (res.data.success) {
+          if (isLiked) {
+            showMsg('取消点赞成功')
+            this.list[idx].like_list.count--
+          } else {
+            showMsg('点赞成功')
+            this.list[idx].like_list.count++
+          }
+          this.list[idx].is_like = !isLiked
+          const newObj = {
+            moment_id: momentId,
+            member_id: this.memberInfo.member_id,
+            member: this.memberInfo
+          }
+          this.list[idx].like_list.list = filterArrayByValue(this.memberInfo.member_id, this.list[idx].like_list.list, isLiked, newObj)
+          this.$apply()
+        }
+      })
+    },
     cancelShareFn() {
       this.showShareFlag = false
       this.$apply()
@@ -335,9 +366,9 @@ export default class Discovery extends wepy.page {
 .img-list {
   margin-bottom: 0;
   &.one-img {
-    image {
-      width: 300rpx;
-      height: 300rpx;
+    .img-item {
+      width: 400rpx;
+      height: 225rpx;
     }
   }
 }

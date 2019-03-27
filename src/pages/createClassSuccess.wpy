@@ -52,7 +52,7 @@ export default class bindRelationship extends wepy.page {
   }
   onShareAppMessage(res) {
     return {
-      title: `${this.memberInfo.nickname}邀请您一起加入${this.name},验证码是${this.key}`,
+      title: `${this.memberInfo.nickname}邀请您加入家委会班级,验证码是${this.key}`,
       path: `pages/createClassSuccess?classId=${this.classId}&name=${this.name}&key=${this.key}`
     }
   }

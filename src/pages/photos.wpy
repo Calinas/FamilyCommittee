@@ -101,7 +101,7 @@ export default class bindRelationship extends wepy.page {
             upload.path = path
             upload.error = false
             upload.uploadProgress = wx.uploadFile({
-              url: `${this.globalData.url}/file/uploadPic`,
+              url: `${_this.$parent.globalData.apiUrl}/file/uploadPic`,
               filePath: path,
               formData: {
                 'member_id': this.memberInfo.member_id,

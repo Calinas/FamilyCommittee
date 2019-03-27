@@ -11,7 +11,8 @@
 .balance {
   width: 70%;
   margin: 40rpx auto;
-  padding: 40rpx; }
+  padding: 40rpx;
+  border-radius: 20rpx; }
   .balance .title {
     font-weight: bold;
     display: inline-block;

@@ -56,8 +56,8 @@
           </view>
           <view class="font-small font-grey text-right create-time">{{item.created_at}}</view>
           <block wx:if="{{item.app_type !== 'account'}}">
-            <view class="item-desc font-36">{{item.info.description}}</view>
-            <view class="img-list flex-wrapper one-img" wx:if="{{item.image.length === 1}}">
+            <view class="item-desc font-36" wx:if="{{item.info.description}}">{{item.info.description}}</view>
+            <view class="img-list flex-wrapper one-img {{item.info.description ? '' : 'extra-margin'}}" wx:if="{{item.image.length === 1}}">
               <image mode="widthFix" src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item" @tap="preview({{img}},{{item.image}})" />
             </view>
             <view class="img-list flex-wrapper" wx:else>
@@ -81,7 +81,7 @@
             </view> -->
           </block>
 
-          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' ? 'between' : 'right'}}">
+          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}}">
             <text wx:if="{{item.app_type === 'circles' && item.see_type === 'all'}}">全部可见</text>
             <text wx:if="{{item.app_type === 'circles' && item.see_type === 'class'}}">仅班级可见</text>
             <text @tap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length && item.app_type === 'account'}}">查看记账凭证</text>
@@ -412,9 +412,9 @@ export default class Zone extends wepy.page {
     this.setData({
       fromPublish: false
     })
-    wx.pageScrollTo({
-      scrollTop: 0
-    })
+    // wx.pageScrollTo({
+    //   scrollTop: 0
+    // })
   }
   onLoad() {
     if (!this.checkDataExist('memberInfo')) {
@@ -870,6 +870,9 @@ export default class Zone extends wepy.page {
       width: 400rpx;
       height: 225rpx;
     }
+  }
+  &.extra-margin {
+    margin-top: 30rpx;
   }
 }
 .menu-wrapper {

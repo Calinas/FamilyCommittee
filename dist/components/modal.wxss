@@ -23,6 +23,11 @@
     padding-bottom: 40rpx;
     border-bottom: 2rpx solid #f2f2f2; }
 
+.icon-wrapper._4d5f1a4 {
+  position: absolute;
+  right: 0;
+  padding: 30rpx; }
+
 .wx-popup-con._4d5f1a4 {
   margin: 60rpx;
   text-align: center; }

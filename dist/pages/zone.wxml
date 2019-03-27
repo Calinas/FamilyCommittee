@@ -56,8 +56,8 @@
           </view>
           <view class="font-small font-grey text-right create-time _849026a">{{item.created_at}}</view>
           <block wx:if="{{item.app_type !== 'account'}}" class="_849026a">
-            <view class="item-desc font-36 _849026a">{{item.info.description}}</view>
-            <view class="img-list flex-wrapper one-img _849026a" wx:if="{{item.image.length === 1}}">
+            <view class="item-desc font-36 _849026a" wx:if="{{item.info.description}}">{{item.info.description}}</view>
+            <view class="img-list flex-wrapper one-img {{item.info.description ? '' : 'extra-margin'}} _849026a" wx:if="{{item.image.length === 1}}">
               <image mode="widthFix" src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load="lazy-load" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
             </view>
             <view class="img-list flex-wrapper _849026a" wx:else>
@@ -81,7 +81,7 @@
             </view> -->
           </block>
 
-          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' ? 'between' : 'right'}} _849026a">
+          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}} _849026a">
             <text wx:if="{{item.app_type === 'circles' && item.see_type === 'all'}}" class="_849026a">全部可见</text>
             <text wx:if="{{item.app_type === 'circles' && item.see_type === 'class'}}" class="_849026a">仅班级可见</text>
             <text bindtap="preview" wx:if="{{item.image.length && item.app_type === 'account'}}" class="_849026a" data-wpypreview-a="{{item.image}}" data-wpypreview-b="{{item.image}}">查看记账凭证</text>

@@ -41,9 +41,9 @@
 
 .img-list._eeb9055 {
   margin-bottom: 0; }
-  .img-list.one-img image._eeb9055 {
-    width: 300rpx;
-    height: 300rpx; }
+  .img-list.one-img .img-item._eeb9055 {
+    width: 400rpx;
+    height: 225rpx; }
 
 .img-mask._eeb9055 {
   position: relative;

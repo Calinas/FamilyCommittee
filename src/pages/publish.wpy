@@ -73,8 +73,8 @@
     </block>
     </text>
     <Modal
-      sureBtnText="确认添加"
-      cancelBtnText="取消"
+      sureBtnText="添加完成"
+      cancelBtnText="再添加一项"
       placeholderText="请输入您想新增的活动项目名"
       :flag.sync="showAddActivity"
       @cancel.user="cancel"
@@ -300,18 +300,21 @@ export default class Publish extends wepy.page {
         sizeType: ['original', 'compressed'],
         sourceType: ['album', 'camera'],
         success: res => {
-          if (this.img.length + res.tempFilePaths.length > this.maxPhotoCount) {
+          const length = res.tempFilePaths.length
+          let tempArr = []
+          if (this.img.length + length > this.maxPhotoCount) {
             wx.showToast({
               title: '最多只能选择' + this.maxPhotoCount + '张图片',
               icon: 'none'
             })
           }
+          wx.showLoading({title: '图片上传中'})
           res.tempFilePaths.forEach(path => {
             let upload = {}
             upload.path = path
             upload.error = false
             upload.uploadProgress = wx.uploadFile({
-              url: `${this.globalData.url}/file/uploadPic`,
+              url: `${_this.$parent.globalData.apiUrl}/file/uploadPic`,
               filePath: path,
               formData: {
                 'member_id': this.memberInfo.member_id,
@@ -321,8 +324,16 @@ export default class Publish extends wepy.page {
               name: 'file',
               success: res => {
                 const data = JSON.parse(res.data)
-                const url = data.data.file_url
-                _this.img.push(url)
+                if (data.data && data.data.file_url) {
+                  const url = data.data.file_url
+                  tempArr.push(url)
+                  _this.img.push(url)
+                }
+                if (tempArr.length === length) {
+                  setTimeout(() => {
+                    wx.hideLoading()
+                  }, 1000)
+                }
                 _this.$apply()
               }
             })
@@ -336,10 +347,10 @@ export default class Publish extends wepy.page {
       })
     },
     submit() {
-      if (!this.canSubmit) {
-        showMsg('请检查发布内容!')
-        return
-      }
+      // if (!this.canSubmit) {
+      //   showMsg('请检查发布内容!')
+      //   return
+      // }
       this.checkCanSubmit()
       const commonParams = Object.assign({}, {
         class_id: this.classInfo.id,
@@ -359,7 +370,8 @@ export default class Publish extends wepy.page {
       this.showAddMoney = false
       this.$apply()
     },
-    sure(value) {
+    sure(value, type) {
+      console.log(type)
       if (this.checkRepeat(value, this.activityList)) {
         showMsg('请不要输入重复的活动项目')
         return
@@ -368,7 +380,9 @@ export default class Publish extends wepy.page {
         name: value
       }
       this.activityList.push(obj)
-      this.showAddActivity = false
+      if (type === 'save') {
+        this.showAddActivity = false
+      }
       this.$apply()
     },
     moneySureFn(value1, value2) {
@@ -408,9 +422,11 @@ export default class Publish extends wepy.page {
     padding: 0 20rpx;
     border-radius: 20rpx;
     font-size: 28rpx;
+    border:2rpx solid #bbb;
     &-active {
       color: #1F5985;
       font-size: 32rpx;
+      border:2rpx solid #1F5985;
     }
   }
 }

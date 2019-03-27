@@ -25,7 +25,25 @@ export default class CashWithdrawal extends wepy.page {
     classInfo: null,
     pn: 1,
     ps: 10,
-    list: []
+    list: [],
+    loading: false,
+    loadFinished: false
+  }
+  onPullDownRefresh() {
+    this.resetData()
+    this.getZoneList()
+  }
+  onReachBottom() {
+    if (this.loading || this.loadFinished) return
+    this.getList()
+  }
+  resetData() {
+    this.pn = 1
+    this.ps = 10
+    this.loading = false
+    this.loadFinished = false
+    this.list = []
+    this.$apply()
   }
   methods = {
     submit(id) {

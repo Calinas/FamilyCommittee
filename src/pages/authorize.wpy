@@ -87,20 +87,38 @@ export default class bindRelationship extends wepy.page {
     code: '',
     removeFlag: false,
     removeName: '',
-    removeId: -1
+    removeId: -1,
+    classId: -1,
+    name: '',
+    key: ''
   }
   onShareAppMessage(res) {
     return {
-      title: `${this.memberInfo.nickname}邀请您一起加入${this.classInfo.name},验证码是${this.classInfo.join_key}`,
-      path: `pages/authorize?classId=${this.classInfo.id}&name=${this.classInfo.name}&key=${this.classInfo.join_key}`
+      title: `${this.memberInfo.nickname}邀请您加入家委会班级,验证码是${this.classInfo.join_key}`,
+      path: `pages/authorize?classId=${this.classInfo.id}&name=${this.classInfo.name}&key=${this.classInfo.join_key}&code=${this.code}`
     }
   }
-  onLoad() {
+  onLoad(params) {
     this.classInfo = wx.getStorageSync('classInfo')
     this.memberInfo = wx.getStorageSync('memberInfo')
-    this.getAuthList()
-    this.getMemberList()
-    this.$apply()
+    this.name = params.name
+    this.code = params.code
+    this.key = params.key
+    this.classId = params.classId
+    if (this.code && !this.memberInfo.member_id) {
+      // 如果是从分享链接进入且没有注册，先走注册流程
+      wx.redirectTo({
+        url: `login?classId=${this.classId}&name=${this.name}&key=${this.key}`
+      })
+    } else if (this.code && this.memberInfo.member_id) {
+      wx.redirectTo({
+        url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
+      })
+    } else {
+      this.getAuthList()
+      this.getMemberList()
+      this.$apply()
+    }
   }
   getMemberList() {
     getMemberList({

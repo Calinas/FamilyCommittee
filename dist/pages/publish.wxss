@@ -29,10 +29,12 @@
     display: inline-block;
     padding: 0 20rpx;
     border-radius: 20rpx;
-    font-size: 28rpx; }
+    font-size: 28rpx;
+    border: 2rpx solid #bbb; }
     .choose-see-btn-active {
       color: #1F5985;
-      font-size: 32rpx; }
+      font-size: 32rpx;
+      border: 2rpx solid #1F5985; }
 
 .submit-btn {
   background-color: #1F9E3C;

@@ -22,9 +22,10 @@
           <text class="tag tag-grey">{{item.info.type === 'in' ? '收入': '支出'}}</text>
           <text class="tag tag-light-grey">{{item.info.money}}</text>
         </view>
-        <view class="desc">
-          事由：{{item.info.description}}
-        </view>
+         <view class="tag-wrapper flex-wrapper no-padding">
+            <text class="tag tag-grey">事由</text>
+            <text class="tag tag-empty">{{item.info.description}}</text>
+          </view>
         <view class="flex-wrapper center invoice-wrapper">
           <text class="tag tag-empty" wx:if="{{item.info.balance}}">余额：{{item.info.balance}}元</text>
           <view class="operate-btn" @tap="preview({{item.image}})" wx:if="{{item.image.length}}">
@@ -139,6 +140,7 @@ export default class cashflow extends wepy.page {
   width: 70%;
   margin: 40rpx auto;
   padding: 40rpx;
+  border-radius: 20rpx;
   .title {
     font-weight: bold;
     display: inline-block;

@@ -39,10 +39,13 @@
           <view class="flex-wrapper icon-container _eeb9055">
             <text class="font-grey font-small from-school _eeb9055">来自{{item.class.name}}</text>
             <view class="flex-wrapper icon-wrapper _eeb9055">
-              <view class="font-grey iconfont icon-dianzan text-right _eeb9055"/>
+              <view class="font-grey iconfont icon-dianzan text-right _eeb9055" catchtap="addLike" data-wpyaddlike-a="{{item.id}}" data-wpyaddlike-b="{{listIndex}}" data-wpyaddlike-c="{{item.is_like}}"/>
               <view class="font-grey iconfont icon-message text-right _eeb9055" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
               <view class="font-grey iconfont icon-share text-right _eeb9055" catchtap="shareCircle"/>
             </view>
+          </view>
+          <view class="font-grey _eeb9055" wx:if="{{item.like_list.count}}">
+            <text wx:for="{{item.like_list.list}}" wx:for-item="like" class="_eeb9055">{{like.member.nickname}}</text>共{{item.like_list.count}}人觉得很赞
           </view>
           <view class="comment-wrapper font-grey _eeb9055" wx:if="{{item.comment_list.count}}">
             <view class="item _eeb9055" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">

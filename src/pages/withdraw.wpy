@@ -121,7 +121,7 @@ export default class Withdraw extends wepy.page {
   border-radius:10rpx;
   height:80rpx;
   line-height:80rpx;
-  width:30%;
+  width:40%;
 }
 .current-money {
   margin:80rpx auto;

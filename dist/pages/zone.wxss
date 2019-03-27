@@ -76,6 +76,8 @@
   .img-list.one-img .img-item._849026a {
     width: 400rpx;
     height: 225rpx; }
+  .img-list.extra-margin._849026a {
+    margin-top: 30rpx; }
 
 .menu-wrapper._849026a {
   background-color: #fff;

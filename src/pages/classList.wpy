@@ -91,7 +91,7 @@ export default class ClassList extends wepy.page {
   }
   onShareAppMessage(res) {
     return {
-      title: `${this.memberInfo.nickname}邀请您一起加入${this.classInfo.name},验证码是${this.classInfo.join_key}`,
+      title: `${this.memberInfo.nickname}邀请您加入家委会班级,验证码是${this.classInfo.join_key}`,
       path: `pages/classList?classId=${this.classInfo.id}&name=${this.classInfo.name}&key=${this.classInfo.join_key}`
     }
   }

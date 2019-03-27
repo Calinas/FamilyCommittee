@@ -14,5 +14,3 @@ export const personalCashflowObj = item => ({
   money: item.pay_amount,
   time: item.updated_at
 })
-
-// 个人记账
