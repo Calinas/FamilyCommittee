@@ -106,8 +106,14 @@ export function uploadImage() {
 export function previewImage(src, imgList) {
   wx.previewImage({
     current: src,
-    urls: imgList
+    urls: imgList.map(filterImgList)
   })
+}
+
+const reg = /^https/g
+
+const filterImgList = item => {
+  return item.match(reg) ? item : item.replace(/http/, 'https')
 }
 
 // 只获取日期
@@ -139,8 +145,16 @@ export const filterArrayByValue = (keyName, arr, booleanValue, newObj) => {
   if (booleanValue) {
     console.log(booleanValue, currentIdx, arr)
     console.log(arr.splice(currentIdx, 1))
-    return arr.splice(currentIdx, 1)
+    arr.splice(currentIdx, 1)
+    return arr
   } else {
     return arr.concat(newObj)
   }
+}
+
+export const emptyObj = (obj) => {
+  Object.keys(obj).forEach(key => {
+    obj[key] = ''
+  })
+  return obj
 }

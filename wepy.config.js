@@ -19,9 +19,9 @@ module.exports = {
     less: {
       compress: prod
     },
-    /*sass: {
+    sass: {
       outputStyle: 'compressed'
-    },*/
+    },
     babel: {
       sourceMap: true,
       presets: [
@@ -45,7 +45,7 @@ module.exports = {
 if (prod) {
 
   // 压缩sass
-  // module.exports.compilers['sass'] = {outputStyle: 'compressed'}
+  module.exports.compilers['sass'] = {outputStyle: 'compressed'}
 
   // 压缩js
   module.exports.plugins = {
@@ -53,6 +53,9 @@ if (prod) {
       filter: /\.js$/,
       config: {
       }
+    },
+    filemin: {
+      filter: /\.(json|wxml|xml)$/
     },
     imagemin: {
       filter: /\.(jpg|png|jpeg)$/,

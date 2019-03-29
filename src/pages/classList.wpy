@@ -22,10 +22,8 @@
           </view>
         </block>
         <view class="flex-wrapper center between" wx:for="{{list}}" wx:key="key" wx:for-index="idx" @tap="setClass({{idx}})">
-          <!-- <text class="dot dot-grey"></text> -->
           <text>{{item.class.name}}</text>
           <text class="font-bold font-20">点击进入</text>
-          <!-- <text class="iconfont icon-arrow-right"></text> -->
         </view>
       </block>
       <block wx:else>
@@ -53,13 +51,13 @@
 <script>
 import wepy from 'wepy'
 import { getClassList } from '../api/createClass'
+import { classListObj } from '../utils/normalize'
 import { memberInfo } from '../api/user'
 export default class ClassList extends wepy.page {
   config = {
     navigationBarTitleText: '我的班级'
   }
   data = {
-    classList: [],
     memberInfo: {},
     classInfo: null,
     list: [],
@@ -79,13 +77,13 @@ export default class ClassList extends wepy.page {
         class_nickname: classNickname,
         card_info: cardInfo
       }, memberInfo)
-      console.log(info)
       wx.setStorageSync('memberInfo', info)
     })
   }
   getClassList() {
     getClassList().then(res => {
-      this.list = res.data.list
+      let list = res.data.list
+      this.list = list.map(classListObj)
       this.$apply()
     })
   }

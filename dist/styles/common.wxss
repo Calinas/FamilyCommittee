@@ -3,6 +3,25 @@ page {
   color: #586069;
   font-size: 30rpx;
 }
+.weui-btn {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    padding: 30rpx;
+    box-sizing:border-box;
+    font-size:30rpx;
+    text-align:center;
+    text-decoration:none;
+    color:#fff;
+    background-color: #fff;
+    border-radius:4rpx;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    overflow: hidden;
+}
+.weui-btn_primary {
+    background-color: #2DB200;
+}
+
 .common-container {
   padding: 30rpx;
   min-height: 100%;

@@ -74,11 +74,6 @@
               <text class="tag tag-grey _849026a">事由</text>
               <text class="tag tag-empty _849026a">{{item.info.description}}</text>
             </view>
-            <!-- <view class="flex-wrapper center invoice-wrapper">
-              <view class="desc invoice" bindtap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length}}">
-                查看记账凭证
-              </view>
-            </view> -->
           </block>
 
           <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}} _849026a">
@@ -87,12 +82,13 @@
             <text bindtap="preview" wx:if="{{item.image.length && item.app_type === 'account'}}" class="_849026a" data-wpypreview-a="{{item.image}}" data-wpypreview-b="{{item.image}}">查看记账凭证</text>
             <view class="flex-wrapper icon-wrapper _849026a">
               <view class="font-grey iconfont icon-dianzan text-right _849026a" catchtap="addLike" data-wpyaddlike-a="{{item.id}}" data-wpyaddlike-b="{{listIndex}}" data-wpyaddlike-c="{{item.is_like}}"/>
-              <view class="font-grey iconfont icon-message text-right _849026a" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{item.id}}"/>
+              <view class="font-grey iconfont icon-message text-right _849026a" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}"/>
               <view class="font-grey iconfont icon-share text-right _849026a" catchtap="shareCircle" data-wpysharecircle-a="{{item.app_type}}"/>
             </view>
           </view>
           <view class="font-grey _849026a" wx:if="{{item.like_list.count}}">
-            <text wx:for="{{item.like_list.list}}" wx:for-item="like" class="_849026a">{{like.member.class_nickname}}</text>共{{item.like_list.count}}人觉得很赞
+            <text class="iconfont icon-xin _849026a" style="margin-right: 10rpx;"/>
+            <text wx:for="{{item.like_list.list}}" wx:for-item="like" wx:key="{{keyIndex}}" class="_849026a">{{like.member.class_nickname}}<text wx:if="{{index !== item.like_list.count - 1}}" class="_849026a">，</text></text>共{{item.like_list.count}}人觉得很赞
           </view>
           <block wx:if="{{item.app_type === 'activity'}}" class="_849026a">
             <block wx:if="{{!item.is_apply}}" class="_849026a">
@@ -155,14 +151,19 @@
           </block>
           <!-- 留言结果 -->
           <view class="comment-wrapper font-grey _849026a" wx:if="{{item.comment_list.count}}">
-            <view class="item _849026a" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
-              <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_849026a">
-                <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.root_id}}" data-wpyaddcomment-d="{{comment.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.root_id}}" data-wpyaddcomment-d="{{comment.to_comment_id}}" data-wpyaddcomment-e="{{comment.to_member.class_nickname}}">{{comment.to_member.class_nickname}}：</text>
-              </block>
-              <block wx:else class="_849026a">
-                <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{item.id}}" data-wpyaddcomment-c="{{comment.id}}" data-wpyaddcomment-d="{{comment.to_member.id}}" data-wpyaddcomment-e="{{comment.member.class_nickname}}">{{comment.member.class_nickname}}: </text>
-              </block>
-              <text class="_849026a">{{comment.content}}</text>
+            <view class="flex-wrapper _849026a" style="flex-wrap:wrap;">
+              <view class="font-grey iconfont icon-message text-right _849026a" style="font-size: 15px;"/>
+              <view class="_849026a">
+                <view class="item _849026a" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key" wx:for-index="idx">
+                  <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_849026a">
+                    <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.id}}" data-wpyaddcomment-f="{{comment.member.class_nickname}}" data-wpyaddcomment-g="{{comment.member.id}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.to_comment_id}}" data-wpyaddcomment-f="{{comment.to_member.class_nickname}}" data-wpyaddcomment-g="{{comment.to_member.id}}">{{comment.to_member.class_nickname}}：</text>
+                  </block>
+                  <block wx:else class="_849026a">
+                    <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.id}}" data-wpyaddcomment-f="{{comment.member.class_nickname}}" data-wpyaddcomment-g="{{comment.member.id}}">{{comment.member.class_nickname}}: </text>
+                  </block>
+                  <text class="_849026a">{{comment.content}}</text>
+                </view>
+              </view>
             </view>
             <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center _849026a" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}">
               <text class="font-blue font-small _849026a">加载更多评论</text>

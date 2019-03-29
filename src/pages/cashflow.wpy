@@ -46,6 +46,7 @@
 import wepy from 'wepy'
 import { getFinanceInfo } from '../api/finance'
 import { getCircleList } from '../api/zone'
+import { cashflowObj } from '../utils/normalize'
 import { previewImage } from '../utils/common'
 export default class cashflow extends wepy.page {
   config = {
@@ -100,6 +101,7 @@ export default class cashflow extends wepy.page {
       pn: this.pn
     }).then(res => {
       let { list } = res.data
+      list = list.map(cashflowObj)
       this.loading = false
       this.pn++
       if (list.length < this.ps) {

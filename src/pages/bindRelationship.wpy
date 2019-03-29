@@ -258,7 +258,6 @@ export default class bindRelationship extends wepy.page {
 </script>
 
 <style lang="scss">
-@import '../styles/buttons.wxss';
 .radio-group {
   text-align: center;
   padding: 40rpx 0 80rpx 0;

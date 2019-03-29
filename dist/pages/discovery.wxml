@@ -45,7 +45,8 @@
             </view>
           </view>
           <view class="font-grey _eeb9055" wx:if="{{item.like_list.count}}">
-            <text wx:for="{{item.like_list.list}}" wx:for-item="like" class="_eeb9055">{{like.member.nickname}}</text>共{{item.like_list.count}}人觉得很赞
+            <text class="iconfont icon-xin _eeb9055" style="margin-right: 10rpx;"/>
+            <text wx:for="{{item.like_list.list}}" wx:for-item="like" wx:key="{{keyIndex}}" class="_eeb9055">{{like.member.nickname}}<text wx:if="{{index !== item.like_list.count - 1}}" class="_eeb9055">，</text></text>共{{item.like_list.count}}人觉得很赞
           </view>
           <view class="comment-wrapper font-grey _eeb9055" wx:if="{{item.comment_list.count}}">
             <view class="item _eeb9055" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">

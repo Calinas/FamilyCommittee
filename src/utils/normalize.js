@@ -14,3 +14,17 @@ export const personalCashflowObj = item => ({
   money: item.pay_amount,
   time: item.updated_at
 })
+
+// 班级列表
+export const classListObj = item => ({
+  class: item.class
+})
+
+// 财务记账
+export const cashflowObj = item => ({
+  member: item.member,
+  app_type: item.app_type,
+  created_at: item.created_at,
+  info: item.info,
+  image: item.image
+})

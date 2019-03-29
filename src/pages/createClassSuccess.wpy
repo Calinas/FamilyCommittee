@@ -53,10 +53,11 @@ export default class bindRelationship extends wepy.page {
   onShareAppMessage(res) {
     return {
       title: `${this.memberInfo.nickname}邀请您加入家委会班级,验证码是${this.key}`,
-      path: `pages/createClassSuccess?classId=${this.classId}&name=${this.name}&key=${this.key}`
+      path: `pages/createClassSuccess?classId=${this.classId}&name=${this.name}&key=${this.key}&is_share=true`
     }
   }
   onLoad(params) {
+    // 因为从绑定身份页面进入也有 key,name, classId,所有需要一个is_share
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.name = params.name
     this.code = params.code

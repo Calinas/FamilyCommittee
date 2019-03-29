@@ -74,11 +74,6 @@
               <text class="tag tag-grey">事由</text>
               <text class="tag tag-empty">{{item.info.description}}</text>
             </view>
-            <!-- <view class="flex-wrapper center invoice-wrapper">
-              <view class="desc invoice" @tap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length}}">
-                查看记账凭证
-              </view>
-            </view> -->
           </block>
 
           <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}}">
@@ -87,12 +82,13 @@
             <text @tap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length && item.app_type === 'account'}}">查看记账凭证</text>
             <view class="flex-wrapper icon-wrapper">
               <view class="font-grey iconfont icon-dianzan text-right" catchtap="addLike({{item.id}},{{listIndex}},{{item.is_like}})"></view>
-              <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{item.id}})"></view>
+              <view class="font-grey iconfont icon-message text-right" catchtap="addComment('add', {{listIndex}}, {{item.id}})"></view>
               <view class="font-grey iconfont icon-share text-right" catchtap="shareCircle({{item.app_type}})"></view>
             </view>
           </view>
           <view class="font-grey" wx:if="{{item.like_list.count}}">
-            <text wx:for="{{item.like_list.list}}" wx:for-item="like">{{like.member.class_nickname}}</text>共{{item.like_list.count}}人觉得很赞
+            <text class="iconfont icon-xin" style="margin-right: 10rpx;"></text>
+            <text wx:for="{{item.like_list.list}}" wx:for-item="like" wx:key="{{keyIndex}}">{{like.member.class_nickname}}<text wx:if="{{index !== item.like_list.count - 1}}">，</text></text>共{{item.like_list.count}}人觉得很赞
           </view>
           <block wx:if="{{item.app_type === 'activity'}}">
             <block wx:if="{{!item.is_apply}}">
@@ -155,14 +151,19 @@
           </block>
           <!-- 留言结果 -->
           <view class="comment-wrapper font-grey" wx:if="{{item.comment_list.count}}">
-            <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
-              <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
-                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.root_id}},{{comment.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.root_id}},{{comment.to_comment_id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
-              </block>
-              <block wx:else>
-                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
-              </block>
-              <text>{{comment.content}}</text>
+            <view class="flex-wrapper" style="flex-wrap:wrap;">
+              <view class="font-grey iconfont icon-message text-right" style="font-size: 15px;"></view>
+              <view>
+                <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key" wx:for-index="idx">
+                  <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
+                    <text class="font-blue" @tap="addComment('reply',{{listIndex}}, {{item.id}},{{comment.root_id}},{{comment.id}},{{comment.member.class_nickname}}, {{comment.member.id}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{listIndex}},{{item.id}},{{comment.root_id}},{{comment.to_comment_id}},{{comment.to_member.class_nickname}}, {{comment.to_member.id}})">{{comment.to_member.class_nickname}}：</text>
+                  </block>
+                  <block wx:else>
+                    <text class="font-blue" @tap="addComment('reply',{{listIndex}},{{item.id}},{{comment.root_id}},{{comment.id}},{{comment.member.class_nickname}}, {{comment.member.id}})">{{comment.member.class_nickname}}: </text>
+                  </block>
+                  <text>{{comment.content}}</text>
+                </view>
+              </view>
             </view>
             <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
               <text class="font-blue font-small">加载更多评论</text>
@@ -239,13 +240,19 @@
   </view>
 </template>
 
-<script>
+<script lang="Typescript">
+let replyCommentData = {
+  idx: '',
+  memberId: '',
+  memberName: '',
+  type: ''
+}
 import wepy from 'wepy'
 import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
 import SureModal from '../components/sureModal'
 import shareModal from '../components/shareModal'
-import { showMsg, previewImage, filterArrayByValue } from '../utils/common'
+import { showMsg, previewImage, filterArrayByValue, emptyObj } from '../utils/common'
 import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle, addLike } from '../api/zone'
 import { addOrder, getPaymentParams } from '../api/finance'
 import { getAuth } from '../api/authorize'
@@ -388,6 +395,7 @@ export default class Zone extends wepy.page {
     this.paymentLocked = false
     this.pn = 1
     this.list = []
+    // replyCommentData = emptyObj(replyCommentData)
     this.$apply()
   }
   onPullDownRefresh() {
@@ -477,7 +485,7 @@ export default class Zone extends wepy.page {
     }
     return false
   }
-  getZoneList() {
+  getZoneList(type) {
     this.loading = true
     this.$apply()
     const id = this.classInfo.id
@@ -566,6 +574,10 @@ export default class Zone extends wepy.page {
   }
   methods = {
     addLike(momentId, idx, isLiked) {
+      if (!this.classInfo && !this.classInfo.id) {
+        showMsg('请先加入班级')
+        return
+      }
       addLike({
         class_id: this.classInfo.id,
         moment_id: momentId
@@ -701,13 +713,18 @@ export default class Zone extends wepy.page {
         }
       })
     },
-    addComment(type, id, rootId, toCommentId, name) {
-      if (toCommentId === this.memberInfo.member_id) {
-        showMsg('请不要回复自己')
-        return
-      }
+    addComment(type, listIndex, id, rootId, toCommentId, name, memberId) {
+      console.log(arguments)
+      replyCommentData.idx = listIndex
+      replyCommentData.type = type
+      replyCommentData.memberId = memberId
+      replyCommentData.memberName = name
       if (!this.classInfo) {
         showMsg('请先选择班级')
+        return
+      }
+      if (memberId === this.memberInfo.member_id) {
+        showMsg('请不要回复自己')
         return
       }
       this.commentFlag = true
@@ -735,9 +752,18 @@ export default class Zone extends wepy.page {
         to_comment_id: this.currentToCommentId
       }).then(res => {
         if (res.data.success) {
+          // this.resetData()
+          // this.getZoneList()
+          let { idx, memberId, memberName, type } = replyCommentData
+          this.insertComment({
+            idx,
+            memberId,
+            memberName,
+            type,
+            content: this.currentReplyId > 0 ? this.commentInput.replace(/^@.+:/, '') : this.commentInput,
+            toCommentId: this.currentToCommentId
+          })
           this.commentInput = ''
-          this.resetData()
-          this.getZoneList()
           this.$apply()
         }
       })
@@ -792,6 +818,22 @@ export default class Zone extends wepy.page {
       this.addToOrder(this.currentCollectionId)
     }
   }
+  insertComment(params) {
+    let { idx, memberId, memberName, content, toCommentId } = params
+    let data = {
+      member: this.memberInfo,
+      to_member: {
+        id: memberId,
+        class_nickname: memberName
+      },
+      root_id: null,
+      content: content,
+      to_comment_id: toCommentId
+    }
+    this.list[idx].comment_list.list.push(data)
+    this.list[idx].comment_list.count++
+    this.$apply()
+  }
   onShareAppMessage(res) {
     return {
       title: this.shareTitle,
@@ -804,6 +846,10 @@ export default class Zone extends wepy.page {
 <style lang="scss" scoped>
 @import '../styles/mixins.scss';
 @include upload-img-wrapper;
+.add-coma {
+  position: relative;
+  margin-right: 10rpx;
+}
 .result-wrapper {
   font-size: 28rpx !important;
 }
@@ -969,9 +1015,6 @@ export default class Zone extends wepy.page {
     overflow: hidden;
     margin: 40rpx 0;
     line-height: 1.4;
-    &.comment-wrapper {
-      margin-top: 0;
-    }
     &.no-bg {
       background-color: transparent;
     }
@@ -989,7 +1032,7 @@ export default class Zone extends wepy.page {
 }
 .comment-wrapper {
   line-height: 50rpx;
-  margin-bottom: 20rpx;
+  margin: 20rpx 0;
   .item {
     padding-left: 10rpx;
   }

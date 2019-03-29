@@ -1,16 +1,27 @@
 <template>
-<view class="page" style="background-color:#fff;margin-top: 400rpx;">
-  <view class="login-title flex">
+<view class="page" style="background-color:#fff;">
+  <view wx:if="{{!forWeixinTest}}" style="margin-top: 400rpx;">
+    <view class="login-title flex">
     <text class="line-title"></text>
     <text class="font-grey line-text">使用微信绑定的手机号登录</text>
     <text class="line-title"></text>
   </view>
   <button wx:if="{{!show_lay}}" bindgetuserinfo="getUserInfo" open-type="getUserInfo" class="weixin-login-btn">授权登录</button>
+  </view>
   <view class='bind-phone-lay' wx:if="{{show_lay}}">
     <view>您好，我们需要绑定您的手机号就可以完成注册啦</view>
     <button plain="true" bindgetphonenumber="getPhoneNumber" openType="getPhoneNumber" style="font" type="themeBg" class="weixin-login-btn">点击授权</button>
   </view>
   <view class='overlay' wx:if="{{show_lay}}"></view>
+  <view wx:if="{{forWeixinTest}}" class="inner">
+    <view class="line">
+      <input class="weui-input" name="tel" maxlength='11' placeholder-class="input-font" placeholder="请输入手机号码" type="number" id="testPhone" @input="bindTest" />
+    </view>
+    <view class="line flex get-code">
+      <input class="input light-bg" placeholder-class="input-font" maxlength="6" placeholder="请输入六位密码" type="number" id="testCode" @input="bindTest" />
+    </view>
+    <view type="default" style="width: 100%;" class="line login-btn font-blue center" @tap="loginTest">登录</view>
+  </view>
 </view>
 </template>
 
@@ -18,6 +29,7 @@
 // 如果直接拿到了union_id,那 nickname,这些是什么时候拿到的？
 //报错信息好像没处理
 import wepy from 'wepy'
+import { showMsg } from '../utils/common'
 import { getSessionKey, decryptData, wxLogin } from '../api/login'
 export default class login extends wepy.page {
   config = {
@@ -35,11 +47,42 @@ export default class login extends wepy.page {
     open_id: '',
     joinKey: '',
     classId: -1,
-    name: ''
+    name: '',
+    show_lay: false,
+    forWeixinTest: false,
+    testPhone: '',
+    testCode: ''
   };
   methods = {
+    bindTest(e) {
+      this[e.currentTarget.id] = Number(e.detail.value)
+      this.$apply()
+    },
+    loginTest() {
+      //给微信开发测试
+      if (this.testPhone !== 13456780980 || this.testCode !== 123456) {
+        showMsg('请填写正确的账户信息')
+        return
+      }
+      let memberInfo = Object.create(null)
+      memberInfo = {
+        member_id: 19,
+        member_token: '10751B5360622D6BEAC588ED2D94E379'
+      }
+      wx.setStorageSync('memberInfo', memberInfo)
+      wx.switchTab({
+        url: 'classList'
+      })
+    },
     getUserInfo(e) {
       const detail = e.detail
+       if(!detail.rawData) {
+          showMsg('授权失败')
+          this.forWeixinTest = true
+          this.show_lay = false
+          this.$apply()
+          return
+      }
       decryptData({
         encryptedData: detail.encryptedData,
         iv: detail.iv,
@@ -57,6 +100,13 @@ export default class login extends wepy.page {
     },
     getPhoneNumber(e) {
       const detail = e.detail
+      if(!detail.encryptedData) {
+        showMsg('授权失败')
+        this.forWeixinTest = true
+        this.show_lay = false
+        this.$apply()
+        return
+      }
       decryptData({
         encryptedData: detail.encryptedData,
         iv: detail.iv,
@@ -103,6 +153,7 @@ export default class login extends wepy.page {
     this.joinKey = e.key
     this.classId = e.classId
     this.name = e.name
+    this.$apply()
     wx.login({
       success: res => {
         let old_wxapp_token = wx.getStorageSync('wxtoken')
@@ -124,8 +175,25 @@ export default class login extends wepy.page {
 </script>
 
 
-<style>
-
+<style lang="scss">
+.line {
+  margin-top: 40rpx;
+  border-radius: 10rpx;
+  overflow: hidden;
+    input {
+    font-size: 30rpx;
+    background-color: #f2f2f2;
+    padding: 22rpx;
+  }
+}
+.login-btn {
+  text-align: center;
+  height:80rpx;
+  line-height:80rpx;
+  font-size:30rpx;
+  border:1px solid #fd8238;
+  color:#fd8238;
+}
 .icon-wechat {
   width: 100rpx;
   padding: 40rpx 0;
