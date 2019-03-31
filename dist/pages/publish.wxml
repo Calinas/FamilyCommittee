@@ -73,17 +73,17 @@
     </block>
     
     
-  <view class="wx-popup _4d5f1a4"  wx:if="{{$Modal$flag}}">
-    <view class="popup-container _4d5f1a4">
-      <view class="icon-wrapper _4d5f1a4" bindtap="$Modal$cancelFn">
-        <text class="iconfont icon-delete _4d5f1a4"/>
+  <view class="wx-popup _8859a02"  wx:if="{{$Modal$flag}}">
+    <view class="popup-container _8859a02">
+      <view class="icon-wrapper _8859a02" bindtap="$Modal$cancelFn">
+        <text class="iconfont icon-delete _8859a02"/>
       </view>
-      <view class="wx-popup-con _4d5f1a4">
-        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" cursor-spacing="100" focus class="_4d5f1a4"/>
+      <view class="wx-popup-con _8859a02">
+        <input type="text" placeholder="{{$Modal$placeholderText}}" bindinput="$Modal$bindInput" value="{{$Modal$input}}" cursor-spacing="100" focus class="_8859a02"/>
       </view>
-      <view class="wx-popup-btn _4d5f1a4">
-        <text class="btn-ok _4d5f1a4" bindtap="$Modal$sureFn" data-wpysurefn-a="save">{{$Modal$sureBtnText}}</text>
-        <text class="btn-no _4d5f1a4" bindtap="$Modal$sureFn" data-wpysurefn-a="add">{{$Modal$cancelBtnText}}</text>
+      <view class="wx-popup-btn _8859a02">
+        <text class="btn-ok _8859a02" bindtap="$Modal$sureFn" data-wpysurefn-a="save">{{$Modal$sureBtnText}}</text>
+        <text class="btn-no _8859a02" bindtap="$Modal$sureFn" data-wpysurefn-a="add">{{$Modal$cancelBtnText}}</text>
       </view>
     </view>
   </view>

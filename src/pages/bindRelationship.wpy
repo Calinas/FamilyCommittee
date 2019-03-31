@@ -32,15 +32,23 @@
 
 <script>
 import wepy from 'wepy'
+import { connect, getStore } from 'wepy-redux'
+import { saveIdentityList } from '../store/actions'
 import { getIdentityList, bindIdentity, identityList, bindTeacher } from '../api/user'
 import { addClass } from '../api/createClass'
 import { showMsg, isEmptyString } from '../utils/common'
+let store = getStore()
+
+@connect({
+  relationship(state){
+    return state.zone.relationship
+  }
+})
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '身份绑定'
   }
   data = {
-    relationship: [],
     parentIndex: 0,
     canSubmit: false,
     studentName: '',
@@ -68,17 +76,23 @@ export default class bindRelationship extends wepy.page {
     ]
   }
   watch = {
+    relationship(newValue, oldValue) {
+      if (!oldValue.length && newValue.length && this.type === 'create') {
+        this.addNewFn()
+      }
+    },
     studentName (newValue, oldValue) {
       this.canSubmit = !isEmptyString(newValue)
     }
   }
   onLoad(e) {
+    !this.relationship.length && saveIdentityList()
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.classInfo = wx.getStorageSync('classInfo')
     this.joinClassId = Number(e.id)
     this.key = e.key
     this.type = e.type
-    this.getRelationShip()
+    this.type === 'edit' && this.getClassIdentity()
     this.$apply()
   }
   addClassCallback(data, filterList) {
@@ -149,6 +163,15 @@ export default class bindRelationship extends wepy.page {
       this.$apply()
     })
   }
+  addNewFn() {
+    const item = {
+      relationship: this.relationship,
+      value: '',
+      activeIndex: 0
+    }
+    this.list.push(item)
+    this.$apply()
+  }
   methods = {
     pickerChange(e) {
       this[e.currentTarget.id] = e.detail.value
@@ -159,13 +182,7 @@ export default class bindRelationship extends wepy.page {
       this.$apply()
     },
     addNew() {
-      const item = {
-        relationship: this.relationship,
-        value: '',
-        activeIndex: 0
-      }
-      this.list.push(item)
-      this.$apply()
+      this.addNewFn()
     },
     bindForm(e) {
       const target = e.currentTarget
@@ -240,19 +257,6 @@ export default class bindRelationship extends wepy.page {
       }
     }
     return canSubmit
-  }
-  getRelationShip() {
-    getIdentityList().then(res => {
-      this.relationship = res.data.list
-      const item = {
-        relationship: this.relationship,
-        value: '',
-        activeIndex: 0
-      }
-      this.list.push(item)
-      this.type === 'edit' && this.getClassIdentity()
-      this.$apply()
-    })
   }
 }
 </script>

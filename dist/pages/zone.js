@@ -9,6 +9,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var replyCommentData = {
     idx: '',
@@ -17,6 +23,8 @@ var replyCommentData = {
     type: ''
 };
 var wepy_1 = require('./../npm/wepy/lib/wepy.js');
+var wepy_redux_1 = require('./../npm/wepy-redux/lib/index.js');
+var actions_1 = require('./../store/actions/index.js');
 var selectModal_1 = require('./../components/selectModal.js');
 var commentModal_1 = require('./../components/commentModal.js');
 var sureModal_1 = require('./../components/sureModal.js');
@@ -26,6 +34,7 @@ var zone_1 = require('./../api/zone.js');
 var finance_1 = require('./../api/finance.js');
 var authorize_1 = require('./../api/authorize.js');
 var user_1 = require('./../api/user.js');
+var store = wepy_redux_1.getStore();
 var Zone = /** @class */ (function (_super) {
     __extends(Zone, _super);
     function Zone() {
@@ -446,17 +455,11 @@ var Zone = /** @class */ (function (_super) {
         this.classInfo = wx.getStorageSync('classInfo');
         this.$apply();
         // 如果是从publish等页面返回，则需要刷新数据
-        var data = this.$wxpage.data;
-        if (data.fromPublish) {
+        if (this.fromPublish) {
             this.resetData();
             this.getZoneList();
+            actions_1.setFromPublish(false);
         }
-        this.setData({
-            fromPublish: false
-        });
-        // wx.pageScrollTo({
-        //   scrollTop: 0
-        // })
     };
     Zone.prototype.onLoad = function () {
         if (!this.checkDataExist('memberInfo')) {
@@ -636,6 +639,13 @@ var Zone = /** @class */ (function (_super) {
             imageUrl: this.shareImg
         };
     };
+    Zone = __decorate([
+        wepy_redux_1.connect({
+            fromPublish: function (state) {
+                return state.zone.from_publish;
+            }
+        })
+    ], Zone);
     return Zone;
 }(wepy_1.default.page));
 

@@ -248,6 +248,8 @@ let replyCommentData = {
   type: ''
 }
 import wepy from 'wepy'
+import { connect, getStore } from 'wepy-redux'
+import { setFromPublish } from '../store/actions'
 import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
 import SureModal from '../components/sureModal'
@@ -257,6 +259,15 @@ import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle, 
 import { addOrder, getPaymentParams } from '../api/finance'
 import { getAuth } from '../api/authorize'
 import { checkStudent } from '../api/user'
+
+let store = getStore()
+
+@connect({
+  fromPublish(state) {
+    return state.zone.from_publish
+  }
+})
+
 export default class Zone extends wepy.page {
   config = {
     navigationBarTitleText: '最近班级',
@@ -412,17 +423,11 @@ export default class Zone extends wepy.page {
     this.classInfo = wx.getStorageSync('classInfo')
     this.$apply()
     // 如果是从publish等页面返回，则需要刷新数据
-    let data = this.$wxpage.data;
-    if (data.fromPublish) {
+    if (this.fromPublish) {
       this.resetData()
       this.getZoneList()
+      setFromPublish(false)
     }
-    this.setData({
-      fromPublish: false
-    })
-    // wx.pageScrollTo({
-    //   scrollTop: 0
-    // })
   }
   onLoad() {
     if (!this.checkDataExist('memberInfo')) {

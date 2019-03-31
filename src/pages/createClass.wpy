@@ -59,15 +59,35 @@
 
 <script>
 import wepy from 'wepy'
+import { connect, getStore } from 'wepy-redux'
+import { setCityList, getCityName, saveLocation, setCityName } from '../store/actions'
 import { showMsg, throttle, isEmptyString } from '../utils/common'
 import { schoolList, searchClass, getCityInfo, getCityList, createSchool} from '../api/createClass'
+
+let store = getStore()
+
+@connect(
+  {
+    cityList(state) {
+      return state.zone.city_list
+    },
+    cityName(state) {
+      return state.zone.city_name
+    },
+    longitude(state) {
+      return state.zone.lng
+    },
+    latitude(state) {
+      return state.zone.lat
+    }
+  }
+)
+
 export default class joinClass extends wepy.page {
   config = {
     navigationBarTitleText: '创建班级'
   }
   data = {
-    latitude: '',
-    longitude: '',
     classNumber: 0,
     gradeNumber: 0,
     activeClassType: 0,
@@ -97,36 +117,9 @@ export default class joinClass extends wepy.page {
     memberInfo: null,
     schoolList: [],
     type: '',
-    cityName: '正在定位中',
     keywords: '',
     schoolId: 0,
-    cityList: [],
     cityIndex: -1
-  }
-  getCity() {
-    return new Promise((resolve) => {
-      getCityInfo({
-        lat: this.latitude,
-        lng: this.longitude
-      }).then(res => {
-        this.cityName = res.data.data.regeocode.addressComponent.province
-        this.$apply()
-        resolve()
-      })
-    })
-  }
-  getCityList() {
-    const cityList = wx.getStorageSync('cityList')
-    if (cityList.length)  {
-      this.cityList = cityList
-      this.$apply()
-      return
-    }
-    getCityList().then(res => {
-      this.cityList = res.data.list
-      wx.setStorageSync('cityList', this.cityList)
-      this.$apply()
-    })
   }
   checkClassExist(data) {
     searchClass(data).then(res => {
@@ -208,10 +201,7 @@ export default class joinClass extends wepy.page {
       const id = e.currentTarget.id
       const value = e.detail.value
       this[id] = value
-      if(id === 'cityIndex') {
-        this.cityName = this.cityList[value].city_name
-      }
-      this.$apply()
+      id === 'cityIndex' && setCityName(this.cityList[value].city_name)
     },
     submit() {
       if (!this.gradeNumber) {
@@ -237,6 +227,9 @@ export default class joinClass extends wepy.page {
     }
   }
   onLoad(params) {
+    //在小程序一个生命周期内，应该只有一次定位和一次请求所有城市
+    !this.cityList.length && setCityList()
+    !this.longitude && this.wxGetLocation()
     this.type = params.type
     wx.setNavigationBarTitle({
       title: this.type === 'join' ? '加入班级' : '创建班级'
@@ -244,19 +237,21 @@ export default class joinClass extends wepy.page {
     const globalData = this.$parent.globalData
     this.memberInfo = globalData.memberInfo
     this.$apply()
-    let _this = this
+  }
+  wxGetLocation() {
     wx.getLocation({
       type: 'wgs84',
       complete(res) {
-        _this.latitude = res.latitude
-        _this.longitude = res.longitude
-        _this.getCity()
-        _this.$apply()
-        _this.getCityList()
+        const lat = res.latitude,
+              lng = res.longitude
+        saveLocation({lat, lng})
+        getCityName({lat, lng})
       }
     })
   }
   getSchoolList() {
+    if (!this.keywords.length) return
+    // 如果输入两个字，删除一个字，剩余一个字的时候也会触发getSchoolList（实际上两个字都删除）,所以这里多加一层判断
     schoolList({
       keywords: this.keywords,
       city_name: this.cityName
@@ -270,7 +265,6 @@ export default class joinClass extends wepy.page {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/buttons.wxss';
 .navigation-bar {
   .item {
     color: #fff;

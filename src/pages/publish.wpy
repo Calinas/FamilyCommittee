@@ -119,10 +119,15 @@
 
 <script>
 import wepy from 'wepy'
+import { connect, getStore } from 'wepy-redux'
+import { setFromPublish } from '../store/actions'
 import Modal from '../components/modal'
 import Modal2 from '../components/modal2'
 import { showMsg, isEmptyString, uploadImage } from '../utils/common'
 import { addCircles, addCollection, addActivity, addNotify } from '../api/zone'
+
+let store = getStore()
+
 export default class Publish extends wepy.page {
   config = {
     navigationBarTitleText: '发布'
@@ -192,11 +197,12 @@ export default class Publish extends wepy.page {
   }
   commonFn(res) {
     if (res.data.success) {
-      let pages = getCurrentPages();
-      let prevPage = pages[pages.length - 2];
-      prevPage.setData({
-        fromPublish: true
-      })
+      // let pages = getCurrentPages();
+      // let prevPage = pages[pages.length - 2];
+      // prevPage.setData({
+      //   fromPublish: true
+      // })
+      setFromPublish(true)
       showMsg('发布成功', 2000)
       setTimeout(() => {
         wx.navigateBack()
