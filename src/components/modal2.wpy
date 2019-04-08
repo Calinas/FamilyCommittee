@@ -1,13 +1,16 @@
 <template lang="wxml" minapp="wepy">
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
+      <view class="icon-wrapper" @tap='cancelFn'>
+        <text class="iconfont icon-delete"></text>
+      </view>
       <view class="wx-popup-con">
-        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}" id="input" style="margin-bottom: 40rpx" cursor-spacing='100' focus />
+        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{input}}" id="input" style="margin-bottom: 40rpx" cursor-spacing='180' focus />
         <input type="digit" min="10" placeholder={{placeholderText2}} @input="bindInput" value="{{money}}" id="money" cursor-spacing='100' />
       </view>
       <view class="wx-popup-btn">
-        <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>
-        <text class="btn-ok" @tap='sureFn'>{{sureBtnText}}</text>
+        <text class="btn-ok" @tap="sureFn('save')">{{sureBtnText}}</text>
+        <text class="btn-no" @tap="sureFn('add')">{{cancelBtnText}}</text>
       </view>
     </view>
   </view>
@@ -39,12 +42,12 @@ export default class Modal2 extends wepy.component {
     cancelFn () {
       this.$emit('cancel')
     },
-    sureFn () {
+    sureFn (type) {
       if (isEmptyString(this.input)) {
         showMsg('请输入项目名称')
         return
       }
-      this.$emit('sure', this.input, this.money)
+      this.$emit('sure', this.input, this.money, type)
       this.input = ''
       this.money = ''
       this.$apply()
@@ -79,6 +82,11 @@ export default class Modal2 extends wepy.component {
     padding-bottom:40rpx;
     border-bottom:2rpx solid #f2f2f2;
   }
+}
+.icon-wrapper {
+  position: absolute;
+  right: 0;
+  padding: 30rpx;
 }
 .wx-popup-con {
   margin: 60rpx;

@@ -30,7 +30,7 @@
     </view>
     <!-- 筛选框 -->
     <view class="menu-wrapper flex-wrapper">
-      <view data-type="circles" @tap="jumpPublish({{item.type}})" wx:for="{{menuList}}" >
+      <view data-type="circles" @tap="jumpPublish({{item.type}})" wx:for="{{menuList}}">
         <image src="{{item.src}}" mode="scaleToFill" />
         <text>{{item.text}}</text>
       </view>
@@ -188,7 +188,7 @@
         <view catchtap="jumpPage('personalCashflow')" wx:if="{{auth.finance}}">财务流水</view>
         <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view>
         <view catchtap="jumpPage('authorize')" wx:if="{{auth.president}}">家委会管理</view>
-        </view>
+      </view>
     </view>
     <!-- 右边侧边栏 -->
     <view class="sidebar sidebar-publish bg-white {{publishFlag ? 'show': ''}}">
@@ -203,7 +203,8 @@
         <view catchtap="jumpPage('publish','activity')" wx:if="{{auth.activity}}">活动</view>
         <view catchtap="jumpPage('publish','money')" wx:if="{{auth.finance}}">收款</view>
         <view catchtap="jumpPage('recordCashflow')" wx:if="{{auth.finance}}">记账</view>
-        </view>
+        <view catchtap="jumpPage('advice')">意见反馈</view>
+      </view>
     </view>
     <CurrentModal
       sureBtnText="确认"
@@ -249,7 +250,7 @@ let replyCommentData = {
 }
 import wepy from 'wepy'
 import { connect, getStore } from 'wepy-redux'
-import { setFromPublish } from '../store/actions'
+import { setFromPublish, setClassChanged } from '../store/actions'
 import SelectModal from '../components/selectModal'
 import CurrentModal from '../components/commentModal'
 import SureModal from '../components/sureModal'
@@ -265,6 +266,9 @@ let store = getStore()
 @connect({
   fromPublish(state) {
     return state.zone.from_publish
+  },
+  classHasChanged(state) {
+    return state.zone.classChanged
   }
 })
 
@@ -375,16 +379,6 @@ export default class Zone extends wepy.page {
     currentToCommentId: -1
   }
   watch = {
-    classInfo(newVal, oldVal) {
-      // 切换了班级之后数据要更新
-      if (oldVal !== null) {
-        this.resetData()
-        this.getAuthList()
-        this.getZoneList()
-        this.memberInfo = wx.getStorageSync('memberInfo')
-        this.$parent.globalData.userData = this.memberInfo
-      }
-    },
     currentJoinActivityId(newVal, oldVal) {
       if (newVal > 0) {
         this.currerntSubActivityId = []
@@ -420,7 +414,15 @@ export default class Zone extends wepy.page {
   onShow() {
     this.currerntJoinAcitivytId = -1
     this.currerntSubActivityId = []
-    this.classInfo = wx.getStorageSync('classInfo')
+    if (this.classHasChanged) {
+      this.memberInfo = wx.getStorageSync('memberInfo')
+      this.classInfo = wx.getStorageSync('classInfo')
+      this.resetData()
+      this.getAuthList()
+      this.getZoneList()
+      this.$parent.globalData.userData = this.memberInfo
+      setClassChanged(false)
+    }
     this.$apply()
     // 如果是从publish等页面返回，则需要刷新数据
     if (this.fromPublish) {
@@ -776,6 +778,10 @@ export default class Zone extends wepy.page {
     jumpPublish(value) {
       if (!this.classInfo) {
         showMsg('请选绑定班级', 3000)
+        return
+      }
+      if (value === 'account' && !this.auth.finance) {
+        showMsg('您没有财务权限', 3000)
         return
       }
       let url = value === 'account' ? 'recordCashflow' : `publish?type=${value}`

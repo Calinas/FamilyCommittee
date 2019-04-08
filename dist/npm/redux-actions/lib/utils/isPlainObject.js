@@ -1,1 +1,17 @@
-"use strict";exports.__esModule=!0,exports.default=void 0;var _default=function(t){if("object"!=typeof t||null===t)return!1;for(var e=t;null!==Object.getPrototypeOf(e);)e=Object.getPrototypeOf(e);return Object.getPrototypeOf(t)===e};exports.default=_default;
+"use strict";
+
+exports.__esModule = true;
+exports.default = void 0;
+
+var _default = function _default(value) {
+  if (typeof value !== 'object' || value === null) return false;
+  var proto = value;
+
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  return Object.getPrototypeOf(value) === proto;
+};
+
+exports.default = _default;

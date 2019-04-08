@@ -1,1 +1,21 @@
-function toSpaceCase(e){return clean(e).replace(/[\W_]+(.|$)/g,function(e,n){return n?" "+n:""}).trim()}var clean=require("./../to-no-case/index.js");module.exports=toSpaceCase;
+
+var clean = require('./../to-no-case/index.js')
+
+/**
+ * Export.
+ */
+
+module.exports = toSpaceCase
+
+/**
+ * Convert a `string` to space case.
+ *
+ * @param {String} string
+ * @return {String}
+ */
+
+function toSpaceCase(string) {
+  return clean(string).replace(/[\W_]+(.|$)/g, function (matches, match) {
+    return match ? ' ' + match : ''
+  }).trim()
+}

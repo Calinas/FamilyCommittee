@@ -81,8 +81,8 @@
       @sure.user="sure"
     ></Modal>
     <Modal2
-      sureBtnText="确认"
-      cancelBtnText="取消"
+      sureBtnText="添加完成"
+      cancelBtnText="再添加一项"
       placeholderText="收款选项名"
       placeholderText2="金额"
       :flag.sync="showAddMoney"
@@ -190,18 +190,13 @@ export default class Publish extends wepy.page {
     memberInfo: null,
     classInfo: null,
     money: '',
-    isRemind: 0,
+    isRemind: 1,
     moneyList: [],
     maxPhotoCount: 9,
     uploads: []
   }
   commonFn(res) {
     if (res.data.success) {
-      // let pages = getCurrentPages();
-      // let prevPage = pages[pages.length - 2];
-      // prevPage.setData({
-      //   fromPublish: true
-      // })
       setFromPublish(true)
       showMsg('发布成功', 2000)
       setTimeout(() => {
@@ -377,7 +372,6 @@ export default class Publish extends wepy.page {
       this.$apply()
     },
     sure(value, type) {
-      console.log(type)
       if (this.checkRepeat(value, this.activityList)) {
         showMsg('请不要输入重复的活动项目')
         return
@@ -391,13 +385,15 @@ export default class Publish extends wepy.page {
       }
       this.$apply()
     },
-    moneySureFn(value1, value2) {
+    moneySureFn(value1, value2, type) {
       const obj = {
         name: value1,
         money: value2
       }
       this.moneyList.push(obj)
-      this.showAddMoney = false
+      if (type === 'save') {
+        this.showAddMoney = false
+      }
       this.$apply()
     },
     addNew(flag) {

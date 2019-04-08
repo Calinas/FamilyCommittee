@@ -43,7 +43,6 @@ export default class Modal extends wepy.component {
       this.$emit('cancel')
     },
     sureFn (type) {
-      console.log(type)
       if (isEmptyString(this.input)) {
         showMsg('请输入活动项目名称')
         return

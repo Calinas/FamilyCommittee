@@ -1,1 +1,16 @@
-"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{default:e}}exports.__esModule=!0,exports.default=void 0;var _justCurryIt=_interopRequireDefault(require("./../../just-curry-it/index.js")),_createAction=_interopRequireDefault(require("./createAction.js")),_default=function(e,t){return(0,_justCurryIt.default)((0,_createAction.default)(e,t),t.length)};exports.default=_default;
+"use strict";
+
+exports.__esModule = true;
+exports.default = void 0;
+
+var _justCurryIt = _interopRequireDefault(require('./../../just-curry-it/index.js'));
+
+var _createAction = _interopRequireDefault(require('./createAction.js'));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = function _default(type, payloadCreator) {
+  return (0, _justCurryIt.default)((0, _createAction.default)(type, payloadCreator), payloadCreator.length);
+};
+
+exports.default = _default;

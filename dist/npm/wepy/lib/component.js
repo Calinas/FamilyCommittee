@@ -1,1 +1,785 @@
-"use strict";function _interopRequireDefault(t){return t&&t.__esModule?t:{default:t}}function _classCallCheck(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function keyCheck(t,e){return"function"==typeof t[e]?(console.warn('You are not allowed to define a function "'+e+'" in data.'),0):-1!==["data","props","methods","events","mixins"].indexOf(e)?(console.warn('"'+e+'" is reserved word, please fix it.'),0):"$"===e[0]?(console.warn('"'+e+': You can not define a property started with "$"'),0):1}function getEventsFn(t,e){var i=t.events?t.events[e]:t.$events[e]?t.$events[e]:void 0,n=void 0===i?"undefined":_typeof(i),o=void 0;if("string"===n){var a=t.methods&&t.methods[i];"function"==typeof a&&(o=a)}else("function"===n||Array.isArray(i))&&(o=i);return o}Object.defineProperty(exports,"__esModule",{value:!0});var _createClass=function(){function t(t,e){for(var i=0;i<e.length;i++){var n=e[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(t,n.key,n)}}return function(e,i,n){return i&&t(e.prototype,i),n&&t(e,n),e}}(),_typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},_event=require("./event.js"),_event2=_interopRequireDefault(_event),_util=require("./util.js"),_util2=_interopRequireDefault(_util),Props={check:function(t,e){switch(t){case String:return"string"==typeof e;case Number:return"number"==typeof e;case Boolean:return"boolean"==typeof e;case Function:return"function"==typeof e;case Object:return"object"===(void 0===e?"undefined":_typeof(e));case Array:return"[object Array]"===toString.call(e);default:return e instanceof t}},build:function(t){var e={};return"string"==typeof t?e[t]={}:"[object Array]"===toString.call(t)?t.forEach(function(t){e[t]={}}):Object.keys(t).forEach(function(i){"function"==typeof t[i]?e[i]={type:[t[i]]}:"[object Array]"===toString.call(t[i])?e[i]={type:t[i]}:e[i]=t[i],e[i].type&&"[object Array]"!==toString.call(e[i].type)&&(e[i].type=[e[i].type])}),e},valid:function(t,e,i){var n=this,o=!1;if(t[e]){if(t[e].type)return t[e].type.some(function(t){return n.check(t,i)});o=!0}return o},getValue:function(t,e,i,n){var o;return o=void 0!==i&&this.valid(t,e,i)?i:"function"==typeof t[e].default?t[e].default():t[e].default,t[e].coerce?t[e].coerce.call(n,o):o}},_class=function(){function t(){_classCallCheck(this,t),this.$com={},this.$events={},this.$mixins=[],this.$isComponent=!0,this.$prefix="",this.$mappingProps={},this.data={},this.methods={}}return _createClass(t,[{key:"$init",value:function(t,e,i){var n=this;this.$wxpage=t,this.$isComponent&&(this.$root=e||this.$root,this.$parent=i||this.$parent,this.$wxapp=this.$root.$parent.$wxapp),this.props&&(this.props=Props.build(this.props));var o=void 0,a={},r=this.props,s=void 0,p=void 0,f=void 0,h=!1,c=void 0;if(void 0===this.$initData?this.$initData=_util2.default.$copy(this.data,!0):this.data=_util2.default.$copy(this.$initData,!0),this.$props)for(s in this.$props)for(f in this.$props[s])/\.sync$/.test(f)&&(this.$mappingProps[this.$props[s][f]]||(this.$mappingProps[this.$props[s][f]]={}),this.$mappingProps[this.$props[s][f]][s]=f.substring(7,f.length-5));if(r)for(s in r)keyCheck(this,s)&&(p=void 0,i&&i.$props&&i.$props[this.$name]&&(p=i.$props[this.$name][s],f=i.$props[this.$name]["v-bind:"+s+".once"]||i.$props[this.$name]["v-bind:"+s+".sync"],f?"object"===(void 0===f?"undefined":_typeof(f))?function(){r[s].repeat=f.for,r[s].item=f.item,r[s].index=f.index,r[s].key=f.key,r[s].value=f.value,h=!0;var t=f.for,e=i;t.split(".").forEach(function(t){e=e?e[t]:{}}),!e||"object"!==(void 0===e?"undefined":_typeof(e))&&"string"!=typeof e||(c=Object.keys(e)[0]),n.$mappingProps[s]||(n.$mappingProps[s]={}),n.$mappingProps[s].parent={mapping:f.for,from:s}}():(p=i[f],r[s].twoWay&&(this.$mappingProps[s]||(this.$mappingProps[s]={}),this.$mappingProps[s].parent=f)):"object"===(void 0===p?"undefined":_typeof(p))&&void 0!==p.value&&(this.data[s]=p.value)),this.data[s]||r[s].repeat||(p=Props.getValue(r,s,p,this),this.data[s]=p));"function"==typeof this.data&&(this.data=this.data.apply(this.data));for(o in this.data)keyCheck(this,o)&&(a[""+this.$prefix+o]=this.data[o],this[o]=this.data[o]);if(this.$data=_util2.default.$copy(this.data,!0),h&&void 0!==c&&this.$setIndex(c),this.computed)for(o in this.computed)if(keyCheck(this,o)){var u=this.computed[o];a[""+this.$prefix+o]=u.call(this),this[o]=_util2.default.$copy(a[""+this.$prefix+o],!0)}this.setData(a);var $=Object.getOwnPropertyNames(this.$com);$.length&&$.forEach(function(t){n.$com[t].$init(n.getWxPage(),e,n)})}},{key:"$initMixins",value:function(){var t=this;this.mixins?"function"==typeof this.mixins&&(this.mixins=[this.mixins]):this.mixins=[],this.mixins.forEach(function(e){var i=new e;i.$init(t),t.$mixins.push(i)})}},{key:"$onLoad",value:function(){for(var t=this,e=arguments.length,i=Array(e),n=0;n<e;n++)i[n]=arguments[n];[].concat(this.$mixins,this).forEach(function(e){e.onLoad&&e.onLoad.apply(t,i)});var o=Object.getOwnPropertyNames(this.$com);o.length&&o.forEach(function(e){var i=t.$com[e];i.$onLoad.call(i)})}},{key:"$onUnload",value:function(){for(var t=this,e=arguments.length,i=Array(e),n=0;n<e;n++)i[n]=arguments[n];var o=Object.getOwnPropertyNames(this.$com);o.length&&o.forEach(function(e){var i=t.$com[e];i.$onUnload.call(i)}),[].concat(this.$mixins,this).forEach(function(e){e.onUnload&&e.onUnload.apply(t,i)})}},{key:"onLoad",value:function(){}},{key:"onUnload",value:function(){}},{key:"setData",value:function(t,e){if("string"==typeof t){if(e){var i={};i[t]=e,t=i}else{var n={};n[t]=this.data[""+t],t=n}return this.$wxpage.setData(t)}var o=null,a=new RegExp("^"+this.$prefix.replace(/\$/g,"\\$"),"ig");for(o in t){var r=o.replace(a,"");this.$data[r]=_util2.default.$copy(t[o],!0),_util2.default.isImmutable(t[o])&&(t[o]=t[o].toJS()),void 0===t[o]&&delete t[o]}return"function"==typeof e?this.$root.$wxpage.setData(t,e):this.$root.$wxpage.setData(t)}},{key:"getWxPage",value:function(){return this.$wxpage}},{key:"getCurrentPages",value:function(t){function e(){return t.apply(this,arguments)}return e.toString=function(){return t.toString()},e}(function(){return getCurrentPages()})},{key:"$setIndex",value:function(t){var e=this;this.$index=t;var i=this.props,n=this.$parent,o=void 0,a=void 0,r=void 0;if(i){for(o in i)a=void 0,n&&n.$props&&n.$props[this.$name]&&(a=n.$props[this.$name][o],(r=n.$props[this.$name]["v-bind:"+o+".once"]||n.$props[this.$name]["v-bind:"+o+".sync"])&&"object"===(void 0===r?"undefined":_typeof(r))&&function(){var s=r.for,p=n;if(0===s.indexOf("[")){var f=[];s=s.substr(1,s.length-2).trim(),s.split(",").forEach(function(t){var e=n;t.trim().split(".").forEach(function(t){e=e?e[t]:{}}),f.push(e)}),p=f}else s.split(".").forEach(function(t){p=p?p[t]:{}});t=Array.isArray(p)?+t:t,a=i[o].value===i[o].item?p[t]:i[o].value===i[o].index?t:i[o].value===i[o].key?t:n[i[o].value],e.$index=t,e.data[o]=a,e[o]=a,e.$data[o]=_util2.default.$copy(e[o],!0)}());for(o in this.$com)this.$com[o].$index=void 0}}},{key:"$getComponent",value:function(t){var e=this;if("string"==typeof t){if(-1===t.indexOf("/"))return this.$com[t];if("/"===t)return this.$parent;t.split("/").forEach(function(i,n){0===n?t=""===i?e.$root:"."===i?e:".."===i?e.$parent:e.$getComponent(i):i&&(t=t.$com[i])})}return"object"!==(void 0===t?"undefined":_typeof(t))?null:t}},{key:"$invoke",value:function(t,e){if(!(t=this.$getComponent(t)))throw new Error("Invalid path: "+t);for(var i=t.methods?t.methods[e]:"",n=arguments.length,o=Array(n>2?n-2:0),a=2;a<n;a++)o[a-2]=arguments[a];if("function"==typeof i){var r=new _event2.default("",this,"invoke"),s=i.apply(t,o.concat(r));return t.$apply(),s}if("function"==typeof(i=t[e]))return i.apply(t,o);throw new Error("Invalid method: "+e)}},{key:"$broadcast",value:function(t){for(var e=arguments.length,i=Array(e>1?e-1:0),n=1;n<e;n++)i[n-1]=arguments[n];for(var o=this,a="string"==typeof t?new _event2.default(t,this,"broadcast"):a,r=[o];r.length&&a.active;){var s=r.shift();for(var p in s.$com){if("break"===function(e){e=s.$com[e],r.push(e);var n=getEventsFn(e,t);if(n&&e.$apply(function(){n.apply(e,i.concat(a))}),!a.active)return"break";p=e}(p))break}}}},{key:"$emit",value:function(t){for(var e=this,i=arguments.length,n=Array(i>1?i-1:0),o=1;o<i;o++)n[o-1]=arguments[o];var a=this,r=this,s=new _event2.default(t,r,"emit");if(n=n.concat(s),this.$parent&&this.$parent.$events&&this.$parent.$events[this.$name]){var p=this.$parent.$events[this.$name]["v-on:"+t];if(p&&this.$parent.methods){var f=this.$parent.methods[p];if("function"==typeof f)return void this.$parent.$apply(function(){f.apply(e.$parent,n)});throw new Error("Invalid method from emit, component is "+this.$parent.$name+", method is "+p+". Make sure you defined it already.\n")}}for(;a&&void 0!==a.$isComponent&&s.active;)!function(){var e=a,i=getEventsFn(e,t);i&&("function"==typeof i?e.$apply(function(){i.apply(e,n)}):Array.isArray(i)&&(i.forEach(function(t){t.apply(e,n)}),e.$apply())),a=e.$parent}()}},{key:"$on",value:function(t,e){var i=this;if("string"==typeof t)(this.$events[t]||(this.$events[t]=[])).push(e);else if(Array.isArray(t))t.forEach(function(t){i.$on(t,e)});else if("object"===(void 0===t?"undefined":_typeof(t)))for(var n in t)this.$on(n,t[n]);return this}},{key:"$once",value:function(t,e){var i=this,n=function n(){i.$off(t,n),e.apply(i,arguments)};n.fn=e,this.$on(t,n)}},{key:"$off",value:function(t,e){var i=this;if(void 0===t)this.$events={};else if("string"==typeof t)if(e){for(var n=this.$events[t],o=n.length;o--;)if(e===n[o]||e===n[o].fn){n.splice(o,1);break}}else this.$events[t]=[];else Array.isArray(t)&&t.forEach(function(t){i.$off(t,e)});return this}},{key:"$apply",value:function(t){"function"==typeof t?(t.call(this),this.$apply()):this.$$phase?this.$$phase="$apply":this.$digest()}},{key:"$digest",value:function(){var t=this,e=void 0,i=this.$data;for(this.$$phase="$digest",this.$$dc=0;this.$$phase;){if(++this.$$dc>=3)throw new Error("Can not call $apply in $apply process");var n={};if(this.computed)for(e in this.computed){var o=this.computed[e],a=o.call(this);_util2.default.$isEqual(this[e],a)||(n[this.$prefix+e]=a,this[e]=_util2.default.$copy(a,!0))}for(e in i)if(!_util2.default.$isEqual(this[e],i[e])){if(this.watch&&this.watch[e]&&("function"==typeof this.watch[e]?this.watch[e].call(this,this[e],i[e]):"string"==typeof this.watch[e]&&"function"==typeof this.methods[e]&&this.methods[e].call(this,this[e],i[e])),n[this.$prefix+e]=this[e],this.data[e]=this[e],i[e]=_util2.default.$copy(this[e],!0),this.$repeat&&this.$repeat[e]){var r=this.$repeat[e];this.$com[r.com].data[r.props]=this[e],this.$com[r.com].$setIndex(0),this.$com[r.com].$apply()}this.$mappingProps[e]&&Object.keys(this.$mappingProps[e]).forEach(function(i){var n=t.$mappingProps[e][i];"object"===(void 0===n?"undefined":_typeof(n))?t.$parent.$apply():"parent"!==i||_util2.default.$isEqual(t.$parent.$data[n],t[e])?"parent"===i||_util2.default.$isEqual(t.$com[i].$data[n],t[e])||(t.$com[i][n]=t[e],t.$com[i].data[n]=t[e],t.$com[i].$apply()):(t.$parent[n]=t[e],t.$parent.data[n]=t[e],t.$parent.$apply())})}if(Object.keys(n).length)this.setData(n,function(){if(t.$$nextTick){var e=t.$$nextTick;t.$$nextTick=null,e.promise?e():e.call(t)}});else if(this.$$nextTick){var s=this.$$nextTick;this.$$nextTick=null,s.promise?s():s.call(this)}this.$$phase="$apply"===this.$$phase&&"$digest"}}},{key:"$nextTick",value:function(t){var e=this;if(void 0===t)return new Promise(function(t,i){e.$$nextTick=function(){t()},e.$$nextTick.promise=!0});this.$$nextTick=t}}]),t}();exports.default=_class;
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _event = require('./event.js');
+
+var _event2 = _interopRequireDefault(_event);
+
+var _util = require('./util.js');
+
+var _util2 = _interopRequireDefault(_util);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Props = {
+    check: function check(t, val) {
+        switch (t) {
+            case String:
+                return typeof val === 'string';
+            case Number:
+                return typeof val === 'number';
+            case Boolean:
+                return typeof val === 'boolean';
+            case Function:
+                return typeof val === 'function';
+            case Object:
+                return (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object';
+            case Array:
+                return toString.call(val) === '[object Array]';
+            default:
+                return val instanceof t;
+        }
+    },
+    build: function build(props) {
+        var rst = {};
+        if (typeof props === 'string') {
+            rst[props] = {};
+        } else if (toString.call(props) === '[object Array]') {
+            props.forEach(function (p) {
+                rst[p] = {};
+            });
+        } else {
+            Object.keys(props).forEach(function (p) {
+                if (typeof props[p] === 'function') {
+                    rst[p] = {
+                        type: [props[p]]
+                    };
+                } else if (toString.call(props[p]) === '[object Array]') {
+                    rst[p] = {
+                        type: props[p]
+                    };
+                } else rst[p] = props[p];
+
+                if (rst[p].type && toString.call(rst[p].type) !== '[object Array]') rst[p].type = [rst[p].type];
+            });
+        }
+        return rst;
+    },
+    valid: function valid(props, key, val) {
+        var _this = this;
+
+        var valid = false;
+        if (props[key]) {
+            if (!props[key].type) {
+                valid = true;
+            } else {
+                return props[key].type.some(function (t) {
+                    return _this.check(t, val);
+                });
+            }
+        }
+        return valid;
+    },
+    getValue: function getValue(props, key, value, com) {
+        var rst;
+        if (value !== undefined && this.valid(props, key, value)) {
+            rst = value;
+        } else if (typeof props[key].default === 'function') {
+            rst = props[key].default();
+        } else rst = props[key].default;
+        return props[key].coerce ? props[key].coerce.call(com, rst) : rst;
+    }
+};
+
+var _class = function () {
+    function _class() {
+        _classCallCheck(this, _class);
+
+        this.$com = {};
+        this.$events = {};
+        this.$mixins = [];
+        this.$isComponent = true;
+        this.$prefix = '';
+        this.$mappingProps = {};
+        this.data = {};
+        this.methods = {};
+    }
+
+    _createClass(_class, [{
+        key: '$init',
+        value: function $init($wxpage, $root, $parent) {
+            var _this2 = this;
+
+            var self = this;
+
+            this.$wxpage = $wxpage;
+            if (this.$isComponent) {
+                this.$root = $root || this.$root;
+                this.$parent = $parent || this.$parent;
+                this.$wxapp = this.$root.$parent.$wxapp;
+            }
+
+            if (this.props) {
+                this.props = Props.build(this.props);
+            }
+
+            var k = void 0,
+                defaultData = {};
+
+            var props = this.props;
+            var key = void 0,
+                val = void 0,
+                binded = void 0;
+            var inRepeat = false,
+                repeatKey = void 0;
+
+            if (this.$initData === undefined) {
+                this.$initData = _util2.default.$copy(this.data, true);
+            } else {
+                this.data = _util2.default.$copy(this.$initData, true);
+            }
+
+            if (this.$props) {
+                for (key in this.$props) {
+                    for (binded in this.$props[key]) {
+                        if (/\.sync$/.test(binded)) {
+                            if (!this.$mappingProps[this.$props[key][binded]]) this.$mappingProps[this.$props[key][binded]] = {};
+                            this.$mappingProps[this.$props[key][binded]][key] = binded.substring(7, binded.length - 5);
+                        }
+                    }
+                }
+            }
+
+            if (props) {
+                for (key in props) {
+                    if (keyCheck(this, key)) {
+                        val = undefined;
+                        if ($parent && $parent.$props && $parent.$props[this.$name]) {
+                            val = $parent.$props[this.$name][key];
+                            binded = $parent.$props[this.$name]['v-bind:' + key + '.once'] || $parent.$props[this.$name]['v-bind:' + key + '.sync'];
+                            if (binded) {
+                                if ((typeof binded === 'undefined' ? 'undefined' : _typeof(binded)) === 'object') {
+                                    (function () {
+                                        props[key].repeat = binded.for;
+                                        props[key].item = binded.item;
+                                        props[key].index = binded.index;
+                                        props[key].key = binded.key;
+                                        props[key].value = binded.value;
+
+                                        inRepeat = true;
+
+                                        var bindfor = binded.for,
+                                            binddata = $parent;
+                                        bindfor.split('.').forEach(function (t) {
+                                            binddata = binddata ? binddata[t] : {};
+                                        });
+                                        if (binddata && ((typeof binddata === 'undefined' ? 'undefined' : _typeof(binddata)) === 'object' || typeof binddata === 'string')) {
+                                            repeatKey = Object.keys(binddata)[0];
+                                        }
+
+                                        if (!_this2.$mappingProps[key]) _this2.$mappingProps[key] = {};
+                                        _this2.$mappingProps[key]['parent'] = {
+                                            mapping: binded.for,
+                                            from: key
+                                        };
+                                    })();
+                                } else {
+                                    val = $parent[binded];
+                                    if (props[key].twoWay) {
+                                        if (!this.$mappingProps[key]) this.$mappingProps[key] = {};
+                                        this.$mappingProps[key]['parent'] = binded;
+                                    }
+                                }
+                            } else if ((typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object' && val.value !== undefined) {
+                                this.data[key] = val.value;
+                            }
+                        }
+                        if (!this.data[key] && !props[key].repeat) {
+                            val = Props.getValue(props, key, val, this);
+                            this.data[key] = val;
+                        }
+                    }
+                }
+            }
+
+            if (typeof this.data === 'function') {
+                this.data = this.data.apply(this.data);
+            }
+
+            for (k in this.data) {
+                if (keyCheck(this, k)) {
+                    defaultData['' + this.$prefix + k] = this.data[k];
+                    this[k] = this.data[k];
+                }
+            }
+
+            this.$data = _util2.default.$copy(this.data, true);
+            if (inRepeat && repeatKey !== undefined) this.$setIndex(repeatKey);
+
+            if (this.computed) {
+                for (k in this.computed) {
+                    if (keyCheck(this, k)) {
+                        var fn = this.computed[k];
+                        defaultData['' + this.$prefix + k] = fn.call(this);
+                        this[k] = _util2.default.$copy(defaultData['' + this.$prefix + k], true);
+                    }
+                }
+            }
+            this.setData(defaultData);
+
+            var coms = Object.getOwnPropertyNames(this.$com);
+            if (coms.length) {
+                coms.forEach(function (name) {
+                    var com = _this2.$com[name];
+                    com.$init(_this2.getWxPage(), $root, _this2);
+                });
+            }
+        }
+    }, {
+        key: '$initMixins',
+        value: function $initMixins() {
+            var _this3 = this;
+
+            if (this.mixins) {
+                if (typeof this.mixins === 'function') {
+                    this.mixins = [this.mixins];
+                }
+            } else {
+                this.mixins = [];
+            }
+            this.mixins.forEach(function (mix) {
+                var inst = new mix();
+                inst.$init(_this3);
+                _this3.$mixins.push(inst);
+            });
+        }
+    }, {
+        key: '$onLoad',
+        value: function $onLoad() {
+            var _this4 = this;
+
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+            }
+
+            [].concat(this.$mixins, this).forEach(function (mix) {
+                mix['onLoad'] && mix['onLoad'].apply(_this4, args);
+            });
+
+            var coms = Object.getOwnPropertyNames(this.$com);
+            if (coms.length) {
+                coms.forEach(function (name) {
+                    var com = _this4.$com[name];
+                    com.$onLoad.call(com);
+                });
+            }
+        }
+    }, {
+        key: '$onUnload',
+        value: function $onUnload() {
+            var _this5 = this;
+
+            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+                args[_key2] = arguments[_key2];
+            }
+
+            var coms = Object.getOwnPropertyNames(this.$com);
+            if (coms.length) {
+                coms.forEach(function (name) {
+                    var com = _this5.$com[name];
+                    com.$onUnload.call(com);
+                });
+            }
+
+            [].concat(this.$mixins, this).forEach(function (mix) {
+                mix['onUnload'] && mix['onUnload'].apply(_this5, args);
+            });
+        }
+    }, {
+        key: 'onLoad',
+        value: function onLoad() {}
+    }, {
+        key: 'onUnload',
+        value: function onUnload() {}
+    }, {
+        key: 'setData',
+        value: function setData(k, v) {
+            if (typeof k === 'string') {
+                if (v) {
+                    var tmp = {};
+                    tmp[k] = v;
+                    k = tmp;
+                } else {
+                    var _tmp = {};
+                    _tmp[k] = this.data['' + k];
+                    k = _tmp;
+                }
+                return this.$wxpage.setData(k);
+            }
+            var t = null,
+                reg = new RegExp('^' + this.$prefix.replace(/\$/g, '\\$'), 'ig');
+
+            for (t in k) {
+                var noPrefix = t.replace(reg, '');
+                this.$data[noPrefix] = _util2.default.$copy(k[t], true);
+
+                if (_util2.default.isImmutable(k[t])) {
+                    k[t] = k[t].toJS();
+                }
+
+                if (k[t] === undefined) {
+                    delete k[t];
+                }
+            }
+
+            if (typeof v === 'function') {
+                return this.$root.$wxpage.setData(k, v);
+            }
+            return this.$root.$wxpage.setData(k);
+        }
+    }, {
+        key: 'getWxPage',
+        value: function getWxPage() {
+            return this.$wxpage;
+        }
+    }, {
+        key: 'getCurrentPages',
+        value: function (_getCurrentPages) {
+            function getCurrentPages() {
+                return _getCurrentPages.apply(this, arguments);
+            }
+
+            getCurrentPages.toString = function () {
+                return _getCurrentPages.toString();
+            };
+
+            return getCurrentPages;
+        }(function () {
+            return getCurrentPages();
+        })
+    }, {
+        key: '$setIndex',
+        value: function $setIndex(index) {
+            var _this6 = this;
+
+            this.$index = index;
+
+            var props = this.props,
+                $parent = this.$parent;
+            var key = void 0,
+                val = void 0,
+                binded = void 0;
+            if (props) {
+                for (key in props) {
+                    val = undefined;
+                    if ($parent && $parent.$props && $parent.$props[this.$name]) {
+                        val = $parent.$props[this.$name][key];
+                        binded = $parent.$props[this.$name]['v-bind:' + key + '.once'] || $parent.$props[this.$name]['v-bind:' + key + '.sync'];
+                        if (binded) {
+                            if ((typeof binded === 'undefined' ? 'undefined' : _typeof(binded)) === 'object') {
+                                (function () {
+                                    var bindfor = binded.for,
+                                        binddata = $parent;
+
+                                    if (bindfor.indexOf('[') === 0) {
+                                        var bdarr = [];
+                                        bindfor = bindfor.substr(1, bindfor.length - 2).trim();
+
+                                        bindfor.split(',').forEach(function (e) {
+                                            var bd = $parent;
+                                            e.trim().split('.').forEach(function (t) {
+                                                bd = bd ? bd[t] : {};
+                                            });
+                                            bdarr.push(bd);
+                                        });
+
+                                        binddata = bdarr;
+                                    } else {
+                                        bindfor.split('.').forEach(function (t) {
+                                            binddata = binddata ? binddata[t] : {};
+                                        });
+                                    }
+
+                                    index = Array.isArray(binddata) ? +index : index;
+
+                                    if (props[key].value === props[key].item) {
+                                        val = binddata[index];
+                                    } else if (props[key].value === props[key].index) {
+                                        val = index;
+                                    } else if (props[key].value === props[key].key) {
+                                        val = index;
+                                    } else {
+                                        val = $parent[props[key].value];
+                                    }
+                                    _this6.$index = index;
+                                    _this6.data[key] = val;
+                                    _this6[key] = val;
+                                    _this6.$data[key] = _util2.default.$copy(_this6[key], true);
+                                })();
+                            }
+                        }
+                    }
+                }
+
+                for (key in this.$com) {
+                    this.$com[key].$index = undefined;
+                }
+            }
+        }
+    }, {
+        key: '$getComponent',
+        value: function $getComponent(com) {
+            var _this7 = this;
+
+            if (typeof com === 'string') {
+                if (com.indexOf('/') === -1) {
+                    return this.$com[com];
+                } else if (com === '/') {
+                    return this.$parent;
+                } else {
+                    var path = com.split('/');
+                    path.forEach(function (s, i) {
+                        if (i === 0) {
+                            if (s === '') {
+                                com = _this7.$root;
+                            } else if (s === '.') {
+                                com = _this7;
+                            } else if (s === '..') {
+                                com = _this7.$parent;
+                            } else {
+                                com = _this7.$getComponent(s);
+                            }
+                        } else if (s) {
+                            com = com.$com[s];
+                        }
+                    });
+                }
+            }
+            return (typeof com === 'undefined' ? 'undefined' : _typeof(com)) !== 'object' ? null : com;
+        }
+    }, {
+        key: '$invoke',
+        value: function $invoke(com, method) {
+            com = this.$getComponent(com);
+
+            if (!com) {
+                throw new Error('Invalid path: ' + com);
+            }
+
+            var fn = com.methods ? com.methods[method] : '';
+
+            for (var _len3 = arguments.length, args = Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+                args[_key3 - 2] = arguments[_key3];
+            }
+
+            if (typeof fn === 'function') {
+                var $evt = new _event2.default('', this, 'invoke');
+                var rst = fn.apply(com, args.concat($evt));
+                com.$apply();
+                return rst;
+            } else {
+                fn = com[method];
+            }
+
+            if (typeof fn === 'function') {
+                return fn.apply(com, args);
+            } else {
+                throw new Error('Invalid method: ' + method);
+            }
+        }
+    }, {
+        key: '$broadcast',
+        value: function $broadcast(evtName) {
+            for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+                args[_key4 - 1] = arguments[_key4];
+            }
+
+            var com = this;
+            var $evt = typeof evtName === 'string' ? new _event2.default(evtName, this, 'broadcast') : $evt;
+            var queue = [com];
+
+            while (queue.length && $evt.active) {
+                var current = queue.shift();
+
+                var _loop = function _loop(_c) {
+                    _c = current.$com[_c];
+                    queue.push(_c);
+                    var fn = getEventsFn(_c, evtName);
+                    if (fn) {
+                        _c.$apply(function () {
+                            fn.apply(_c, args.concat($evt));
+                        });
+                    }
+                    if (!$evt.active) return 'break';
+                    c = _c;
+                };
+
+                for (var c in current.$com) {
+                    var _ret3 = _loop(c);
+
+                    if (_ret3 === 'break') break;
+                }
+            }
+        }
+    }, {
+        key: '$emit',
+        value: function $emit(evtName) {
+            var _this8 = this;
+
+            for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+                args[_key5 - 1] = arguments[_key5];
+            }
+
+            var com = this;
+            var source = this;
+            var $evt = new _event2.default(evtName, source, 'emit');
+
+            args = args.concat($evt);
+
+            if (this.$parent && this.$parent.$events && this.$parent.$events[this.$name]) {
+                var method = this.$parent.$events[this.$name]['v-on:' + evtName];
+                if (method && this.$parent.methods) {
+                    var _fn = this.$parent.methods[method];
+                    if (typeof _fn === 'function') {
+                        this.$parent.$apply(function () {
+                            _fn.apply(_this8.$parent, args);
+                        });
+                        return;
+                    } else {
+                        throw new Error('Invalid method from emit, component is ' + this.$parent.$name + ', method is ' + method + '. Make sure you defined it already.\n');
+                    }
+                }
+            }
+
+            var _loop2 = function _loop2() {
+                var comContext = com;
+                var fn = getEventsFn(comContext, evtName);
+                if (fn) {
+                    if (typeof fn === 'function') {
+                        comContext.$apply(function () {
+                            fn.apply(comContext, args);
+                        });
+                    } else if (Array.isArray(fn)) {
+                        fn.forEach(function (f) {
+                            f.apply(comContext, args);
+                        });
+                        comContext.$apply();
+                    }
+                }
+                com = comContext.$parent;
+            };
+
+            while (com && com.$isComponent !== undefined && $evt.active) {
+                _loop2();
+            }
+        }
+    }, {
+        key: '$on',
+        value: function $on(evtName, fn) {
+            var _this9 = this;
+
+            if (typeof evtName === 'string') {
+                (this.$events[evtName] || (this.$events[evtName] = [])).push(fn);
+            } else if (Array.isArray(evtName)) {
+                evtName.forEach(function (k) {
+                    _this9.$on(k, fn);
+                });
+            } else if ((typeof evtName === 'undefined' ? 'undefined' : _typeof(evtName)) === 'object') {
+                for (var k in evtName) {
+                    this.$on(k, evtName[k]);
+                }
+            }
+            return this;
+        }
+    }, {
+        key: '$once',
+        value: function $once(evtName, fn) {
+            var self = this;
+            var oncefn = function oncefn() {
+                self.$off(evtName, oncefn);
+                fn.apply(self, arguments);
+            };
+            oncefn.fn = fn;
+            this.$on(evtName, oncefn);
+        }
+    }, {
+        key: '$off',
+        value: function $off(evtName, fn) {
+            var _this10 = this;
+
+            if (evtName === undefined) {
+                this.$events = {};
+            } else if (typeof evtName === 'string') {
+                if (fn) {
+                    var fns = this.$events[evtName];
+                    var i = fns.length;
+                    while (i--) {
+                        if (fn === fns[i] || fn === fns[i].fn) {
+                            fns.splice(i, 1);
+                            break;
+                        }
+                    }
+                } else {
+                    this.$events[evtName] = [];
+                }
+            } else if (Array.isArray(evtName)) {
+                evtName.forEach(function (k) {
+                    _this10.$off(k, fn);
+                });
+            }
+            return this;
+        }
+    }, {
+        key: '$apply',
+        value: function $apply(fn) {
+            if (typeof fn === 'function') {
+                fn.call(this);
+                this.$apply();
+            } else {
+                if (this.$$phase) {
+                    this.$$phase = '$apply';
+                } else {
+                    this.$digest();
+                }
+            }
+        }
+    }, {
+        key: '$digest',
+        value: function $digest() {
+            var _this11 = this;
+
+            var k = void 0;
+            var originData = this.$data;
+            this.$$phase = '$digest';
+            this.$$dc = 0;
+            while (this.$$phase) {
+                this.$$dc++;
+                if (this.$$dc >= 3) {
+                    throw new Error('Can not call $apply in $apply process');
+                }
+                var readyToSet = {};
+                if (this.computed) {
+                    for (k in this.computed) {
+                        var _fn2 = this.computed[k],
+                            val = _fn2.call(this);
+                        if (!_util2.default.$isEqual(this[k], val)) {
+                            readyToSet[this.$prefix + k] = val;
+                            this[k] = _util2.default.$copy(val, true);
+                        }
+                    }
+                }
+                for (k in originData) {
+                    if (!_util2.default.$isEqual(this[k], originData[k])) {
+                        if (this.watch) {
+                            if (this.watch[k]) {
+                                if (typeof this.watch[k] === 'function') {
+                                    this.watch[k].call(this, this[k], originData[k]);
+                                } else if (typeof this.watch[k] === 'string' && typeof this.methods[k] === 'function') {
+                                    this.methods[k].call(this, this[k], originData[k]);
+                                }
+                            }
+                        }
+
+                        readyToSet[this.$prefix + k] = this[k];
+                        this.data[k] = this[k];
+                        originData[k] = _util2.default.$copy(this[k], true);
+                        if (this.$repeat && this.$repeat[k]) {
+                            var $repeat = this.$repeat[k];
+                            this.$com[$repeat.com].data[$repeat.props] = this[k];
+                            this.$com[$repeat.com].$setIndex(0);
+                            this.$com[$repeat.com].$apply();
+                        }
+                        if (this.$mappingProps[k]) {
+                            Object.keys(this.$mappingProps[k]).forEach(function (changed) {
+                                var mapping = _this11.$mappingProps[k][changed];
+                                if ((typeof mapping === 'undefined' ? 'undefined' : _typeof(mapping)) === 'object') {
+                                    _this11.$parent.$apply();
+                                } else if (changed === 'parent' && !_util2.default.$isEqual(_this11.$parent.$data[mapping], _this11[k])) {
+                                    _this11.$parent[mapping] = _this11[k];
+                                    _this11.$parent.data[mapping] = _this11[k];
+                                    _this11.$parent.$apply();
+                                } else if (changed !== 'parent' && !_util2.default.$isEqual(_this11.$com[changed].$data[mapping], _this11[k])) {
+                                    _this11.$com[changed][mapping] = _this11[k];
+                                    _this11.$com[changed].data[mapping] = _this11[k];
+                                    _this11.$com[changed].$apply();
+                                }
+                            });
+                        }
+                    }
+                }
+                if (Object.keys(readyToSet).length) {
+                    this.setData(readyToSet, function () {
+                        if (_this11.$$nextTick) {
+                            var $$nextTick = _this11.$$nextTick;
+                            _this11.$$nextTick = null;
+                            if ($$nextTick.promise) {
+                                $$nextTick();
+                            } else {
+                                $$nextTick.call(_this11);
+                            }
+                        }
+                    });
+                } else {
+                    if (this.$$nextTick) {
+                        var $$nextTick = this.$$nextTick;
+                        this.$$nextTick = null;
+                        if ($$nextTick.promise) {
+                            $$nextTick();
+                        } else {
+                            $$nextTick.call(this);
+                        }
+                    }
+                }
+                this.$$phase = this.$$phase === '$apply' ? '$digest' : false;
+            }
+        }
+    }, {
+        key: '$nextTick',
+        value: function $nextTick(fn) {
+            var _this12 = this;
+
+            if (typeof fn === 'undefined') {
+                return new Promise(function (resolve, reject) {
+                    _this12.$$nextTick = function () {
+                        resolve();
+                    };
+                    _this12.$$nextTick.promise = true;
+                });
+            }
+            this.$$nextTick = fn;
+        }
+    }]);
+
+    return _class;
+}();
+
+exports.default = _class;
+
+function keyCheck(vm, k) {
+    if (typeof vm[k] === 'function') {
+        console.warn('You are not allowed to define a function "' + k + '" in data.');
+        return 0;
+    } else if (['data', 'props', 'methods', 'events', 'mixins'].indexOf(k) !== -1) {
+        console.warn('"' + k + '" is reserved word, please fix it.');
+        return 0;
+    } else if (k[0] === '$') {
+        console.warn('"' + k + ': You can not define a property started with "$"');
+        return 0;
+    }
+    return 1;
+}
+
+function getEventsFn(comContext, evtName) {
+    var fn = comContext.events ? comContext.events[evtName] : comContext.$events[evtName] ? comContext.$events[evtName] : undefined;
+    var typeFn = typeof fn === 'undefined' ? 'undefined' : _typeof(fn);
+    var fnFn = void 0;
+    if (typeFn === 'string') {
+        var method = comContext.methods && comContext.methods[fn];
+        if (typeof method === 'function') {
+            fnFn = method;
+        }
+    } else if (typeFn === 'function' || Array.isArray(fn)) {
+        fnFn = fn;
+    }
+    return fnFn;
+}
+//# sourceMappingURL=component.js.map

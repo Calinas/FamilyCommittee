@@ -76,7 +76,7 @@ export default class login extends wepy.page {
     },
     getUserInfo(e) {
       const detail = e.detail
-       if(!detail.rawData) {
+        if(!detail.rawData) {
           showMsg('授权失败')
           this.forWeixinTest = true
           this.show_lay = false

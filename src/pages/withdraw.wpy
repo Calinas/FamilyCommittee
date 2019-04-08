@@ -70,7 +70,7 @@ export default class Withdraw extends wepy.page {
       saveBankInfo({
         bankName: this.bankName ? this.bankName : this.card.bank_name,
         bankReservedName: this.bankReservedName ? this.bankReservedName : this.card.bank_reserved_name,
-        bankCard: this.bankCard ? this.bandCard : this.card.bank_card,
+        bankCard: this.bankCard ? this.bankCard : this.card.bank_card,
         bankMobile: this.bankMobile ? this.bankMobile : this.card.bank_mobile
       }).then(res => {
         if (res.data.success) {
@@ -86,7 +86,7 @@ export default class Withdraw extends wepy.page {
         amount: this.money
       }).then(res => {
         if (res.data.success) {
-          showMsg('操作成功')
+          showMsg('24小时之内提现将会到账，5月1日之后即将开通微信提现即时到账，敬请期待。')
           this.$apply()
         }
       })

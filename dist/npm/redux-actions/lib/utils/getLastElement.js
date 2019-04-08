@@ -1,1 +1,10 @@
-"use strict";exports.__esModule=!0,exports.default=void 0;var _default=function(e){return e[e.length-1]};exports.default=_default;
+"use strict";
+
+exports.__esModule = true;
+exports.default = void 0;
+
+var _default = function _default(array) {
+  return array[array.length - 1];
+};
+
+exports.default = _default;

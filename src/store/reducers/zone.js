@@ -38,10 +38,17 @@ export default handleActions({
       ...state,
       relationship: action.list
     }
+  },
+  [types.CLASS_HAS_CHANGED](state, action) {
+    return {
+      ...state,
+      classChanged: action.data
+    }
   }
 }, {
   city_name: '正在定位中...',
   city_list: [],
   from_publish: false,
-  relationship: []
+  relationship: [],
+  classChanged: false
 })

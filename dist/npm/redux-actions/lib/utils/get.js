@@ -1,1 +1,12 @@
-"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{default:e}}function get(e,t){return(0,_isMap.default)(t)?t.get(e):t[e]}exports.__esModule=!0,exports.default=get;var _isMap=_interopRequireDefault(require("./isMap.js"));
+"use strict";
+
+exports.__esModule = true;
+exports.default = get;
+
+var _isMap = _interopRequireDefault(require('./isMap.js'));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function get(key, x) {
+  return (0, _isMap.default)(x) ? x.get(key) : x[key];
+}

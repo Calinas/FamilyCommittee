@@ -151,3 +151,18 @@ export function memberInfo(data) {
     })
   })
 }
+
+export function addAdvice(data) {
+  return new Promise(resolve => {
+    wepy.request({
+      url: '/postAdvice',
+      data: Object.assign({}, commonParams(), {
+        description: data.description,
+        img_url: data.imgList
+      }),
+      method: 'post'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}

@@ -1,1 +1,12 @@
-"use strict";exports.__esModule=!0,exports.default=void 0;var _default=function(e,t){return e.reduce(function(e,u){return t(e,u)},{})};exports.default=_default;
+"use strict";
+
+exports.__esModule = true;
+exports.default = void 0;
+
+var _default = function _default(array, callback) {
+  return array.reduce(function (partialObject, element) {
+    return callback(partialObject, element);
+  }, {});
+};
+
+exports.default = _default;

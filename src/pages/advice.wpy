@@ -1,0 +1,125 @@
+<template lang="wxml" minapp="wepy">
+  <view class="common-container" style="padding-top: 120rpx;">
+    <textarea class="msg-wrapper" placeholder="请输入您的意见反馈" @input="bindChange" id="description"></textarea>
+    <view class="img-list flex-wrapper">
+      <repeat for="{{img}}" index="index" item="item">
+        <view class="img-item">
+          <image @tap='previewImage' mode="widthFix" class='img' src='{{item}}'/>
+          <image src='/images/close-white.png' @tap="deleteFn('img',{{index}})" class="close-btn"/>
+        </view>
+      </repeat>
+      <view class="img-item" @tap="chooseImage">
+        <image mode="widthFix" class='img' src='/images/add-img.png'/>
+      </view>
+    </view>
+    <view class="fixed-bottom-btn top right" @tap="submit">发表</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { showMsg } from '../utils/common'
+import { addAdvice } from '../api/user'
+export default class Advice extends wepy.page {
+  config = {
+    navigationBarTitleText: '发布'
+  }
+  data = {
+    description: '',
+    img: [],
+    memberInfo: {}
+  }
+  onLoad = (e) => {
+    this.memberInfo = wx.getStorageSync('memberInfo')
+    this.$apply()
+  }
+  methods = {
+    deleteFn (arr, index) {
+      this[arr].splice(index, 1)
+      this.$apply()
+    },
+    bindChange(e) {
+      this[e.currentTarget.id] = e.detail.value
+      this.$apply()
+    },
+    chooseImage() {
+      if (this.img.length > this.maxPhotoCount) {
+        showMsg('最多上传9张图')
+        return
+      }
+      let _this = this
+      wx.chooseImage({
+        count: this.maxPhotoCount,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album', 'camera'],
+        success: res => {
+          const length = res.tempFilePaths.length
+          let tempArr = []
+          if (this.img.length + length > this.maxPhotoCount) {
+            wx.showToast({
+              title: '最多只能选择' + this.maxPhotoCount + '张图片',
+              icon: 'none'
+            })
+          }
+          wx.showLoading({title: '图片上传中'})
+          res.tempFilePaths.forEach(path => {
+            let upload = {}
+            upload.path = path
+            upload.error = false
+            upload.uploadProgress = wx.uploadFile({
+              url: `${_this.$parent.globalData.apiUrl}/file/uploadPic`,
+              filePath: path,
+              formData: {
+                'member_id': this.memberInfo.member_id,
+                'member_token': this.memberInfo.member_token,
+                'folder': 'committee'
+              },
+              name: 'file',
+              success: res => {
+                const data = JSON.parse(res.data)
+                if (data.data && data.data.file_url) {
+                  const url = data.data.file_url
+                  tempArr.push(url)
+                  _this.img.push(url)
+                }
+                if (tempArr.length === length) {
+                  setTimeout(() => {
+                    wx.hideLoading()
+                  }, 1000)
+                }
+                _this.$apply()
+              }
+            })
+          })
+        }
+      })
+    },
+    submit() {
+      addAdvice({
+        description: this.description,
+        imgList: this.img
+      }).then(res => {
+        if (res.data.success) {
+          showMsg('发布成功，谢谢您的反馈')
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+@import '../styles/mixins.scss';
+@include upload-img-wrapper;
+textarea {
+  width:calc(100% - 80rpx);
+  border:2rpx solid #f1f1f1;
+  margin-bottom:40rpx;
+  padding:40rpx;
+  line-height:1.6;
+  border-radius:20rpx;
+}
+textarea::-webkit-input-placeholder {
+  color: #9c9c9c;
+}
+</style>

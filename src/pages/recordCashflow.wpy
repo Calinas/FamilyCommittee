@@ -32,7 +32,7 @@
         <text>{{seeTypes[seenIndex].title}}</text>
       </view>
     </picker>
-    <view class="fixed-bottom-btn top" @tap="submit">记一笔</view>
+    <view class="fixed-bottom-btn top right" @tap="submit">发表</view>
   </view>
 </template>
 

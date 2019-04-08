@@ -52,14 +52,19 @@
             <text wx:for="{{item.like_list.list}}" wx:for-item="like" wx:key="{{keyIndex}}">{{like.member.nickname}}<text wx:if="{{index !== item.like_list.count - 1}}">，</text></text>共{{item.like_list.count}}人觉得很赞
           </view>
           <view class="comment-wrapper font-grey" wx:if="{{item.comment_list.count}}">
-            <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
-              <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
-                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
-              </block>
-              <block wx:else>
-                <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
-              </block>
-              <text>{{comment.content}}</text>
+            <view class="flex-wrapper">
+              <view class="font-grey iconfont icon-message text-right" style="font-size: 15px;margin-right: 10rpx;"></view>
+              <view>
+                <view class="item" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key">
+                  <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}">
+                    <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}</text>回复<text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.to_member.id}},{{comment.to_member.class_nickname}})">{{comment.to_member.class_nickname}}：</text>
+                  </block>
+                  <block wx:else>
+                    <text class="font-blue" @tap="addComment('reply',{{item.id}},{{comment.id}},{{comment.member.id}},{{comment.member.class_nickname}})">{{comment.member.class_nickname}}: </text>
+                  </block>
+                  <text>{{comment.content}}</text>
+                </view>
+              </view>
             </view>
             <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center" @tap="loadMoreComment({{item.id}},{{listIndex}})">
               <text class="font-blue font-small">加载更多评论</text>
@@ -296,7 +301,7 @@ export default class Discovery extends wepy.page {
         return
       }
       if (!this.classInfo) {
-        showMsg('请先选择班级')
+        showMsg('请先加入班级')
         return
       }
       this.commentFlag = true

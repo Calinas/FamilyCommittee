@@ -52,3 +52,10 @@ export const saveIdentityList = () => {
     })
   })
 }
+
+export const setClassChanged = (data) => {
+  store.dispatch({
+    type: types.CLASS_HAS_CHANGED,
+    data
+  })
+}

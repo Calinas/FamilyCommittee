@@ -43,7 +43,8 @@ export default class extends wepy.app {
       'pages/createClass',
       'pages/member',
       'pages/discovery',
-      'pages/withdraw'
+      'pages/withdraw',
+      'pages/advice'
     ],
     permission: {
       'scope.userLocation': {

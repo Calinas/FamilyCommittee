@@ -148,16 +148,6 @@ var Zone = /** @class */ (function (_super) {
             currentToCommentId: -1
         };
         _this_1.watch = {
-            classInfo: function (newVal, oldVal) {
-                // 切换了班级之后数据要更新
-                if (oldVal !== null) {
-                    this.resetData();
-                    this.getAuthList();
-                    this.getZoneList();
-                    this.memberInfo = wx.getStorageSync('memberInfo');
-                    this.$parent.globalData.userData = this.memberInfo;
-                }
-            },
             currentJoinActivityId: function (newVal, oldVal) {
                 if (newVal > 0) {
                     this.currerntSubActivityId = [];
@@ -376,6 +366,10 @@ var Zone = /** @class */ (function (_super) {
                     common_1.showMsg('请选绑定班级', 3000);
                     return;
                 }
+                if (value === 'account' && !this.auth.finance) {
+                    common_1.showMsg('您没有财务权限', 3000);
+                    return;
+                }
                 var url = value === 'account' ? 'recordCashflow' : "publish?type=" + value;
                 wx.navigateTo({
                     url: url
@@ -452,7 +446,15 @@ var Zone = /** @class */ (function (_super) {
     Zone.prototype.onShow = function () {
         this.currerntJoinAcitivytId = -1;
         this.currerntSubActivityId = [];
-        this.classInfo = wx.getStorageSync('classInfo');
+        if (this.classHasChanged) {
+            this.memberInfo = wx.getStorageSync('memberInfo');
+            this.classInfo = wx.getStorageSync('classInfo');
+            this.resetData();
+            this.getAuthList();
+            this.getZoneList();
+            this.$parent.globalData.userData = this.memberInfo;
+            actions_1.setClassChanged(false);
+        }
         this.$apply();
         // 如果是从publish等页面返回，则需要刷新数据
         if (this.fromPublish) {
@@ -643,6 +645,9 @@ var Zone = /** @class */ (function (_super) {
         wepy_redux_1.connect({
             fromPublish: function (state) {
                 return state.zone.from_publish;
+            },
+            classHasChanged: function (state) {
+                return state.zone.classChanged;
             }
         })
     ], Zone);
