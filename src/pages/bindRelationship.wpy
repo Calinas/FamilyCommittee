@@ -78,11 +78,18 @@ export default class bindRelationship extends wepy.page {
   watch = {
     relationship(newValue, oldValue) {
       if (!oldValue.length && newValue.length && (this.type === 'create' || this.type === 'join')) {
+        // 从redux-store第一次取值，需要初始化一个input输入框
         this.addNewFn()
       }
     },
     studentName (newValue, oldValue) {
       this.canSubmit = !isEmptyString(newValue)
+    }
+  }
+  onShow() {
+    // 第一次进来初始化获取relationship的时候，length此时为0，和上面的watch是不会同时执行的
+    if (this.relationship.length && (this.type === 'create' || this.type === 'join')) {
+      this.addNewFn()
     }
   }
   onLoad(e) {
