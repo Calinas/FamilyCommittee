@@ -13,10 +13,10 @@
         </block>
       </view>
     </view>
-    <view class="fixed-bottom-btn top right _22cd1e0" bindtap="chooseAll"  wx:if="{{isEditMode}}">全选</view>
+    <!-- <view class="fixed-bottom-btn top right" bindtap="chooseAll" wx:if="{{isEditMode}}">全选</view> -->
     <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1 _22cd1e0">
       <view class="text-center btn-white btn _22cd1e0" bindtap="setPhotoEdit"  wx:if="{{!isEditMode}}">编辑</view>
-      <view class="text-center btn btn-white width30 _22cd1e0" wx:else bindtap="deletePhoto">删除</view>
+      <view class="text-center btn btn-white width30 _22cd1e0"  wx:else bindtap="deletePhoto">删除</view>
       <view class="text-center btn _22cd1e0" wx:if="{{!isEditMode}}" bindtap="upload">上传</view>
       <view class="text-center btn width30 _22cd1e0" wx:else bindtap="reset">放弃</view>
     </view>
