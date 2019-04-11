@@ -105,6 +105,7 @@ export default class bindRelationship extends wepy.page {
     }).then(res => {
       if (res.data.success) {
         showMsg('提交成功')
+        this.resetData()
         this.getPhotoList()
         this.imgList = []
         this.$apply()
@@ -115,7 +116,14 @@ export default class bindRelationship extends wepy.page {
     for (let i = 0, len = this.list.length; i < len; i++) {
       let imgList = this.list[i].img_list
       for (let j = 0, length = imgList.length; j < length; j++) {
-        imgList[j].type = type
+        if (type === 'edit' && (imgList[j].member_id !== this.memberInfo.member_id && !this.isPresident)) {
+          console.log(1)
+          // 编辑模式下，如果不是本人也不是会长，则不展示编辑框
+          imgList[j].type = 'none'
+        }
+        else {
+          imgList[j].type = type
+        }
       }
     }
   }
