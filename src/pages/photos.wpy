@@ -5,7 +5,7 @@
       <view class="img-list flex-wrapper">
         <repeat for="{{item.img_list}}" index="imgIndex" item="imgSrc">
           <view class="img-item">
-            <image @tap='preview({{imgSrc}}, {{item.preview_list}})' src="{{imgSrc.img_url+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load />
+            <image @tap='preview({{imgSrc}}, {{item.preview_list}})' src="{{imgSrc.img_url+'?imageView2/1/w/300/h/300'}}" lazy-load />
             <view class="close-btn" wx:if="{{imgSrc.type !== 'none'}}" @tap="editPhoto({{index}}, {{imgIndex}}, {{imgSrc.type}}, {{imgSrc.member_id}})">
               <view class="inner" wx:if="{{imgSrc.type === 'delete'}}"></view>
             </view>
@@ -128,6 +128,7 @@ export default class bindRelationship extends wepy.page {
     }
   }
   resetPhoto() {
+    this.deleteIds = []
     this.isEditMode = false
     this.loopPhoto('none')
     this.$apply()
@@ -147,8 +148,14 @@ export default class bindRelationship extends wepy.page {
         return
       }
       const val = type === 'edit' ? 'delete' : 'edit'
+      const id = this.list[listIdx].img_list[imgListIdx].photo_img_id
       this.list[listIdx].img_list[imgListIdx].type = val
-      this.deleteIds.push(this.list[listIdx].img_list[imgListIdx].photo_img_id)
+      if (val === 'delete') {
+        this.deleteIds.push(id)
+      } else {
+        const idx = this.deleteIds.indexOf(id)
+        this.deleteIds.splice(idx, 1)
+      }
       this.$apply()
     },
     chooseAll() {
@@ -159,6 +166,7 @@ export default class bindRelationship extends wepy.page {
       this.resetPhoto()
     },
     deletePhoto() {
+      if (!this.deleteIds.length) return
       delPhoto({photo_img_ids: this.deleteIds, class_id: this.classInfo.id}).then(res => {
         if (res.data.success) {
           showMsg('删除成功')
