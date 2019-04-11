@@ -1,16 +1,1 @@
-"use strict";
-
-exports.__esModule = true;
-exports.default = hasGeneratorInterface;
-
-var _ownKeys = _interopRequireDefault(require('./ownKeys.js'));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function hasGeneratorInterface(handler) {
-  var keys = (0, _ownKeys.default)(handler);
-  var hasOnlyInterfaceNames = keys.every(function (ownKey) {
-    return ownKey === 'next' || ownKey === 'throw';
-  });
-  return keys.length && keys.length <= 2 && hasOnlyInterfaceNames;
-}
+"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{default:e}}function hasGeneratorInterface(e){var r=(0,_ownKeys.default)(e),t=r.every(function(e){return"next"===e||"throw"===e});return r.length&&r.length<=2&&t}exports.__esModule=!0,exports.default=hasGeneratorInterface;var _ownKeys=_interopRequireDefault(require("./ownKeys.js"));

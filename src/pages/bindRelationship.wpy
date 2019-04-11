@@ -77,7 +77,7 @@ export default class bindRelationship extends wepy.page {
   }
   watch = {
     relationship(newValue, oldValue) {
-      if (!oldValue.length && newValue.length && this.type === 'create') {
+      if (!oldValue.length && newValue.length && (this.type === 'create' || this.type === 'join')) {
         this.addNewFn()
       }
     },

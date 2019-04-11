@@ -1,16 +1,24 @@
 <template lang="wxml" minapp="wepy">
   <view class="common-container">
-    <block wx:for="{{list}}" wx:key="{{key}}">
+    <view wx:for="{{list}}" wx:key="{{key}}" class="{{index === list.length -1 ? 'last' : 'not-last'}}">
       <view class="photo-title font-black">{{item.upload_date}} {{item.upload_members}}上传</view>
       <view class="img-list flex-wrapper">
-        <repeat for="{{item.img_list}}" index="index" item="imgSrc">
-            <image @tap='preview({{imgSrc}}, {{item.img_list}})' class='img-item' src="{{imgSrc+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load />
-            <!-- <image src='../../images/close-white.png' @tap="closeImg" class="close-btn"/> -->
+        <repeat for="{{item.img_list}}" index="imgIndex" item="imgSrc">
+          <view class="img-item">
+            <image @tap='preview({{imgSrc}}, {{item.preview_list}})' src="{{imgSrc.img_url+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load />
+            <view class="close-btn" wx:if="{{imgSrc.type !== 'none'}}" @tap="editPhoto({{index}}, {{imgIndex}}, {{imgSrc.type}}, {{imgSrc.member_id}})">
+              <view class="inner" wx:if="{{imgSrc.type === 'delete'}}"></view>
+            </view>
+          </view>
         </repeat>
       </view>
-    </block>
+    </view>
+    <!-- <view class="fixed-bottom-btn top right" @tap="chooseAll" wx:if="{{isEditMode}}">全选</view> -->
     <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1">
-      <view class="text-center" style="width: 100%;" @tap="upload">上传</view>
+      <view class="text-center btn-white btn" @tap="setPhotoEdit" wx:if="{{!isEditMode}}">编辑</view>
+      <view class="text-center btn btn-white width30" wx:else @tap="deletePhoto">删除</view>
+      <view class="text-center btn" wx:if="{{!isEditMode}}" @tap="upload">上传</view>
+      <view class="text-center btn width30" wx:else @tap="reset">放弃</view>
     </view>
   </view>
 
@@ -18,8 +26,18 @@
 
 <script>
 import wepy from 'wepy'
-import { uploadImage, showMsg, previewImage } from '../utils/common'
-import { photoIndex, addPhoto } from '../api/zone'
+import { connect, getStore } from 'wepy-redux'
+import { showMsg, previewImage } from 'utils/common'
+import { photoIndex, addPhoto, delPhoto } from 'api/zone'
+
+let store = getStore()
+
+@connect({
+  isPresident(state) {
+    return state.zone.isPresident
+  }
+})
+
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '相册'
@@ -29,38 +47,54 @@ export default class bindRelationship extends wepy.page {
     list: [],
     memberInfo: null,
     classInfo: null,
-    ps: 10,
+    ps: 6,
     pn: 1,
     maxCount: 6,
     imgList: [],
-    uploads: []
+    uploads: [],
+    isEditMode: false,
+    deleteIds: [],
+    loading: false,
+    loadFinished: false
+  }
+  onReachBottom() {
+    if (this.loading || this.loadFinished) return
+    this.getPhotoList()
   }
   onLoad() {
+    console.log(store.getState())
     this.classInfo = wx.getStorageSync('classInfo')
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.getPhotoList()
     this.$apply()
   }
   getPhotoList() {
+    this.loading = true
     photoIndex({
       ps: this.ps,
       pn: this.pn,
       class_id: this.classInfo.id
     }).then(res => {
-      let list = []
-      let returnList = res.data.list
+      let returnList = [...res.data.list]
       for (let i = 0, len = returnList.length; i < len; i++) {
-        list[i] = {
-          img_list: [],
+        returnList[i] = {
+          img_list: returnList[i].img_list,
           upload_date: returnList[i].upload_date,
-          upload_members: returnList[i].upload_members
+          upload_members: returnList[i].upload_members,
+          preview_list: []
         }
         for (let j = 0, len = returnList[i].img_list.length; j < len; j++) {
           let obj = returnList[i].img_list[j]
-          list[i].img_list.push(obj.img_url)
+          obj.type = this.isEditMode ? 'edit' : 'none'
+          returnList[i].preview_list.push(obj.img_url)
         }
       }
-      this.list = list
+      this.list = [...this.list, ...returnList]
+      if (res.data.list.length < this.ps) {
+        this.loadFinished = true
+      }
+      this.loading = false
+      this.pn++
       this.$apply()
     })
   }
@@ -77,7 +111,61 @@ export default class bindRelationship extends wepy.page {
       }
     })
   }
+  loopPhoto (type) {
+    for (let i = 0, len = this.list.length; i < len; i++) {
+      let imgList = this.list[i].img_list
+      for (let j = 0, length = imgList.length; j < length; j++) {
+        imgList[j].type = type
+      }
+    }
+  }
+  resetPhoto() {
+    this.isEditMode = false
+    this.loopPhoto('none')
+    this.$apply()
+  }
+  resetData() {
+    this.ps = 6
+    this.pn = 1
+    this.loading = false
+    this.loadFinished = false
+    this.list = []
+    this.$apply()
+  }
   methods = {
+    editPhoto(listIdx, imgListIdx, type, memberId) {
+      if (this.memberInfo.member_id !== memberId && !this.isPresident) {
+        showMsg('您没有权限删除该照片')
+        return
+      }
+      const val = type === 'edit' ? 'delete' : 'edit'
+      this.list[listIdx].img_list[imgListIdx].type = val
+      this.deleteIds.push(this.list[listIdx].img_list[imgListIdx].photo_img_id)
+      this.$apply()
+    },
+    chooseAll() {
+      this.loopPhoto('delete')
+      this.$apply()
+    },
+    reset() {
+      this.resetPhoto()
+    },
+    deletePhoto() {
+      delPhoto({photo_img_ids: this.deleteIds, class_id: this.classInfo.id}).then(res => {
+        if (res.data.success) {
+          showMsg('删除成功')
+          this.resetPhoto()
+          this.resetData()
+          this.getPhotoList()
+        }
+      })
+      this.$apply()
+    },
+    setPhotoEdit() {
+      this.isEditMode = true
+      this.loopPhoto('edit')
+      this.$apply()
+    },
     preview(url, urls) {
       previewImage(url, urls)
     },
@@ -101,7 +189,7 @@ export default class bindRelationship extends wepy.page {
             upload.path = path
             upload.error = false
             upload.uploadProgress = wx.uploadFile({
-              url: `${_this.$parent.globalData.apiUrl}/file/uploadPic`,
+              url: `${wepy.$appConfig.baseUrl}/file/uploadPic`,
               filePath: path,
               formData: {
                 'member_id': this.memberInfo.member_id,
@@ -137,7 +225,16 @@ export default class bindRelationship extends wepy.page {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.fixed-bottom-btn {
+  .btn {
+    width: 50%;
+    &-white {
+      background-color: #fff;
+      color: #1F9E3C;
+    }
+  }
+}
 .picker {
   margin-top: 40rpx;
   font-size: 32rpx;
@@ -149,12 +246,16 @@ textarea {
  padding:20rpx;
 }
 .photo-title {
-  margin-top: 2rem;
   margin-bottom: 1rem;
 }
-.img-list {
+.last {
   margin-bottom: 100rpx;
+}
+.img-list {
   flex-wrap: wrap;
+  &.last {
+    margin-bottom: 100rpx;
+  }
   .img-item {
     position: relative;
     width: 30%;
@@ -165,12 +266,28 @@ textarea {
     &:nth-child( 3n+3 ) {
       margin-right: 0;
     }
+    & > image {
+      width: 100%;
+      height: 100%;
+    }
     .close-btn {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 40rpx;
-      height: 40rpx;
+      position:absolute;
+      right:5px;
+      bottom:5px;
+      width:20px;
+      height:20px;
+      background-color:white;
+      border:1px solid #1F9E3C;
+      border-radius:50%;
+      .inner {
+        position:absolute;
+        width: 30rpx;
+        height: 30rpx;
+        right:5rpx;
+        bottom:5rpx;
+        background-color:#1F9E3C;
+        border-radius:50%;
+      }
     }
   }
 }

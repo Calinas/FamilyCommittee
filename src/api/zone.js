@@ -110,6 +110,22 @@ export function addPhoto(data) {
   })
 }
 
+//删除相册
+export function delPhoto(data) {
+  return new Promise((resolve) => {
+    wepy.request({
+      url: '/class/photo/del',
+      data: Object.assign({}, commonParams(), {
+        class_id: data.class_id,
+        photo_img_ids: data.photo_img_ids
+      }),
+      method: 'delete'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
 // 班级相册列表
 export function photoIndex(data) {
   return new Promise((resolve, reject) => {

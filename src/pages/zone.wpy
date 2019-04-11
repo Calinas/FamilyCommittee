@@ -250,16 +250,16 @@ let replyCommentData = {
 }
 import wepy from 'wepy'
 import { connect, getStore } from 'wepy-redux'
-import { setFromPublish, setClassChanged } from '../store/actions'
-import SelectModal from '../components/selectModal'
-import CurrentModal from '../components/commentModal'
-import SureModal from '../components/sureModal'
-import shareModal from '../components/shareModal'
-import { showMsg, previewImage, filterArrayByValue, emptyObj } from '../utils/common'
-import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle, addLike } from '../api/zone'
-import { addOrder, getPaymentParams } from '../api/finance'
-import { getAuth } from '../api/authorize'
-import { checkStudent } from '../api/user'
+import { setFromPublish, setClassChanged, setPresident } from 'store/actions'
+import SelectModal from 'components/selectModal'
+import CurrentModal from 'components/commentModal'
+import SureModal from 'components/sureModal'
+import shareModal from 'components/shareModal'
+import { showMsg, previewImage, filterArrayByValue, emptyObj } from 'utils/common'
+import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle, addLike } from 'api/zone'
+import { addOrder, getPaymentParams } from 'api/finance'
+import { getAuth } from 'api/authorize'
+import { checkStudent } from 'api/user'
 
 let store = getStore()
 
@@ -478,9 +478,11 @@ export default class Zone extends wepy.page {
     for (let i = 0, len = list.length; i < len; i++) {
       let {code, is_auth: isAuth} = list[i]
       if (code === 'president' && isAuth) {
+        setPresident(true)
         this.formatAllAuth(this.auth)
         break
       } else {
+        setPresident(false)
         isAuth && this.formatSingleAuth(code, true)
         !isAuth && this.formatSingleAuth(code, false)
       }

@@ -1,5 +1,1 @@
-module.exports = isPromise;
-
-function isPromise(obj) {
-  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
-}
+function isPromise(o){return!!o&&("object"==typeof o||"function"==typeof o)&&"function"==typeof o.then}module.exports=isPromise;

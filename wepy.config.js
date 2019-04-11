@@ -10,7 +10,11 @@ module.exports = {
   resolve: {
     alias: {
       counter: path.join(__dirname, 'src/components/counter'),
-      '@': path.join(__dirname, 'src')
+      api: path.join(__dirname, 'src/api'),
+      images: path.join(__dirname, 'src/images'),
+      store: path.join(__dirname, 'src/store'),
+      utils: path.join(__dirname, 'src/utils'),
+      components: path.join(__dirname, 'src/components')
     },
     aliasFields: ['wepy', 'weapp'],
     modules: ['node_modules']
@@ -32,13 +36,18 @@ module.exports = {
         'transform-decorators-legacy',
         'transform-object-rest-spread',
         'transform-export-extensions',
+        'transform-node-env-inline',
+        ['global-define', {
+          isProd: prod
+        }]
       ]
     }
   },
   plugins: {
   },
   appConfig: {
-    noPromiseAPI: ['createSelectorQuery']
+    noPromiseAPI: ['createSelectorQuery'],
+    baseUrl: process.env.NODE_ENV === 'production' ? 'https://www.ctjwh.com/api/v1' : 'https://test.ctjwh.com/api/v1'
   }
 }
 

@@ -120,11 +120,11 @@
 <script>
 import wepy from 'wepy'
 import { connect, getStore } from 'wepy-redux'
-import { setFromPublish } from '../store/actions'
-import Modal from '../components/modal'
-import Modal2 from '../components/modal2'
-import { showMsg, isEmptyString, uploadImage } from '../utils/common'
-import { addCircles, addCollection, addActivity, addNotify } from '../api/zone'
+import { setFromPublish } from 'store/actions'
+import Modal from 'components/modal'
+import Modal2 from 'components/modal2'
+import { showMsg, isEmptyString, uploadImage } from 'utils/common'
+import { addCircles, addCollection, addActivity, addNotify } from 'api/zone'
 
 let store = getStore()
 
@@ -315,7 +315,7 @@ export default class Publish extends wepy.page {
             upload.path = path
             upload.error = false
             upload.uploadProgress = wx.uploadFile({
-              url: `${_this.$parent.globalData.apiUrl}/file/uploadPic`,
+              url: `${wepy.$appConfig.baseUrl}/file/uploadPic`,
               filePath: path,
               formData: {
                 'member_id': this.memberInfo.member_id,

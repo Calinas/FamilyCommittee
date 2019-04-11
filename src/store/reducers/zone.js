@@ -39,6 +39,12 @@ export default handleActions({
       relationship: action.list
     }
   },
+  [types.SET_PRESIDENT](state, action) {
+    return {
+      ...state,
+      isPresident: action.data
+    }
+  },
   [types.CLASS_HAS_CHANGED](state, action) {
     return {
       ...state,
@@ -50,5 +56,6 @@ export default handleActions({
   city_list: [],
   from_publish: false,
   relationship: [],
-  classChanged: false
+  classChanged: false,
+  isPresident: false
 })

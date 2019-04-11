@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 7,
 			"list": [
 				{
 					"id": 0,
@@ -65,6 +65,26 @@
 					"name": "转账2",
 					"pathName": "pages/cashWithdraw",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "测试分享",
+					"pathName": "pages/joinClass",
+					"query": "name=重庆家委会开发组幼儿园2019级1班&key=234585&classId=1",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "测试分享",
+					"pathName": "pages/bindRelationship",
+					"query": "type=create",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "相册",
+					"pathName": "pages/photos",
 					"scene": null
 				}
 			]

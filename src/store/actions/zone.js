@@ -59,3 +59,10 @@ export const setClassChanged = (data) => {
     data
   })
 }
+
+export const setPresident = (data) => {
+  store.dispatch({
+    type: types.SET_PRESIDENT,
+    data
+  })
+}

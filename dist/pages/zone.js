@@ -513,10 +513,12 @@ var Zone = /** @class */ (function (_super) {
         for (var i = 0, len = list.length; i < len; i++) {
             var _a = list[i], code = _a.code, isAuth = _a.is_auth;
             if (code === 'president' && isAuth) {
+                actions_1.setPresident(true);
                 this.formatAllAuth(this.auth);
                 break;
             }
             else {
+                actions_1.setPresident(false);
                 isAuth && this.formatSingleAuth(code, true);
                 !isAuth && this.formatSingleAuth(code, false);
             }
