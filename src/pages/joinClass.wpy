@@ -75,8 +75,10 @@ export default class JoinClass extends wepy.page {
         class_id: this.classId,
         join_key: this.key
       }).then(res => {
-        if (res.data.success) {
-          showMsg('成功加入班级')
+        let data = res.data
+        let msg = data.success ? '成功加入班级' : res.data.error_msg
+        if (data.success || data.error_code === '100506') {
+          showMsg(msg)
           this.$parent.globalData.classHasChange = true
           wx.setStorage({
             key: 'classInfo',
