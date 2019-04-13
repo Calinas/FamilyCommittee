@@ -1,14 +1,2 @@
 
-  <view class="common-container common-container-grey _d8ff260">
-    <scroll-view class="scroll-container _d8ff260">
-      <view class="msg-card font-black _d8ff260"  wx:for="{{list}}">
-        <view class="flex-wrapper center _d8ff260">
-          <image src="" class="small-avatar _d8ff260"/>
-          <text class="_d8ff260">我通过{{item.class_nickname}}发布的收款信息支付了</text>
-        </view>
-        <view class="btn-money _d8ff260">{{item.money}}元</view>
-        <view class="font-grey font-small time _d8ff260">{{item.time}}</view>
-      </view>
-      
-    </scroll-view>
-  </view>
+  <view class="common-container common-container-grey _d8ff260"><scroll-view class="scroll-container _d8ff260"><view class="msg-card font-black _d8ff260"  wx:for="{{list}}"><view class="flex-wrapper center _d8ff260"><image src="" class="small-avatar _d8ff260"/><text class="_d8ff260">我通过{{item.class_nickname}}发布的收款信息支付了</text></view><view class="btn-money _d8ff260">{{item.money}}元</view><view class="font-grey font-small time _d8ff260">{{item.time}}</view></view></scroll-view></view>
