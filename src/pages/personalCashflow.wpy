@@ -1,4 +1,4 @@
-<template lang="wxml" minapp="wepy">
+<template lang="wxml"   style=""minapp="wepy">
   <view class="common-container common-container-grey">
     <scroll-view class="scroll-container">
       <view class="msg-card font-black" wx:for="{{list}}">
@@ -11,6 +11,9 @@
       </view>
       </view>
     </scroll-view>
+    <block wx:if="{{!list.length}}">
+      <text class="text-center" style="display: block;">暂无数据</text>
+    </block>
   </view>
 </template>
 

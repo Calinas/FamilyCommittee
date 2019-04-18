@@ -16,35 +16,37 @@
       <image src="{{classInfo.qr_code}}" class="qr-code"/>
       <button open-type="share" class="font-green btn-invite bg-white" @tap="share">点击按钮邀请其他家长加入</button>
     </view>
-    <view class="flex-wrapper item last-one" style="align-items:center;">
-      <text class="font-bold font-black sub-title" style="margin-right: 0;">修改班级验证码：</text>
-      <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @input="bindForm" />
-      <button @tap="changeCode">修改</button>
-    </view>
-    <view class="flex-wrapper item last-one" style="align-items:center;">
-      <text class="font-bold font-black sub-title" style="margin-right: 0;">逐出成员：</text>
-      <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @tap="addNew({{true}}, 0, 'remove')" value="{{removeName}}"/>
-      <button @tap="remove">确认</button>
-    </view>
-    <view class="font-black font-bold font-36">
-      <text>权限管理</text>
-    </view>
-    <!-- 会长权限 -->
-    <view class="flex-wrapper item" wx:for="{{list}}">
-      <view class="font-bold font-black sub-title">{{item.name}}</view>
-      <block wx:if="{{item.auth_list.length}}">
-        <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member" @tap="del({{member.class_auth_id}})">
-          <text class="iconfont icon-delete font-24"></text>
-          <text>{{member.member.class_nickname}}</text>
-        </view>
-      </block>
-      <block wx:else>
-        <text class="font-grey" style="margin-right: 20rpx;">{{item.code === 'finance' ? '全体无权限' : '全体'}}</text>
-      </block>
-      <view class="tag-wrapper" wx:if="{{item.auth_list.length || item.code === 'finance'}}">
-        <text class="tag tag-blue" @tap="addNew({{true}},{{item.id}})">添加</text>
+    <block wx:if="{{isPresident}}">
+      <view class="flex-wrapper item last-one" style="align-items:center;">
+        <text class="font-bold font-black sub-title" style="margin-right: 0;">修改班级验证码：</text>
+        <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @input="bindForm" />
+        <button @tap="changeCode">修改</button>
       </view>
-    </view>
+      <view class="flex-wrapper item last-one" style="align-items:center;">
+        <text class="font-bold font-black sub-title" style="margin-right: 0;">逐出成员：</text>
+        <input type="tel" maxlength="6" style="border-bottom: 2rpx solid #bbb;" id="code" @tap="addNew({{true}}, 0, 'remove')" value="{{removeName}}"/>
+        <button @tap="remove">确认</button>
+      </view>
+      <view class="font-black font-bold font-36">
+        <text>权限管理</text>
+      </view>
+      <!-- 会长权限 -->
+      <view class="flex-wrapper item" wx:for="{{list}}">
+        <view class="font-bold font-black sub-title">{{item.name}}</view>
+        <block wx:if="{{item.auth_list.length}}">
+          <view class="tag tag-light-grey" wx:for="{{item.auth_list}}" wx:for-item="member" @tap="del({{member.class_auth_id}})">
+            <text class="iconfont icon-delete font-24"></text>
+            <text>{{member.member.class_nickname}}</text>
+          </view>
+        </block>
+        <block wx:else>
+          <text class="font-grey" style="margin-right: 20rpx;">{{item.code === 'finance' ? '全体无权限' : '全体'}}</text>
+        </block>
+        <view class="tag-wrapper" wx:if="{{item.auth_list.length || item.code === 'finance'}}">
+          <text class="tag tag-blue" @tap="addNew({{true}},{{item.id}})">添加</text>
+        </view>
+      </view>
+    </block>
   </view>
   <Modal
     sureBtnText="确认添加"
@@ -64,11 +66,19 @@
 </template>
 <script>
 import wepy from 'wepy'
+import { connect, getStore } from 'wepy-redux'
 import { getMemberList } from '../api/user'
 import { showMsg } from '../utils/common'
 import Modal from '../components/modal'
 import Search from '../components/searchResult'
 import * as authorizeReq from '../api/authorize'
+
+@connect({
+  isPresident(state) {
+    return state.zone.isPresident
+  }
+})
+
 export default class bindRelationship extends wepy.page {
   config = {
     navigationBarTitleText: '家委会管理'
@@ -115,7 +125,7 @@ export default class bindRelationship extends wepy.page {
         url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
       })
     } else {
-      this.getAuthList()
+      this.isPresident && this.getAuthList()
       this.getMemberList()
       this.$apply()
     }
