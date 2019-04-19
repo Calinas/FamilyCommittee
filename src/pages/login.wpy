@@ -66,8 +66,8 @@ export default class login extends wepy.page {
       }
       let memberInfo = Object.create(null)
       memberInfo = {
-        member_id: 19,
-        member_token: '10751B5360622D6BEAC588ED2D94E379'
+        member_id: 2,
+        member_token: '9FCE2410F6980C5EA6A6C8B233BD9E22'
       }
       wx.setStorageSync('memberInfo', memberInfo)
       wx.switchTab({
