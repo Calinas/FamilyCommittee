@@ -18,7 +18,7 @@
         <text class="class font-30">{{gradeType[classInfo.grade_type]}}{{classInfo.year_class}}级{{classInfo.class}}班</text>
       </view>
       <view class="buttons">
-        <view catchtap="jumpPage('member')" wx:if="{{auth.president}}" class="flex-wrapper center">
+        <view catchtap="jumpPage('member')" class="flex-wrapper center">
           <image src="../images/icon/icon-member.png" class="small-avatar" mode="scaleToFill"></image>
           <text>成员</text>
         </view>
@@ -125,7 +125,7 @@
           <!-- 收款 -->
           <block wx:if="{{item.app_type === 'collection'}}">
             <view class="tag-wrapper item-tag" wx:if="{{item.info.item.length && !item.is_apply}}">
-              点击缴费：
+              <text style="display: block;margin-bottom: 20rpx;">点击缴费：</text>
               <text class="tag-big tag tag-blue" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" @tap="pay({{item.id}}, {{collection.id}})">{{collection.name}} : ¥{{collection.money}}</text>
             </view>
             <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key">
@@ -187,7 +187,8 @@
         <view catchtap="jumpPage('cashflow')">财务记账</view>
         <view catchtap="jumpPage('personalCashflow')">财务流水</view>
         <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view>
-        <view catchtap="jumpPage('authorize')">家委会管理</view>
+        <view catchtap="jumpPage('authorize')" wx:if="{{auth.president}}">家委会管理</view>
+        <view catchtap="jumpPage('advice')">意见反馈</view>
       </view>
     </view>
     <!-- 右边侧边栏 -->
@@ -203,7 +204,6 @@
         <view catchtap="jumpPage('publish','activity')" wx:if="{{auth.activity}}">活动</view>
         <view catchtap="jumpPage('publish','money')" wx:if="{{auth.finance}}">收款</view>
         <view catchtap="jumpPage('recordCashflow')" wx:if="{{auth.finance}}">记账</view>
-        <view catchtap="jumpPage('advice')">意见反馈</view>
       </view>
     </view>
     <CurrentModal

@@ -16,7 +16,7 @@
   },
   "author": "calinas <1607731780@qq.com>",
   "license": "MIT",
-  "dependencies": {
+  "dependencies": { 
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",
     "tough-cookie": "^3.0.0",

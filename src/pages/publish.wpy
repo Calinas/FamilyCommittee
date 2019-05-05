@@ -37,7 +37,7 @@
           <text class="iconfont icon-user font-black"></text>
           <text class="font-black">增加选项</text>
         </view>
-        <text>可重复添加多个收款选项</text>
+        <text>添加（可重复添加）</text>
       </view>
     </block>
     <!-- 活动 -->
@@ -123,7 +123,7 @@ import { connect, getStore } from 'wepy-redux'
 import { setFromPublish } from 'store/actions'
 import Modal from 'components/modal'
 import Modal2 from 'components/modal2'
-import { showMsg, isEmptyString, uploadImage } from 'utils/common'
+import { showMsg, isEmptyString, uploadImage, checkNum } from 'utils/common'
 import { addCircles, addCollection, addActivity, addNotify } from 'api/zone'
 
 let store = getStore()
@@ -376,6 +376,7 @@ export default class Publish extends wepy.page {
         showMsg('请不要输入重复的活动项目')
         return
       }
+      showMsg('添加成功', 1000)
       const obj = {
         name: value
       }
@@ -388,7 +389,7 @@ export default class Publish extends wepy.page {
     moneySureFn(value1, value2, type) {
       const obj = {
         name: value1,
-        money: value2
+        money: Number(value2)
       }
       this.moneyList.push(obj)
       if (type === 'save') {

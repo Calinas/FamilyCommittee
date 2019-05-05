@@ -15,7 +15,7 @@
     <view class="img-list flex-wrapper">
       <repeat for="{{img}}" index="index" item="item">
         <view class="img-item">
-          <image @tap='previewImage' class='img' src='{{item}}'/>
+          <image @tap='preview({{item}},{{img}})' class='img' src='{{item}}'/>
           <image src='/images/close-white.png' @tap="deleteFn('img',{{index}})" class="close-btn"/>
         </view>
       </repeat>
@@ -39,7 +39,8 @@
 <script>
 import wepy from 'wepy'
 import { addAccount } from '../api/zone'
-import { showMsg, uploadImage } from '../utils/common'
+import { setFromPublish } from 'store/actions'
+import { showMsg, uploadImage, previewImage } from '../utils/common'
 export default class recordCashflow extends wepy.page {
   config = {
     navigationBarTitleText: '记账'
@@ -83,6 +84,9 @@ export default class recordCashflow extends wepy.page {
     this.$apply()
   }
   methods = {
+    preview(img, imgList) {
+      previewImage(img, imgList)
+    },
     deleteFn (arr, index) {
       this[arr].splice(index, 1)
       this.$apply()
@@ -110,7 +114,6 @@ export default class recordCashflow extends wepy.page {
       //   showMsg('请上传凭证')
       //   return
       // }
-
       addAccount({
         class_id: this.classInfo.id,
         type: this.type,
@@ -119,6 +122,7 @@ export default class recordCashflow extends wepy.page {
         imgList: this.img
       }).then(res => {
         if (res.data.success) {
+          setFromPublish(true)
           showMsg('记账成功', 2000)
           setTimeout(() => {
             wx.navigateBack()
@@ -150,9 +154,9 @@ export default class recordCashflow extends wepy.page {
   flex-wrap: wrap;
   .img-item {
     position: relative;
-    width: 100rpx;
+    width: 140rpx;
     margin-right: 20rpx;
-    height: 100rpx;
+    height: 140rpx;
     overflow: hidden;
     margin-bottom: 40rpx;
     & > .img {

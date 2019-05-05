@@ -50,6 +50,7 @@ export default class personCashflow extends wepy.page {
   background-color: #fff;
   margin-bottom: 30rpx;
   padding: 30rpx;
+  border-radius:20rpx;
 }
 .time {
   text-align: right;

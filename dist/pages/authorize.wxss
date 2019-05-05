@@ -1,3 +1,3 @@
 @import "./../components/searchResult.wxss";
 @import "./../components/modal.wxss";
-.last-one{padding-bottom:40rpx;margin-bottom:40rpx}.last-one .sub-title{width:240rpx}.qr-code{width:200rpx;height:200rpx}.sub-title{margin-right:20rpx}.item{flex-wrap:wrap;margin-top:40rpx}.item .tag{position:relative;margin-bottom:20rpx}.item .icon-delete{color:red;position:absolute;right:0rpx;top:-6rpx}
+input[type=tel]{border:1px solid #bbb;border-radius:20rpx;padding:16rpx;flex:1;margin-right:40rpx}.btn-invite{background-color:#1F9E3C;color:#fff;width:32%;height:60rpx;line-height:60rpx;margin:0 auto;margin-bottom:60rpx;height:60rpx;line-height:60rpx}.last-one{padding-bottom:40rpx;margin-bottom:40rpx}.last-one .sub-title{width:240rpx}.qr-code{width:300rpx;height:300rpx;margin-left:10%}.sub-title{margin-right:20rpx}.item{flex-wrap:wrap;margin-top:40rpx}.item .tag{position:relative;margin-bottom:20rpx}.item .icon-delete{color:red;position:absolute;right:0rpx;top:-6rpx}

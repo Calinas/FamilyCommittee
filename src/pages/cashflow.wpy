@@ -1,7 +1,7 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container common-container-grey" style="padding: 30rpx 0;">
-    <view class="flex-wrapper font-grey info-wrapper" @tap="jumpPage">
-      <text class="font-black" wx:if="{{memberList.length}}">本班财务：</text>
+  <view class="common-container common-container-grey" style="padding: 30rpx;">
+    <view class="flex-wrapper font-grey info-wrapper" @tap="jumpPage" wx:if="{{memberList.length}}">
+      <text class="font-black">本班财务：</text>
       <text wx:for="{{memberList}}">{{item.member.class_nickname}}</text>
     </view>
     <view class="balance bg-white font-black">
@@ -139,7 +139,6 @@ export default class cashflow extends wepy.page {
   }
 }
 .balance {
-  width: 70%;
   margin: 40rpx auto;
   padding: 40rpx;
   border-radius: 20rpx;
@@ -160,6 +159,7 @@ export default class cashflow extends wepy.page {
   background-color: #fff;
   margin-bottom: 30rpx;
   padding: 30rpx;
+  border-radius:20rpx;
 }
 .tag-wrapper {
   padding: 20rpx 0;

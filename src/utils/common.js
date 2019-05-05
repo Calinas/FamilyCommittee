@@ -82,7 +82,7 @@ export function uploadImage() {
         const tempFilePaths = res.tempFilePaths
         wx.showLoading()
         wx.uploadFile({
-          url: 'https://test.ctjwh.com/api/v1/file/uploadPic',
+          url: `${wepy.$appConfig.baseUrl}/file/uploadPic`,
           filePath: tempFilePaths[0],
           formData: {
             'member_id': memberInfo.member_id,
@@ -143,8 +143,6 @@ export const filterArrayByValue = (keyName, arr, booleanValue, newObj) => {
     }
   }
   if (booleanValue) {
-    console.log(booleanValue, currentIdx, arr)
-    console.log(arr.splice(currentIdx, 1))
     arr.splice(currentIdx, 1)
     return arr
   } else {
@@ -157,4 +155,12 @@ export const emptyObj = (obj) => {
     obj[key] = ''
   })
   return obj
+}
+
+export const checkNum = num => {
+  const pattern = /^([1-9]\d*|0)(\.\d*[1-9])?$/
+  if (!pattern.exec(num)) {
+    return false
+  }
+  return true
 }

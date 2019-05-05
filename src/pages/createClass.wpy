@@ -22,7 +22,7 @@
       </view>
     </picker> -->
     <view class="common-picker search-school-wrapper">
-      <input value="{{keywords}}" placeholder="请输入学校名称搜索" @input="bindInput" id="keywords"/>
+      <input value="{{keywords}}" placeholder="请输入学校名称搜索" @input="bindInput" id="keywords" focus/>
       <text class="iconfont icon-delete" @tap="deleteSchool"></text>
       <scroll-view scroll-y class="{{showSchool ? 'show' : 'hide'}}">
         <block wx:if="{{schoolList.length}}">

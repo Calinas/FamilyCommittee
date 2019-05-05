@@ -33,11 +33,10 @@
 <script>
 import wepy from 'wepy'
 import { connect, getStore } from 'wepy-redux'
-import { saveIdentityList } from '../store/actions'
-import { getIdentityList, bindIdentity, identityList, bindTeacher } from '../api/user'
+import { saveIdentityList, setClassChanged } from 'store/actions'
+import { bindIdentity, identityList, bindTeacher } from '../api/user'
 import { addClass } from '../api/createClass'
 import { showMsg, isEmptyString } from '../utils/common'
-let store = getStore()
 
 @connect({
   relationship(state){
@@ -141,7 +140,7 @@ export default class bindRelationship extends wepy.page {
         data: data
       })
       let url = `createClassSuccess?name=${data.name}&code=${data.qr_code}&key=${data.join_key}&classId=${data.id}`
-      this.$parent.globalData.classHasChange = true
+      setClassChanged(true)
       setTimeout(() => {
         wx.navigateTo({
           url: url
