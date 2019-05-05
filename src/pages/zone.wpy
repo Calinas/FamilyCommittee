@@ -322,7 +322,8 @@ export default class Zone extends wepy.page {
       collection: '收款',
       notify: '通知',
       activity: '活动',
-      account: '记账'
+      account: '记账',
+      system: '圈子'
     },
     gradeType: {
       primary: '小学',

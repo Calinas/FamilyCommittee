@@ -106,14 +106,8 @@ export function uploadImage() {
 export function previewImage(src, imgList) {
   wx.previewImage({
     current: src,
-    urls: imgList.map(filterImgList)
+    urls: imgList
   })
-}
-
-const reg = /^https/g
-
-const filterImgList = item => {
-  return item.match(reg) ? item : item.replace(/http/, 'https')
 }
 
 // 只获取日期

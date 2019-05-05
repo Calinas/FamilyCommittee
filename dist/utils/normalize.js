@@ -1,1 +1,46 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.cashflowObj=exports.classListObj=exports.personalCashflowObj=exports.cashWithdrawObj=void 0;var _common=require("./common.js"),cashWithdrawObj=exports.cashWithdrawObj=function(e){return{id:e.app_id,desc:(0,_common.getOnlyDate)(e.created_at)+",您发起了一个收款，共收到"+e.info.total_money,money:e.info.can_withdraw_money,created_at:e.created_at}},personalCashflowObj=exports.personalCashflowObj=function(e){return{class_nickname:e.info.member.class_nickname,money:e.pay_amount,time:e.updated_at}},classListObj=exports.classListObj=function(e){return{class:e.class}},cashflowObj=exports.cashflowObj=function(e){return{member:e.member,app_type:e.app_type,created_at:e.created_at,info:e.info,image:e.image}};
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cashflowObj = exports.classListObj = exports.personalCashflowObj = exports.cashWithdrawObj = undefined;
+
+var _common = require('./common.js');
+
+// 收款提现
+var cashWithdrawObj = exports.cashWithdrawObj = function cashWithdrawObj(item) {
+  return {
+    id: item.app_id,
+    desc: (0, _common.getOnlyDate)(item.created_at) + ',\u60A8\u53D1\u8D77\u4E86\u4E00\u4E2A\u6536\u6B3E\uFF0C\u5171\u6536\u5230' + item.info.total_money,
+    money: item.info.can_withdraw_money,
+    created_at: item.created_at
+  };
+};
+
+// 个人财务流水
+var personalCashflowObj = exports.personalCashflowObj = function personalCashflowObj(item) {
+  return {
+    class_nickname: item.info.member.class_nickname,
+    money: item.pay_amount,
+    time: item.updated_at
+  };
+};
+
+// 班级列表
+var classListObj = exports.classListObj = function classListObj(item) {
+  return {
+    class: item.class
+  };
+};
+
+// 财务记账
+var cashflowObj = exports.cashflowObj = function cashflowObj(item) {
+  return {
+    member: item.member,
+    app_type: item.app_type,
+    created_at: item.created_at,
+    info: item.info,
+    image: item.image
+  };
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vcm1hbGl6ZS5qcyJdLCJuYW1lcyI6WyJjYXNoV2l0aGRyYXdPYmoiLCJpZCIsIml0ZW0iLCJhcHBfaWQiLCJkZXNjIiwiY3JlYXRlZF9hdCIsImluZm8iLCJ0b3RhbF9tb25leSIsIm1vbmV5IiwiY2FuX3dpdGhkcmF3X21vbmV5IiwicGVyc29uYWxDYXNoZmxvd09iaiIsImNsYXNzX25pY2tuYW1lIiwibWVtYmVyIiwicGF5X2Ftb3VudCIsInRpbWUiLCJ1cGRhdGVkX2F0IiwiY2xhc3NMaXN0T2JqIiwiY2xhc3MiLCJjYXNoZmxvd09iaiIsImFwcF90eXBlIiwiaW1hZ2UiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFBQTs7QUFFQTtBQUNPLElBQU1BLDRDQUFrQixTQUFsQkEsZUFBa0I7QUFBQSxTQUFTO0FBQ3RDQyxRQUFJQyxLQUFLQyxNQUQ2QjtBQUV0Q0MsVUFBUyx5QkFBWUYsS0FBS0csVUFBakIsQ0FBVCxpRkFBcURILEtBQUtJLElBQUwsQ0FBVUMsV0FGekI7QUFHdENDLFdBQU9OLEtBQUtJLElBQUwsQ0FBVUcsa0JBSHFCO0FBSXRDSixnQkFBWUgsS0FBS0c7QUFKcUIsR0FBVDtBQUFBLENBQXhCOztBQU9QO0FBQ08sSUFBTUssb0RBQXNCLFNBQXRCQSxtQkFBc0I7QUFBQSxTQUFTO0FBQzFDQyxvQkFBZ0JULEtBQUtJLElBQUwsQ0FBVU0sTUFBVixDQUFpQkQsY0FEUztBQUUxQ0gsV0FBT04sS0FBS1csVUFGOEI7QUFHMUNDLFVBQU1aLEtBQUthO0FBSCtCLEdBQVQ7QUFBQSxDQUE1Qjs7QUFNUDtBQUNPLElBQU1DLHNDQUFlLFNBQWZBLFlBQWU7QUFBQSxTQUFTO0FBQ25DQyxXQUFPZixLQUFLZTtBQUR1QixHQUFUO0FBQUEsQ0FBckI7O0FBSVA7QUFDTyxJQUFNQyxvQ0FBYyxTQUFkQSxXQUFjO0FBQUEsU0FBUztBQUNsQ04sWUFBUVYsS0FBS1UsTUFEcUI7QUFFbENPLGNBQVVqQixLQUFLaUIsUUFGbUI7QUFHbENkLGdCQUFZSCxLQUFLRyxVQUhpQjtBQUlsQ0MsVUFBTUosS0FBS0ksSUFKdUI7QUFLbENjLFdBQU9sQixLQUFLa0I7QUFMc0IsR0FBVDtBQUFBLENBQXBCIiwiZmlsZSI6Im5vcm1hbGl6ZS5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IGdldE9ubHlEYXRlIH0gZnJvbSAnLi9jb21tb24nXG5cbi8vIOaUtuasvuaPkOeOsFxuZXhwb3J0IGNvbnN0IGNhc2hXaXRoZHJhd09iaiA9IGl0ZW0gPT4gKHtcbiAgaWQ6IGl0ZW0uYXBwX2lkLFxuICBkZXNjOiBgJHtnZXRPbmx5RGF0ZShpdGVtLmNyZWF0ZWRfYXQpfSzmgqjlj5HotbfkuobkuIDkuKrmlLbmrL7vvIzlhbHmlLbliLAke2l0ZW0uaW5mby50b3RhbF9tb25leX1gLFxuICBtb25leTogaXRlbS5pbmZvLmNhbl93aXRoZHJhd19tb25leSxcbiAgY3JlYXRlZF9hdDogaXRlbS5jcmVhdGVkX2F0XG59KVxuXG4vLyDkuKrkurrotKLliqHmtYHmsLRcbmV4cG9ydCBjb25zdCBwZXJzb25hbENhc2hmbG93T2JqID0gaXRlbSA9PiAoe1xuICBjbGFzc19uaWNrbmFtZTogaXRlbS5pbmZvLm1lbWJlci5jbGFzc19uaWNrbmFtZSxcbiAgbW9uZXk6IGl0ZW0ucGF5X2Ftb3VudCxcbiAgdGltZTogaXRlbS51cGRhdGVkX2F0XG59KVxuXG4vLyDnj63nuqfliJfooahcbmV4cG9ydCBjb25zdCBjbGFzc0xpc3RPYmogPSBpdGVtID0+ICh7XG4gIGNsYXNzOiBpdGVtLmNsYXNzXG59KVxuXG4vLyDotKLliqHorrDotKZcbmV4cG9ydCBjb25zdCBjYXNoZmxvd09iaiA9IGl0ZW0gPT4gKHtcbiAgbWVtYmVyOiBpdGVtLm1lbWJlcixcbiAgYXBwX3R5cGU6IGl0ZW0uYXBwX3R5cGUsXG4gIGNyZWF0ZWRfYXQ6IGl0ZW0uY3JlYXRlZF9hdCxcbiAgaW5mbzogaXRlbS5pbmZvLFxuICBpbWFnZTogaXRlbS5pbWFnZVxufSlcbiJdfQ==

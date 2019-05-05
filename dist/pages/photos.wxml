@@ -1,2 +1,23 @@
 
-  <view class="common-container _22cd1e0"><view  wx:for="{{list}}" wx:key="{{key}}" class="{{index === list.length -1 ? 'last' : 'not-last'}} _22cd1e0"><view class="photo-title font-black _22cd1e0">{{item.upload_date}} {{item.upload_members}}上传</view><view class="img-list flex-wrapper _22cd1e0"><block class="_22cd1e0" wx:for="{{item.img_list}}" wx:for-index="imgIndex" wx:for-item="imgSrc" wx:key="key"><view class="img-item _22cd1e0"><image bindtap="preview" src="{{imgSrc.img_url+'?imageView2/1/w/300/h/300'}}" lazy-load="lazy-load" class="_22cd1e0" data-wpypreview-a="{{imgSrc}}" data-wpypreview-b="{{item.preview_list}}"/><view class="close-btn _22cd1e0" wx:if="{{imgSrc.type !== 'none'}}" bindtap="editPhoto" data-wpyeditphoto-a="{{index}}" data-wpyeditphoto-b="{{imgIndex}}" data-wpyeditphoto-c="{{imgSrc.type}}" data-wpyeditphoto-d="{{imgSrc.member_id}}"><view class="inner _22cd1e0" wx:if="{{imgSrc.type === 'delete'}}"/></view></view></block></view></view><view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1 _22cd1e0"><view class="text-center btn-white btn _22cd1e0" bindtap="setPhotoEdit"  wx:if="{{!isEditMode}}">编辑</view><view class="text-center btn btn-white width30 _22cd1e0"  wx:else bindtap="deletePhoto">删除</view><view class="text-center btn _22cd1e0" wx:if="{{!isEditMode}}" bindtap="upload">上传</view><view class="text-center btn width30 _22cd1e0" wx:else bindtap="reset">放弃</view></view></view>
+  <view class="common-container _22cd1e0">
+    <view  wx:for="{{list}}" wx:key="{{key}}" class="{{index === list.length -1 ? 'last' : 'not-last'}} _22cd1e0">
+      <view class="photo-title font-black _22cd1e0">{{item.upload_date}} {{item.upload_members}}上传</view>
+      <view class="img-list flex-wrapper _22cd1e0">
+        <block class="_22cd1e0" wx:for="{{item.img_list}}" wx:for-index="imgIndex" wx:for-item="imgSrc" wx:key="key">
+          <view class="img-item _22cd1e0">
+            <image bindtap="preview" src="{{imgSrc.img_url+'?imageView2/1/w/300/h/300'}}" lazy-load="lazy-load" class="_22cd1e0" data-wpypreview-a="{{imgSrc}}" data-wpypreview-b="{{item.preview_list}}"/>
+            <view class="close-btn _22cd1e0" wx:if="{{imgSrc.type !== 'none'}}" bindtap="editPhoto" data-wpyeditphoto-a="{{index}}" data-wpyeditphoto-b="{{imgIndex}}" data-wpyeditphoto-c="{{imgSrc.type}}" data-wpyeditphoto-d="{{imgSrc.member_id}}">
+              <view class="inner _22cd1e0" wx:if="{{imgSrc.type === 'delete'}}"/>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+    <!-- <view class="fixed-bottom-btn top right" bindtap="chooseAll" wx:if="{{isEditMode}}">全选</view> -->
+    <view class="fixed-bottom-btn flex-wrapper fixed-bottom-btn-1 _22cd1e0">
+      <view class="text-center btn-white btn _22cd1e0" bindtap="setPhotoEdit"  wx:if="{{!isEditMode}}">编辑</view>
+      <view class="text-center btn btn-white width30 _22cd1e0"  wx:else bindtap="deletePhoto">删除</view>
+      <view class="text-center btn _22cd1e0" wx:if="{{!isEditMode}}" bindtap="upload">上传</view>
+      <view class="text-center btn width30 _22cd1e0" wx:else bindtap="reset">放弃</view>
+    </view>
+  </view>

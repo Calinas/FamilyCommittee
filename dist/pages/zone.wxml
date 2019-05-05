@@ -1,5 +1,264 @@
 
-  <view class="common-container common-container-grey _849026a" style="position:relative" bindtap="closeToggle"><view class="img-mask _849026a"><image src="/images/banner2.jpg" mode="scaleToFill" class="bg-img _849026a"/><view class="mask _849026a"/><block class="_849026a"><view class="btn btn-set flex-wrapper center _849026a" catchtap="toggleMenu" data-wpytogglemenu-a="setFlag"><text class="iconfont icon-menu _849026a"/><text class="_849026a">设置</text></view><view class="btn btn-publish flex-wrapper center _849026a" catchtap="toggleMenu" data-wpytogglemenu-a="publishFlag"><text class="iconfont icon-edit _849026a"/><text class="_849026a">发布</text></view></block><view class="caption _849026a"  wx:if="{{classInfo}}"><text class="school font-36 font-bold _849026a">{{classInfo.school.name}}</text><text class="class font-30 _849026a">{{gradeType[classInfo.grade_type]}}{{classInfo.year_class}}级{{classInfo.class}}班</text></view><view class="buttons _849026a"><view catchtap="jumpPage" class="flex-wrapper center _849026a" data-wpyjumppage-a="member"><image src="../images/icon/icon-member.png" class="small-avatar _849026a" mode="scaleToFill"/><text class="_849026a">成员</text></view><view catchtap="jumpPage"  wx:if="{{auth.photos}}" class="flex-wrapper center _849026a" data-wpyjumppage-a="photos"><image src="../images/icon/icon-photo.png" class="small-avatar _849026a"/><text class="_849026a">相册</text></view></view></view><view class="menu-wrapper flex-wrapper _849026a"><view data-type="circles" bindtap="jumpPublish"  wx:for="{{menuList}}" class="_849026a" data-wpyjumppublish-a="{{item.type}}"><image src="{{item.src}}" mode="scaleToFill" class="_849026a"/><text class="_849026a">{{item.text}}</text></view></view><view class="item-wrapper _849026a" wx:if="{{list.length}}"><block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex" class="_849026a"><view class="item _849026a"><view class="flex-wrapper center between _849026a"><view class="flex-wrapper center _849026a"><image src="{{item.member.head_img}}" class="small-avatar _849026a"/><text class="font-32 _849026a">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text></view><block wx:if="{{memberInfo.member_id === item.member.id || auth.president}}" class="_849026a"><block wx:if="{{item.app_type !== 'collection'}}" class="_849026a"><view class="font-grey iconfont icon-shanchu text-right _849026a" catchtap="removeCircle" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/></block><block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}" class="_849026a"><view class="font-grey iconfont icon-shanchu text-right _849026a" catchtap="removeCircle" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/></block></block></view><view class="font-small font-grey text-right create-time _849026a">{{item.created_at}}</view><block wx:if="{{item.app_type !== 'account'}}" class="_849026a"><view class="item-desc font-36 _849026a" wx:if="{{item.info.description}}">{{item.info.description}}</view><view class="img-list flex-wrapper one-img {{item.info.description ? '' : 'extra-margin'}} _849026a" wx:if="{{item.image.length === 1}}"><image mode="widthFix" src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load="lazy-load" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/></view><view class="img-list flex-wrapper _849026a" wx:else><image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" wx:key="keyIndex" lazy-load="lazy-load" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/></view></block><block wx:if="{{item.app_type === 'account'}}" class="_849026a"><view class="tag-wrapper flex-wrapper _849026a"><text class="tag tag-grey _849026a">{{item.info.type === 'in' ? '收入': '支出'}}</text><text class="tag tag-empty _849026a">{{item.info.money}}元</text><text class="tag tag-empty _849026a" wx:if="{{item.info.balance}}">余额：{{item.info.balance}}元</text></view><view class="tag-wrapper flex-wrapper no-padding _849026a"><text class="tag tag-grey _849026a">事由</text><text class="tag tag-empty _849026a">{{item.info.description}}</text></view></block><view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}} _849026a"><text wx:if="{{item.app_type === 'circles' && item.see_type === 'all'}}" class="_849026a">全部可见</text><text wx:if="{{item.app_type === 'circles' && item.see_type === 'class'}}" class="_849026a">仅班级可见</text><text bindtap="preview" wx:if="{{item.image.length && item.app_type === 'account'}}" class="_849026a" data-wpypreview-a="{{item.image}}" data-wpypreview-b="{{item.image}}">查看记账凭证</text><view class="flex-wrapper icon-wrapper _849026a"><view class="font-grey iconfont icon-dianzan text-right _849026a" catchtap="addLike" data-wpyaddlike-a="{{item.id}}" data-wpyaddlike-b="{{listIndex}}" data-wpyaddlike-c="{{item.is_like}}"/><view class="font-grey iconfont icon-message text-right _849026a" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}"/><view class="font-grey iconfont icon-share text-right _849026a" catchtap="shareCircle" data-wpysharecircle-a="{{item.app_type}}"/></view></view><view class="font-grey _849026a" wx:if="{{item.like_list.count}}"><text class="iconfont icon-xin _849026a" style="margin-right: 10rpx;"/><text wx:for="{{item.like_list.list}}" wx:for-item="like" wx:key="{{keyIndex}}" class="_849026a">{{like.member.class_nickname}}<text wx:if="{{index !== item.like_list.count - 1}}" class="_849026a">，</text></text>共{{item.like_list.count}}人觉得很赞
-          </view><block wx:if="{{item.app_type === 'activity'}}" class="_849026a"><block wx:if="{{!item.is_apply}}" class="_849026a"><view class="tag-wrapper item-tag _849026a" wx:if="{{item.info.item.length}}"><text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }} _849026a" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" bindtap="joinActivity" data-wpyjoinactivity-a="{{item.activity_id}}" data-wpyjoinactivity-b="{{item.id}}" data-wpyjoinactivity-c="{{listIndex}}" data-wpyjoinactivity-d="{{activityIndex}}">{{item.name}}</text></view><view class="tag-wrapper _849026a"><text class="tag tag-big tag-blue _849026a" bindtap="submitJoinActivity">选好了，报名</text></view></block><text class="tag tag-grey _849026a" wx:else style="margin-top: 30rpx;">已报名</text><block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key" class="_849026a"><view class="result-wrapper _849026a" wx:if="{{activity.student_list.length}}"><view class="title item-tag _849026a"><text class="tag tag-empty _849026a">{{activity.name}}</text><text class="_849026a">已有{{activity.student_list.length}}人报名</text></view><view class="person-list tag-wrapper _849026a"><text class="tag tag-light-grey _849026a" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text></view></view></block><view class="result-wrapper _849026a" wx:if="{{item.info.not_join_student_list.length}}"><view class="title item-tag _849026a"><text class="_849026a">{{item.info.not_join_student_list.length}}人未报名</text></view><view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;"><text class="tag tag-light-grey _849026a" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text></view></view></block><block wx:if="{{item.app_type === 'collection'}}" class="_849026a"><view class="tag-wrapper item-tag _849026a" wx:if="{{item.info.item.length && !item.is_apply}}"><text style="display: block;margin-bottom: 20rpx;" class="_849026a">点击缴费：</text><text class="tag-big tag tag-blue _849026a" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}} : ¥{{collection.money}}</text></view><block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" class="_849026a"><view class="result-wrapper _849026a" wx:if="{{collection.student_list.length}}" style="{{item.is_apply ? 'margin-top: 30rpx;': ''}}"><view class="title item-tag _849026a"><text class="_849026a">{{collection.student_list.length}}人缴费{{collection.money}}</text></view><view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;"><text class="tag tag-light-grey _849026a" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text></view></view></block><block wx:if="{{item.info.not_join_student_list.length}}" class="_849026a"><view class="result-wrapper _849026a"><view class="title item-tag _849026a"><text class="_849026a">{{item.info.not_join_student_list.length}}人未缴费</text></view><view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;"><text class="tag tag-light-grey _849026a" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text></view></view></block></block><view class="comment-wrapper font-grey _849026a" wx:if="{{item.comment_list.count}}"><view class="flex-wrapper _849026a" style="flex-wrap:wrap;"><view class="font-grey iconfont icon-message text-right _849026a" style="font-size: 15px;"/><view class="_849026a"><view class="item _849026a" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key" wx:for-index="idx"><block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_849026a"><text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.id}}" data-wpyaddcomment-f="{{comment.member.class_nickname}}" data-wpyaddcomment-g="{{comment.member.id}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.to_comment_id}}" data-wpyaddcomment-f="{{comment.to_member.class_nickname}}" data-wpyaddcomment-g="{{comment.to_member.id}}">{{comment.to_member.class_nickname}}：</text></block><block wx:else class="_849026a"><text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.id}}" data-wpyaddcomment-f="{{comment.member.class_nickname}}" data-wpyaddcomment-g="{{comment.member.id}}">{{comment.member.class_nickname}}: </text></block><text class="_849026a">{{comment.content}}</text></view></view></view><view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center _849026a" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}"><text class="font-blue font-small _849026a">加载更多评论</text></view></view></view></block></view><view wx:if="{{this.loadFinished && !list.length}}" class="text-center _849026a">暂无内容</view><view class="sidebar sidebar-set bg-white {{setFlag ? 'show': ''}} _849026a"><view class="list _849026a"><view class="title font-bold font-black _849026a"><text class="iconfont icon-setting _849026a"/><text class="_849026a">设置</text></view><view catchtap="jumpPage" wx:if="{{classInfo.id}}" class="_849026a" data-wpyjumppage-a="bindRelationship?type=edit">身份绑定</view><view catchtap="jumpPage" class="_849026a" data-wpyjumppage-a="cashflow">财务记账</view><view catchtap="jumpPage" class="_849026a" data-wpyjumppage-a="personalCashflow">财务流水</view><view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="cashWithdraw">收款提现</view><view catchtap="jumpPage" wx:if="{{auth.president}}" class="_849026a" data-wpyjumppage-a="authorize">家委会管理</view><view catchtap="jumpPage" class="_849026a" data-wpyjumppage-a="advice">意见反馈</view></view></view><view class="sidebar sidebar-publish bg-white {{publishFlag ? 'show': ''}} _849026a"><view class="list _849026a"><view class="title font-bold font-black _849026a"><text class="iconfont icon-publish _849026a"/><text class="_849026a">发布</text></view><view type="family" catchtap="jumpPage" wx:if="{{auth.circles}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="zone">家长圈</view><view catchtap="jumpPage" wx:if="{{auth.photos}}" class="_849026a" data-wpyjumppage-a="photos">相册</view><view catchtap="jumpPage" wx:if="{{auth.notify}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="notice">通知</view><view catchtap="jumpPage" wx:if="{{auth.activity}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="activity">活动</view><view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="money">收款</view><view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="recordCashflow">记账</view></view></view><view class="wx-popup _284a651 _849026a"  wx:if="{{$CurrentModal$flag}}"><view class="popup-container _284a651"><view class="wx-popup-con _284a651"><input type="text" placeholder="{{$CurrentModal$placeholderText}}" bindinput="$CurrentModal$bindInput" value="{{$CurrentModal$commentInput}}" cursor-spacing="100" class="_284a651"/></view><view class="wx-popup-btn _284a651"><text class="btn-no _284a651" bindtap="$CurrentModal$cancelFn">{{$CurrentModal$cancelBtnText}}</text><text class="btn-ok _284a651" bindtap="$CurrentModal$sureFn">{{$CurrentModal$sureBtnText}}</text></view></view></view><view class="wx-popup _3c6ee52 _849026a"  wx:if="{{$SelectModal$flag}}"><view class="popup-container _3c6ee52"><view class="wx-popup-con _3c6ee52"><checkbox-group class="width80 _3c6ee52" bindchange="$SelectModal$pickerChange" id="type"><label class="radio _3c6ee52" wx:for="{{$SelectModal$list}}"><checkbox value="{{item.id}}" checked="{{item.checked}}" class="_3c6ee52"/>
+  <view class="common-container common-container-grey _849026a" style="position:relative" bindtap="closeToggle">
+    <view class="img-mask _849026a">
+      <image src="/images/banner2.jpg" mode="scaleToFill" class="bg-img _849026a"/>
+      <view class="mask _849026a"/>
+      <block class="_849026a">
+        <view class="btn btn-set flex-wrapper center _849026a" catchtap="toggleMenu" data-wpytogglemenu-a="setFlag">
+          <text class="iconfont icon-menu _849026a"/>
+          <text class="_849026a">设置</text>
+        </view>
+        <view class="btn btn-publish flex-wrapper center _849026a" catchtap="toggleMenu" data-wpytogglemenu-a="publishFlag">
+          <text class="iconfont icon-edit _849026a"/>
+          <text class="_849026a">发布</text>
+        </view>
+      </block>
+      <view class="caption _849026a"  wx:if="{{classInfo}}">
+        <text class="school font-36 font-bold _849026a">{{classInfo.school.name}}</text>
+        <text class="class font-30 _849026a">{{gradeType[classInfo.grade_type]}}{{classInfo.year_class}}级{{classInfo.class}}班</text>
+      </view>
+      <view class="buttons _849026a">
+        <view catchtap="jumpPage" class="flex-wrapper center _849026a" data-wpyjumppage-a="member">
+          <image src="../images/icon/icon-member.png" class="small-avatar _849026a" mode="scaleToFill"/>
+          <text class="_849026a">成员</text>
+        </view>
+        <view catchtap="jumpPage"  wx:if="{{auth.photos}}" class="flex-wrapper center _849026a" data-wpyjumppage-a="photos">
+          <image src="../images/icon/icon-photo.png" class="small-avatar _849026a"/>
+          <text class="_849026a">相册</text>
+        </view>
+      </view>
+    </view>
+    <!-- 筛选框 -->
+    <view class="menu-wrapper flex-wrapper _849026a">
+      <view data-type="circles" bindtap="jumpPublish"  wx:for="{{menuList}}" class="_849026a" data-wpyjumppublish-a="{{item.type}}">
+        <image src="{{item.src}}" mode="scaleToFill" class="_849026a"/>
+        <text class="_849026a">{{item.text}}</text>
+      </view>
+    </view>
+
+    <view class="item-wrapper _849026a" wx:if="{{list.length}}">
+      <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex" class="_849026a">
+         <view class="item _849026a">
+          <view class="flex-wrapper center between _849026a">
+            <view class="flex-wrapper center _849026a">
+              <image src="{{item.member.head_img}}" class="small-avatar _849026a"/>
+              <text class="font-32 _849026a">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+            </view>
+            <block wx:if="{{memberInfo.member_id === item.member.id || auth.president}}" class="_849026a">
+                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
+                <block wx:if="{{item.app_type !== 'collection'}}" class="_849026a">
+                  <view class="font-grey iconfont icon-shanchu text-right _849026a" catchtap="removeCircle" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/>
+                </block>
+                <block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}" class="_849026a">
+                  <view class="font-grey iconfont icon-shanchu text-right _849026a" catchtap="removeCircle" data-wpyremovecircle-a="{{item.id}}" data-wpyremovecircle-b="{{listIndex}}"/>
+                </block>
+              </block>
+          </view>
+          <view class="font-small font-grey text-right create-time _849026a">{{item.created_at}}</view>
+          <block wx:if="{{item.app_type !== 'account'}}" class="_849026a">
+            <view class="item-desc font-36 _849026a" wx:if="{{item.info.description}}">{{item.info.description}}</view>
+            <view class="img-list flex-wrapper one-img {{item.info.description ? '' : 'extra-margin'}} _849026a" wx:if="{{item.image.length === 1}}">
+              <image mode="widthFix" src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" lazy-load="lazy-load" wx:key="keyIndex" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
+            </view>
+            <view class="img-list flex-wrapper _849026a" wx:else>
+              <image src="{{img+'?imageMogr2/thumbnail/300x/gravity/Center/crop/640x360'}}" wx:key="keyIndex" lazy-load="lazy-load" wx:for-item="img" wx:for="{{item.image}}" class="img-item _849026a" bindtap="preview" data-wpypreview-a="{{img}}" data-wpypreview-b="{{item.image}}"/>
+            </view>
+          </block>
+          <block wx:if="{{item.app_type === 'account'}}" class="_849026a">
+            <view class="tag-wrapper flex-wrapper _849026a">
+              <text class="tag tag-grey _849026a">{{item.info.type === 'in' ? '收入': '支出'}}</text>
+              <text class="tag tag-empty _849026a">{{item.info.money}}元</text>
+              <text class="tag tag-empty _849026a" wx:if="{{item.info.balance}}">余额：{{item.info.balance}}元</text>
+            </view>
+            <view class="tag-wrapper flex-wrapper no-padding _849026a">
+              <text class="tag tag-grey _849026a">事由</text>
+              <text class="tag tag-empty _849026a">{{item.info.description}}</text>
+            </view>
+          </block>
+
+          <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}} _849026a">
+            <text wx:if="{{item.app_type === 'circles' && item.see_type === 'all'}}" class="_849026a">全部可见</text>
+            <text wx:if="{{item.app_type === 'circles' && item.see_type === 'class'}}" class="_849026a">仅班级可见</text>
+            <text bindtap="preview" wx:if="{{item.image.length && item.app_type === 'account'}}" class="_849026a" data-wpypreview-a="{{item.image}}" data-wpypreview-b="{{item.image}}">查看记账凭证</text>
+            <view class="flex-wrapper icon-wrapper _849026a">
+              <view class="font-grey iconfont icon-dianzan text-right _849026a" catchtap="addLike" data-wpyaddlike-a="{{item.id}}" data-wpyaddlike-b="{{listIndex}}" data-wpyaddlike-c="{{item.is_like}}"/>
+              <view class="font-grey iconfont icon-message text-right _849026a" catchtap="addComment" data-wpyaddcomment-a="add" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}"/>
+              <view class="font-grey iconfont icon-share text-right _849026a" catchtap="shareCircle" data-wpysharecircle-a="{{item.app_type}}"/>
+            </view>
+          </view>
+          <view class="font-grey _849026a" wx:if="{{item.like_list.count}}">
+            <text class="iconfont icon-xin _849026a" style="margin-right: 10rpx;"/>
+            <text wx:for="{{item.like_list.list}}" wx:for-item="like" wx:key="{{keyIndex}}" class="_849026a">{{like.member.class_nickname}}<text wx:if="{{index !== item.like_list.count - 1}}" class="_849026a">，</text></text>共{{item.like_list.count}}人觉得很赞
+          </view>
+          <block wx:if="{{item.app_type === 'activity'}}" class="_849026a">
+            <block wx:if="{{!item.is_apply}}" class="_849026a">
+              <view class="tag-wrapper item-tag _849026a" wx:if="{{item.info.item.length}}">
+                <text class="tag-big tag tag-empty font-grey {{ item.checked ? 'active': '' }} _849026a" wx:for-index="activityIndex" wx:key="activityIndex" wx:for="{{item.info.item}}" bindtap="joinActivity" data-wpyjoinactivity-a="{{item.activity_id}}" data-wpyjoinactivity-b="{{item.id}}" data-wpyjoinactivity-c="{{listIndex}}" data-wpyjoinactivity-d="{{activityIndex}}">{{item.name}}</text>
+              </view>
+              <view class="tag-wrapper _849026a">
+                <text class="tag tag-big tag-blue _849026a" bindtap="submitJoinActivity">选好了，报名</text>
+              </view>
+            </block>
+            <text class="tag tag-grey _849026a" wx:else style="margin-top: 30rpx;">已报名</text>
+            <!-- 报名结果 -->
+            <block wx:for="{{item.info.item}}" wx:for-item="activity" wx:key="key" class="_849026a">
+              <view class="result-wrapper _849026a" wx:if="{{activity.student_list.length}}">
+                <view class="title item-tag _849026a">
+                  <text class="tag tag-empty _849026a">{{activity.name}}</text>
+                  <text class="_849026a">已有{{activity.student_list.length}}人报名</text>
+                </view>
+                <view class="person-list tag-wrapper _849026a">
+                  <text class="tag tag-light-grey _849026a" wx:for="{{activity.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
+                </view>
+              </view>
+            </block>
+            <!-- 没有参加报名的 -->
+              <view class="result-wrapper _849026a" wx:if="{{item.info.not_join_student_list.length}}">
+                <view class="title item-tag _849026a">
+                  <text class="_849026a">{{item.info.not_join_student_list.length}}人未报名</text>
+                </view>
+                <view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey _849026a" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+                </view>
+              </view>
+          </block>
+          <!-- 收款 -->
+          <block wx:if="{{item.app_type === 'collection'}}" class="_849026a">
+            <view class="tag-wrapper item-tag _849026a" wx:if="{{item.info.item.length && !item.is_apply}}">
+              <text style="display: block;margin-bottom: 20rpx;" class="_849026a">点击缴费：</text>
+              <text class="tag-big tag tag-blue _849026a" wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" bindtap="pay" data-wpypay-a="{{item.id}}" data-wpypay-b="{{collection.id}}">{{collection.name}} : ¥{{collection.money}}</text>
+            </view>
+            <block wx:for="{{item.info.item}}" wx:for-item="collection" wx:key="key" class="_849026a">
+              <view class="result-wrapper _849026a" wx:if="{{collection.student_list.length}}" style="{{item.is_apply ? 'margin-top: 30rpx;': ''}}">
+                <view class="title item-tag _849026a">
+                  <text class="_849026a">{{collection.student_list.length}}人缴费{{collection.money}}</text>
+                </view>
+                <view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey _849026a" wx:for="{{collection.student_list}}" wx:for-item="student" wx:key="key">{{student.name}}</text>
+                </view>
+              </view>
+            </block>
+            <block wx:if="{{item.info.not_join_student_list.length}}" class="_849026a">
+              <view class="result-wrapper _849026a">
+                <view class="title item-tag _849026a">
+                  <text class="_849026a">{{item.info.not_join_student_list.length}}人未缴费</text>
+                </view>
+                <view class="person-list tag-wrapper _849026a" style="margin-top: 20rpx;">
+                  <text class="tag tag-light-grey _849026a" wx:for="{{item.info.not_join_student_list}}" wx:for-item="nostudent" wx:key="key">{{nostudent.name}}</text>
+                </view>
+              </view>
+            </block>
+          </block>
+          <!-- 留言结果 -->
+          <view class="comment-wrapper font-grey _849026a" wx:if="{{item.comment_list.count}}">
+            <view class="flex-wrapper _849026a" style="flex-wrap:wrap;">
+              <view class="font-grey iconfont icon-message text-right _849026a" style="font-size: 15px;"/>
+              <view class="_849026a">
+                <view class="item _849026a" wx:for="{{item.comment_list.list}}" wx:for-item="comment" wx:key="key" wx:for-index="idx">
+                  <block wx:if="{{comment.to_member && comment.to_member.class_nickname}}" class="_849026a">
+                    <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.id}}" data-wpyaddcomment-f="{{comment.member.class_nickname}}" data-wpyaddcomment-g="{{comment.member.id}}">{{comment.member.class_nickname}}</text>回复<text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.to_comment_id}}" data-wpyaddcomment-f="{{comment.to_member.class_nickname}}" data-wpyaddcomment-g="{{comment.to_member.id}}">{{comment.to_member.class_nickname}}：</text>
+                  </block>
+                  <block wx:else class="_849026a">
+                    <text class="font-blue _849026a" bindtap="addComment" data-wpyaddcomment-a="reply" data-wpyaddcomment-b="{{listIndex}}" data-wpyaddcomment-c="{{item.id}}" data-wpyaddcomment-d="{{comment.root_id}}" data-wpyaddcomment-e="{{comment.id}}" data-wpyaddcomment-f="{{comment.member.class_nickname}}" data-wpyaddcomment-g="{{comment.member.id}}">{{comment.member.class_nickname}}: </text>
+                  </block>
+                  <text class="_849026a">{{comment.content}}</text>
+                </view>
+              </view>
+            </view>
+            <view wx:if="{{item.comment_list.count > 6 && !item.commentLoadFinished}}" class="text-center _849026a" bindtap="loadMoreComment" data-wpyloadmorecomment-a="{{item.id}}" data-wpyloadmorecomment-b="{{listIndex}}">
+              <text class="font-blue font-small _849026a">加载更多评论</text>
+            </view>
+          </view>
+        </view>
+      </block>
+
+    </view>
+    <view wx:if="{{this.loadFinished && !list.length}}" class="text-center _849026a">暂无内容</view>
+
+    <!-- 左边侧边栏 -->
+    <view class="sidebar sidebar-set bg-white {{setFlag ? 'show': ''}} _849026a">
+      <view class="list _849026a">
+        <view class="title font-bold font-black _849026a">
+          <text class="iconfont icon-setting _849026a"/>
+          <text class="_849026a">设置</text>
+        </view>
+        <view catchtap="jumpPage" wx:if="{{classInfo.id}}" class="_849026a" data-wpyjumppage-a="bindRelationship?type=edit">身份绑定</view>
+        <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
+        <view catchtap="jumpPage" class="_849026a" data-wpyjumppage-a="cashflow">财务记账</view>
+        <view catchtap="jumpPage" class="_849026a" data-wpyjumppage-a="personalCashflow">财务流水</view>
+        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="cashWithdraw">收款提现</view>
+        <view catchtap="jumpPage" wx:if="{{auth.president}}" class="_849026a" data-wpyjumppage-a="authorize">家委会管理</view>
+        <view catchtap="jumpPage" class="_849026a" data-wpyjumppage-a="advice">意见反馈</view>
+      </view>
+    </view>
+    <!-- 右边侧边栏 -->
+    <view class="sidebar sidebar-publish bg-white {{publishFlag ? 'show': ''}} _849026a">
+      <view class="list _849026a">
+        <view class="title font-bold font-black _849026a">
+          <text class="iconfont icon-publish _849026a"/>
+          <text class="_849026a">发布</text>
+        </view>
+        <view type="family" catchtap="jumpPage" wx:if="{{auth.circles}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="zone">家长圈</view>
+        <view catchtap="jumpPage" wx:if="{{auth.photos}}" class="_849026a" data-wpyjumppage-a="photos">相册</view>
+        <view catchtap="jumpPage" wx:if="{{auth.notify}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="notice">通知</view>
+        <view catchtap="jumpPage" wx:if="{{auth.activity}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="activity">活动</view>
+        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="publish" data-wpyjumppage-b="money">收款</view>
+        <view catchtap="jumpPage" wx:if="{{auth.finance}}" class="_849026a" data-wpyjumppage-a="recordCashflow">记账</view>
+      </view>
+    </view>
+    
+  <view class="wx-popup _284a651 _849026a"  wx:if="{{$CurrentModal$flag}}">
+    <view class="popup-container _284a651">
+      <view class="wx-popup-con _284a651">
+        <!-- <textarea type="text" placeholder={{placeholderText}} bindinput="bindInput" value="{{commentInput}}"></textarea> -->
+        <input type="text" placeholder="{{$CurrentModal$placeholderText}}" bindinput="$CurrentModal$bindInput" value="{{$CurrentModal$commentInput}}" cursor-spacing="100" class="_284a651"/>
+      </view>
+      <view class="wx-popup-btn _284a651">
+        <text class="btn-no _284a651" bindtap="$CurrentModal$cancelFn">{{$CurrentModal$cancelBtnText}}</text>
+        <text class="btn-ok _284a651" bindtap="$CurrentModal$sureFn">{{$CurrentModal$sureBtnText}}</text>
+      </view>
+    </view>
+  </view>
+    
+  <view class="wx-popup _3c6ee52 _849026a"  wx:if="{{$SelectModal$flag}}">
+    <view class="popup-container _3c6ee52">
+      <view class="wx-popup-con _3c6ee52">
+        <checkbox-group class="width80 _3c6ee52" bindchange="$SelectModal$pickerChange" id="type">
+          <label class="radio _3c6ee52" wx:for="{{$SelectModal$list}}">
+            <checkbox value="{{item.id}}" checked="{{item.checked}}" class="_3c6ee52"/>
             {{item.name}}
-          </label></checkbox-group></view><view class="wx-popup-btn _3c6ee52"><text class="btn-no _3c6ee52" bindtap="$SelectModal$cancelFn">取消</text><text class="btn-ok _3c6ee52" bindtap="$SelectModal$sureFn">确认</text></view></view></view><view class="wx-popup _99385de _849026a"  wx:if="{{$shareModal$flag}}"><view class="popup-container _99385de"><view class="wx-popup-con _99385de"><text class="share-title _99385de">{{$shareModal$title}}</text><image src="{{$shareModal$imgSrc}}" class="share-img _99385de"/></view><view class="wx-popup-btn _99385de"><button bindtap="$shareModal$cancelFn" class="_99385de">取消</button><button open-type="share" bindtap="$shareModal$sureFn" class="_99385de">确认分享</button></view></view></view><view class="wx-popup _7b8b319 _849026a"  wx:if="{{$SureModal$flag}}"><view class="popup-container _7b8b319"><view class="wx-popup-con _7b8b319"><text class="_7b8b319">{{$SureModal$title}}</text></view><view class="wx-popup-btn _7b8b319"><text class="btn-no _7b8b319" bindtap="$SureModal$cancelFn">取消</text><text class="btn-ok _7b8b319" bindtap="$SureModal$sureFn">确认</text></view></view></view></view>
+          </label>
+        </checkbox-group>
+      </view>
+      <view class="wx-popup-btn _3c6ee52">
+        <text class="btn-no _3c6ee52" bindtap="$SelectModal$cancelFn">取消</text>
+        <text class="btn-ok _3c6ee52" bindtap="$SelectModal$sureFn">确认</text>
+      </view>
+    </view>
+  </view>
+    
+  <view class="wx-popup _99385de _849026a"  wx:if="{{$shareModal$flag}}">
+    <view class="popup-container _99385de">
+      <view class="wx-popup-con _99385de">
+        <text class="share-title _99385de">{{$shareModal$title}}</text>
+        <image src="{{$shareModal$imgSrc}}" class="share-img _99385de"/>
+      </view>
+      <view class="wx-popup-btn _99385de">
+        <button bindtap="$shareModal$cancelFn" class="_99385de">取消</button>
+        <button open-type="share" bindtap="$shareModal$sureFn" class="_99385de">确认分享</button>
+      </view>
+    </view>
+  </view>
+    
+  <view class="wx-popup _7b8b319 _849026a"  wx:if="{{$SureModal$flag}}">
+    <view class="popup-container _7b8b319">
+      <view class="wx-popup-con _7b8b319">
+        <text class="_7b8b319">{{$SureModal$title}}</text>
+      </view>
+      <view class="wx-popup-btn _7b8b319">
+        <text class="btn-no _7b8b319" bindtap="$SureModal$cancelFn">取消</text>
+        <text class="btn-ok _7b8b319" bindtap="$SureModal$sureFn">确认</text>
+      </view>
+    </view>
+  </view>
+  </view>

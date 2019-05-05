@@ -1,4 +1,10 @@
 
-  <view class="common-container common-container-grey"><view class="font-grey info">
+  <view class="common-container common-container-grey">
+    <view class="font-grey info">
       恭喜，您成功创建了一个班级。您的班级为：{{info.schoolName}}{{unitName}}级{{className}}班。您是当前班级家委会的管理员，管理员可以转让给其他家长。
-    </view><view class="flex-wrapper between buttons-wrapper"><text class="font-green btn-invite bg-white">点此加入该班级家委会</text><text class="font-green btn-invite bg-white">申诉找回班级管理权</text></view></view>
+    </view>
+    <view class="flex-wrapper between buttons-wrapper">
+       <text class="font-green btn-invite bg-white">点此加入该班级家委会</text>
+      <text class="font-green btn-invite bg-white">申诉找回班级管理权</text>
+    </view>
+  </view>

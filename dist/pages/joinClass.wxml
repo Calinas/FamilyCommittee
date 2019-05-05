@@ -1,4 +1,12 @@
 
-  <view class="join-class common-container common-container-grey _5990213"><view class="common-line _5990213">
+  <view class="join-class common-container common-container-grey _5990213">
+    <view class="common-line _5990213">
       {{name}}
-    </view><view class="common-line _5990213"><input type="text" placeholder="在此填入该班级验证码" bindinput="bindInput" id="key" class="_5990213"/></view><view class="common-line text-center font-green _5990213" bindtap="joinNow" style="margin-bottom: 30rpx;">申请加入</view><view class="common-line text-center font-green _5990213" bindtap="back">回到首页</view></view>
+    </view>
+    <view class="common-line _5990213">
+      <input type="text" placeholder="在此填入该班级验证码" bindinput="bindInput" id="key" class="_5990213"/>
+    </view>
+    <view class="common-line text-center font-green _5990213" bindtap="joinNow" style="margin-bottom: 30rpx;">申请加入</view>
+    <view class="common-line text-center font-green _5990213" bindtap="back">回到首页</view>
+    <!-- <view class="create-btn font-grey text-right">我要创建班级</view> -->
+  </view>
