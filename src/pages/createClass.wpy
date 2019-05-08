@@ -187,7 +187,7 @@ export default class joinClass extends wepy.page {
       const id = e.currentTarget.id
       this[id] = e.detail.value
       if (id === 'keywords' && !isEmptyString(this.keywords)) {
-        throttle(this.getSchoolList, this, 1000)
+        throttle(this.getSchoolList, this, 100)
       } else {
         this.showSchool = false
       }

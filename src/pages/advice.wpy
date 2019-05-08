@@ -95,12 +95,19 @@ export default class Advice extends wepy.page {
       })
     },
     submit() {
+      if (!this.description) {
+        showMsg('请输入意见内容')
+        return
+      }
       addAdvice({
         description: this.description,
         imgList: this.img
       }).then(res => {
         if (res.data.success) {
           showMsg('发布成功，谢谢您的反馈')
+          setTimeout(() => {
+            wx.navigateBack()
+          }, 2000)
         }
       })
     }

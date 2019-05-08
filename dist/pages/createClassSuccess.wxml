@@ -1,14 +1,4 @@
 
-  <view class="common-container common-container-grey">
-    <view class="font-grey info">
+  <view class="common-container common-container-grey"><view class="font-grey info">
       恭喜，您成功创建了一个班级。您的班级为：{{name}}。您是当前班级家委会的管理员，管理员可以转让给其他家长。
-    </view>
-    <button open-type="share" class="font-green btn-invite bg-white" bindtap="share">点击按钮邀请其他家长加入</button>
-    <image src="{{code}}" class="code"/>
-    <text class="font-grey remind">也可通过扫码加入班级家委会</text>
-    <view class="common-line line-with-btn">
-      <input type="text" disabled value="{{key}}"/>
-      <view class="weui-btn weui-btn_primary btn" style="width: 320rpx" data-text="{{key}}" bindtap="copyText">一键复制验证码</view>
-    </view>
-    <button class="font-green btn-invite bg-white" bindtap="back">进入首页</button>
-    </view>
+    </view><button open-type="share" class="font-green btn-invite bg-white" bindtap="share">点击按钮邀请其他家长加入</button><image src="{{code}}" class="code"/><text class="font-grey remind">也可通过扫码加入班级家委会</text><view class="common-line line-with-btn"><input type="text" disabled value="{{key}}"/><view class="weui-btn weui-btn_primary btn" style="width: 320rpx" data-text="{{key}}" bindtap="copyText">一键复制验证码</view></view><button class="font-green btn-invite bg-white" bindtap="back">进入首页</button></view>

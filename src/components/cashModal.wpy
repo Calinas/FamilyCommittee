@@ -2,12 +2,11 @@
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
       <view class="wx-popup-con">
-        <!-- <textarea type="text" placeholder={{placeholderText}} @input="bindInput" value="{{commentInput}}"></textarea> -->
-        <input type="text" placeholder={{placeholderText}} @input="bindInput" value="{{commentInput}}" cursor-spacing="100" />
+        <input type="digit" placeholder="请输入提现金额" @input="bindInput" value="{{moneyInput}}" cursor-spacing="100" />
       </view>
       <view class="wx-popup-btn">
-        <text class="btn-no" @tap='cancelFn'>{{cancelBtnText}}</text>
-        <text class="btn-ok" @tap='sureFn'>{{sureBtnText}}</text>
+        <text class="btn-no" @tap='cancelFn'>取消</text>
+        <text class="btn-ok" @tap='sureFn'>确认</text>
       </view>
     </view>
   </view>
@@ -18,11 +17,8 @@ import wepy from 'wepy'
 import { showMsg, isEmptyString } from '../utils/common'
 export default class CurrentModal extends wepy.component {
   props = {
-    cancelBtnText: String,
-    sureBtnText: String,
-    placeholderText: String,
     flag: Boolean,
-    commentInput: String
+    moneyInput: String
   }
   onLoad() {
 
@@ -35,11 +31,11 @@ export default class CurrentModal extends wepy.component {
       this.$emit('cancel')
     },
     sureFn () {
-      if (isEmptyString(this.commentInput)) {
-        showMsg('请输入内容')
+      if (this.moneyInput <= 0) {
+        showMsg('请输入金额')
         return
       }
-      this.$emit('sure', this.commentInput)
+      this.$emit('sure', this.moneyInput)
       this.$apply()
     }
   }

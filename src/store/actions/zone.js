@@ -1,6 +1,6 @@
 import * as types from '../types/zone'
 import { getStore } from 'wepy-redux'
-import { getCityList, getCityInfo } from '../../api/createClass'
+import { getCityList, getCityInfo, getClassList } from '../../api/createClass'
 import { getIdentityList } from '../../api/user'
 
 let store = getStore()
@@ -64,5 +64,14 @@ export const setPresident = (data) => {
   store.dispatch({
     type: types.SET_PRESIDENT,
     data
+  })
+}
+
+export const getClass = data => {
+  getClassList().then(res => {
+    store.dispatch({
+      type: types.GET_CLASS_LIST,
+      data: res.data.list
+    })
   })
 }

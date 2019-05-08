@@ -59,6 +59,9 @@ page {
 .flex-wrapper.center {
   align-items: center;
 }
+.flex-wrapper.wrap {
+  flex-wrap: wrap;
+}
 .text-right {
   text-align: right;
 }

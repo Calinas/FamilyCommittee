@@ -38,19 +38,22 @@
 
     <view class="item-wrapper" wx:if="{{list.length}}">
       <block wx:for="{{list}}" wx:key="key" wx:for-index="listIndex">
-         <view class="item">
+         <view class="item {{item.app_type === 'account' && item.deleted_at ? 'delete' : ''}}">
           <view class="flex-wrapper center between">
             <view class="flex-wrapper center">
-              <image src="{{item.member.head_img}}"  class="small-avatar" />
-              <text class="font-32">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text>
+              <image src="{{item.member.head_img}}" class="small-avatar" />
+              <text class="font-32">{{item.member.class_nickname}}发布了{{type[item.app_type]}}</text><text wx:if="{{item.app_type === 'account' && item.deleted_at}}">（已撤销）</text>
             </view>
             <block wx:if="{{memberInfo.member_id === item.member.id || auth.president}}">
-                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 -->
-                <block wx:if="{{item.app_type !== 'collection'}}">
+                <!-- 是本人且是付款以外的其他类型 / 是本人且是付款且付款数目为0 , 因为付款数目大于0不能删除-->
+                <block wx:if="{{item.app_type !== 'collection' && item.app_type !== 'account'}}">
                   <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
                 </block>
                 <block wx:if="{{item.app_type === 'collection' && item.info.total_money <= 0}}">
                   <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeCircle({{item.id}}, {{listIndex}})" ></view>
+                </block>
+                <block wx:if="{{item.app_type === 'account' && !item.deleted_at && memberInfo.member_id === item.member.id}}">  <!-- 如果是记账，只能本人删 -->
+                  <view class="font-grey iconfont icon-shanchu text-right" catchtap="removeRecord({{item.id}}, {{listIndex}})" ></view>
                 </block>
               </block>
           </view>
@@ -74,11 +77,20 @@
               <text class="tag tag-grey">事由</text>
               <text class="tag tag-empty">{{item.info.description}}</text>
             </view>
+            <block wx:if="{{item.deleted_at}}">
+              <view class="flex-wrapper between" style="margin-bottom: 20rpx;margin-top: 30rpx;">
+                <text>{{item.member.class_nickname}}撤销了该记账</text>
+                <text>{{item.deleted_at}}</text>
+              </view>
+              <view class="tag-wrapper flex-wrapper no-padding">
+                <text class="tag tag-grey">撤销原因：{{item.info.undo_msg}}</text>
+              </view>
+            </block>
           </block>
 
           <view class="flex-wrapper font-grey font-small see-type {{item.app_type === 'circles' || item.app_type === 'account' ? 'between' : 'right'}}">
-            <text wx:if="{{item.app_type === 'circles' && item.see_type === 'all'}}">全部可见</text>
-            <text wx:if="{{item.app_type === 'circles' && item.see_type === 'class'}}">仅班级可见</text>
+            <text wx:if="{{(item.app_type === 'circles' || item.app_type === 'account') && item.see_type === 'all'}}">全部可见</text>
+            <text wx:if="{{(item.app_type === 'circles' || item.app_type === 'account') && item.see_type === 'class'}}">仅班级可见</text>
             <text @tap="preview({{item.image}}, {{item.image}})" wx:if="{{item.image.length && item.app_type === 'account'}}">查看记账凭证</text>
             <view class="flex-wrapper icon-wrapper">
               <view class="font-grey iconfont icon-dianzan text-right" catchtap="addLike({{item.id}},{{listIndex}},{{item.is_like}})"></view>
@@ -185,7 +197,7 @@
         <view catchtap="jumpPage('bindRelationship?type=edit')" wx:if="{{classInfo.id}}">身份绑定</view>
         <!-- <view catchtap="jumpPage('bindPhone')">手机绑定</view> -->
         <view catchtap="jumpPage('cashflow')">财务记账</view>
-        <view catchtap="jumpPage('personalCashflow')">财务流水</view>
+        <view catchtap="jumpPage('personalCashflow')">个人流水</view>
         <view catchtap="jumpPage('cashWithdraw')" wx:if="{{auth.finance}}">收款提现</view>
         <view catchtap="jumpPage('authorize')" wx:if="{{auth.president}}">家委会管理</view>
         <view catchtap="jumpPage('advice')">意见反馈</view>
@@ -238,6 +250,16 @@
       @sure.user="toggleFlag"
     >
     </SureModal>
+    <deleteRecordModal
+      sureBtnText="确认"
+      cancelBtnText="取消"
+      placeholderText="请输入撤销原因"
+      :flag.sync="deleteRecordFlag"
+      :commentInput.sync="deleteRecordInput"
+      @cancel.user="deleteCancel"
+      @sure.user="deleteSure"
+      @input.user="bindDeleteInput"
+    ></deleteRecordModal>
   </view>
 </template>
 
@@ -256,7 +278,7 @@ import CurrentModal from 'components/commentModal'
 import SureModal from 'components/sureModal'
 import shareModal from 'components/shareModal'
 import { showMsg, previewImage, filterArrayByValue, emptyObj } from 'utils/common'
-import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle, addLike } from 'api/zone'
+import { getCircleList, addComment, joinActivity, getCommentList, deleteCircle, addLike, deleteRecord } from 'api/zone'
 import { addOrder, getPaymentParams } from 'api/finance'
 import { getAuth } from 'api/authorize'
 import { checkStudent } from 'api/user'
@@ -281,7 +303,8 @@ export default class Zone extends wepy.page {
     CurrentModal,
     SelectModal,
     shareModal,
-    SureModal
+    SureModal,
+    deleteRecordModal: CurrentModal
   }
   data = {
     menuList: [
@@ -311,10 +334,11 @@ export default class Zone extends wepy.page {
         src: '/images/icon/photos.jpg'
       }
     ],
+    deleteRecordFlag: false,
     showSureFlag: false,
     commentFlag: false,
     selectFlag: false,
-    activeType: 'all',
+    activeType: 'circles,collection,notify,activity,account,system',
     setFlag: false,
     publishFlag: false,
     type: {
@@ -348,6 +372,7 @@ export default class Zone extends wepy.page {
     loading: false,
     loadFinished: false,
     commentInput: '',
+    deleteRecordInput: '',
     currentReplyId: -1,
     currentReplyRootId: -1,
     currentReplyToCommentId: -1,
@@ -437,14 +462,31 @@ export default class Zone extends wepy.page {
       wx.reLaunch({
         url: 'login'
       })
-    } else {
+    } else if (!this.classHasChanged) {
+      // 避免 onShow和onLoad同时执行导致重复请求
       this.classInfo = wx.getStorageSync('classInfo')
       this.classInfo && this.getAuthList()
       this.memberInfo = wx.getStorageSync('memberInfo')
+      if (this.memberInfo && this.memberInfo.member_id === -1) return   //微信测试用户
       this.$parent.globalData.userData = this.memberInfo
       this.$apply()
       this.getZoneList()
     }
+  }
+  removeRecordFn(id, idx) {
+    deleteRecord({
+      moment_id: id,
+      class_id: this.classInfo.id,
+      undo_msg: this.deleteRecordInput
+    }).then(res => {
+      if (res.data.success) {
+        showMsg('撤销成功')
+        this.list[idx].deleted_at = '刚刚'
+        this.list[idx].info = {...this.list[idx].info, undo_msg: this.deleteRecordInput}
+        this.deleteRecordInput = ''
+        this.$apply()
+      }
+    })
   }
   removeCircleFn(id, idx) {
     deleteCircle({
@@ -633,6 +675,12 @@ export default class Zone extends wepy.page {
       this.currentRemoveMomentIdx = idx
       this.$apply()
     },
+    removeRecord(id, idx) {
+      this.deleteRecordFlag = true
+      this.currentRemoveMomentId = id
+      this.currentRemoveMomentIdx = idx
+      this.$apply()
+    },
     pay(momentId, collectionId) {
       if (this.paymentLocked) {
         return
@@ -752,6 +800,10 @@ export default class Zone extends wepy.page {
       this.commentInput = value
       this.$apply()
     },
+    bindDeleteInput (value) {
+      this.deleteRecordInput = value
+      this.$apply()
+    },
     commentSure () {
       this.commentFlag = false
       addComment({
@@ -795,6 +847,17 @@ export default class Zone extends wepy.page {
     commentCancel () {
       this.commentFlag = false
       this.commentInput = ''
+      this.$apply()
+    },
+    deleteCancel () {
+      this.deleteRecordFlag = false
+      this.deleteRecordInput = ''
+      this.$apply()
+    },
+    deleteSure () {
+      this.removeRecordFn(this.currentRemoveMomentId, this.currentRemoveMomentIdx)
+      //因为有确认操作，所以下一次还要赋值，不清楚这两个变量没关系
+      this.deleteRecordFlag = false
       this.$apply()
     },
     jumpPage (pageName, type) {
@@ -1021,6 +1084,9 @@ export default class Zone extends wepy.page {
   }
 }
 .item {
+  &.delete {
+    background-color: #F2F4EC;
+  }
   &-desc {
     background-color: #f1f1f1;
     color: #000;

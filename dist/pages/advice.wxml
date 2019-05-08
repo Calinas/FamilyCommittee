@@ -1,16 +1,2 @@
 
-  <view class="common-container" style="padding-top: 120rpx;">
-    <textarea class="msg-wrapper" placeholder="请输入您的意见反馈" bindinput="bindChange" id="description"/>
-    <view class="img-list flex-wrapper">
-      <block wx:for="{{img}}" wx:for-index="index" wx:for-item="item" wx:key="key">
-        <view class="img-item">
-          <image bindtap="previewImage" mode="widthFix" class="img" src="{{item}}"/>
-          <image src="/images/close-white.png" bindtap="deleteFn" class="close-btn" data-wpydeletefn-a="img" data-wpydeletefn-b="{{index}}"/>
-        </view>
-      </block>
-      <view class="img-item" bindtap="chooseImage">
-        <image mode="widthFix" class="img" src="/images/add-img.png"/>
-      </view>
-    </view>
-    <view class="fixed-bottom-btn top right" bindtap="submit">发表</view>
-  </view>
+  <view class="common-container" style="padding-top: 120rpx;"><textarea class="msg-wrapper" placeholder="请输入您的意见反馈" bindinput="bindChange" id="description"/><view class="img-list flex-wrapper"><block wx:for="{{img}}" wx:for-index="index" wx:for-item="item" wx:key="key"><view class="img-item"><image bindtap="previewImage" mode="widthFix" class="img" src="{{item}}"/><image src="/images/close-white.png" bindtap="deleteFn" class="close-btn" data-wpydeletefn-a="img" data-wpydeletefn-b="{{index}}"/></view></block><view class="img-item" bindtap="chooseImage"><image mode="widthFix" class="img" src="/images/add-img.png"/></view></view><view class="fixed-bottom-btn top right" bindtap="submit">发表</view></view>

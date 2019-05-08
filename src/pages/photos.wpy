@@ -183,7 +183,10 @@ export default class bindRelationship extends wepy.page {
       this.$apply()
     },
     preview(url, urls) {
-      previewImage(url, urls)
+      wx.previewImage({
+        current: url.img_url,
+        urls: urls
+      })
     },
     upload() {
       let _this = this

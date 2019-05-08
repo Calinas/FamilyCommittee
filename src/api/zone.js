@@ -229,6 +229,23 @@ export function deleteCircle(data) {
   })
 }
 
+//删除记账
+export function deleteRecord(data) {
+  return new Promise((resolve, reject) => {
+    wepy.request({
+      url: '/moment/delete',
+      data: Object.assign({}, commonParams(), {
+        moment_id: data.moment_id,
+        class_id: data.class_id,
+        undo_msg: data.undo_msg
+      }),
+      method: 'delete'
+    }).then(res => {
+      resolve(res)
+    })
+  })
+}
+
 // 点赞
 export function addLike(data) {
   return new Promise((resolve, reject) => {

@@ -387,6 +387,11 @@ export default class Publish extends wepy.page {
       this.$apply()
     },
     moneySureFn(value1, value2, type) {
+      if (Number(value2) <= 0) {
+        showMsg('请输入合法金额')
+        return
+      }
+      showMsg('添加成功', 1000)
       const obj = {
         name: value1,
         money: Number(value2)

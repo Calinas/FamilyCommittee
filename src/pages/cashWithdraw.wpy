@@ -1,33 +1,51 @@
 <template lang="wxml" minapp="wepy">
-  <view class="common-container">
+  <view class="common-container" wx:if="{{list.length}}">
     <view class="font-black item" wx:for="{{list}}" wx:key="key">
       <text>{{item.desc}}元</text>
       <view class="operate-btn flex-wrapper center">
         <view class="btn-money" style="padding: 14rpx 30rpx">{{item.money}}元</view>
-        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" @tap="tempSubmit({{item.id}}, {{item.money}})" wx:if="{{item.money > 0}}">申请提现</view>
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" @tap="submit({{item.id}}, {{item.money}})" wx:if="{{item.money > 0}}">申请提现</view>
       </view>
     </view>
   </view>
+  <view class="common-container common-container-grey" wx:if="{{!list.length && loadFinished}}">
+    <text class="text-center" style="display: block;">暂无数据</text>
+  </view>
+  <CashModal
+    :flag.sync="showSureFlag"
+    :moneyInput.sync="money"
+    @input.user="bindInput"
+    @cancel.user="cancel"
+    @sure.user="sure"
+  ></CashModal>
 </template>
 
 <script>
 import wepy from 'wepy'
+import CashModal from 'components/cashModal'
 import { getCircleList } from '../api/zone'
 import { withdrawCash } from '../api/finance'
-import { getOnlyDate, showMsg } from '../utils/common'
+import { showMsg } from '../utils/common'
 import { cashWithdrawObj } from '../utils/normalize'
 export default class CashWithdrawal extends wepy.page {
+  components = {
+    CashModal
+  }
   config = {
     navigationBarTitleText: '收款提现'
   }
   data = {
+    showSureFlag: false,
     memberInfo: null,
     classInfo: null,
     pn: 1,
     ps: 10,
     list: [],
     loading: false,
-    loadFinished: false
+    loadFinished: false,
+    title: '确认提现',
+    money: 0,
+    collection_id: 0
   }
   onPullDownRefresh() {
     this.resetData()
@@ -45,23 +63,41 @@ export default class CashWithdrawal extends wepy.page {
     this.list = []
     this.$apply()
   }
+  withdraw() {
+    withdrawCash({
+      class_id: this.classInfo.id,
+      collection_id: Number(this.collection_id),
+      amount: Number(this.money)
+    }).then(res => {
+      if (res.data.success) {
+        showMsg('操作成功', 1000)
+        setTimeout(() => {
+          this.resetData()
+          this.getList()
+        }, 2000)
+      }
+      this.$apply()
+    })
+  }
   methods = {
-    submit(id) {
-      withdrawCash({
-        class_id: this.classInfo.id,
-        collection_id: Number(id),
-        amount: this.money
-      }).then(res => {
-        if (res.data.success) {
-          showMsg('操作成功')
-          this.$apply()
-        }
-      })
+    bindInput(value) {
+      this.money = value
+      this.$apply()
     },
-    tempSubmit(id, money) {
-      wx.navigateTo({
-        url: `withdraw?id=${id}&money=${money}`
-      })
+    sure(money) {
+      this.showSureFlag = false
+      this.withdraw()
+      this.$apply()
+    },
+    cancel() {
+      this.showSureFlag = false
+      this.$apply()
+    },
+    submit(id, money) {
+      this.collection_id = id
+      this.money = money
+      this.showSureFlag = true
+      this.$apply()
     }
   }
   onLoad() {

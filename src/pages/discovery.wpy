@@ -173,6 +173,7 @@ export default class Discovery extends wepy.page {
     this.memberInfo = wx.getStorageSync('memberInfo')
     this.$parent.globalData.userData = this.memberInfo
     this.$apply()
+    if (this.memberInfo && this.memberInfo.member_id === -1) return   //微信测试用户
     this.getZoneList()
   }
   onShow() {

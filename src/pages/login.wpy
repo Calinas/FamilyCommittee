@@ -60,14 +60,13 @@ export default class login extends wepy.page {
     },
     loginTest() {
       //给微信开发测试
-      if (this.testPhone !== 13456780980 || this.testCode !== 123456) {
+      if (this.testPhone !== 1234567890 || this.testCode !== 123456) {
         showMsg('请填写正确的账户信息')
         return
       }
       let memberInfo = Object.create(null)
       memberInfo = {
-        member_id: 2,
-        member_token: '9FCE2410F6980C5EA6A6C8B233BD9E22'
+        member_id: -1
       }
       wx.setStorageSync('memberInfo', memberInfo)
       wx.switchTab({

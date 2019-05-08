@@ -23,7 +23,7 @@ import { getPersonFinanceList } from '../api/finance'
 import { personalCashflowObj } from '../utils/normalize'
 export default class personCashflow extends wepy.page {
   config = {
-    navigationBarTitleText: '个人财务流水'
+    navigationBarTitleText: '个人流水'
   };
   data = {
     list: [],

@@ -26,5 +26,6 @@ export const cashflowObj = item => ({
   app_type: item.app_type,
   created_at: item.created_at,
   info: item.info,
-  image: item.image
+  image: item.image,
+  deleted_at: item.deleted_at
 })

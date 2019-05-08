@@ -33,7 +33,7 @@
 <script>
 import wepy from 'wepy'
 import { connect, getStore } from 'wepy-redux'
-import { saveIdentityList, setClassChanged } from 'store/actions'
+import { saveIdentityList, setClassChanged, getClass } from 'store/actions'
 import { bindIdentity, identityList, bindTeacher } from '../api/user'
 import { addClass } from '../api/createClass'
 import { showMsg, isEmptyString } from '../utils/common'
@@ -114,6 +114,10 @@ export default class bindRelationship extends wepy.page {
       item: filterList
     }).then(res => {
       if (res.data.success) {
+        if (this.type === 'join') {
+          setClassChanged(true)
+          getClass()
+        }
         showMsg('成功绑定身份')
         setTimeout(() => {
           wx.switchTab({url: 'zone'})
@@ -141,6 +145,7 @@ export default class bindRelationship extends wepy.page {
       })
       let url = `createClassSuccess?name=${data.name}&code=${data.qr_code}&key=${data.join_key}&classId=${data.id}`
       setClassChanged(true)
+      getClass()
       setTimeout(() => {
         wx.navigateTo({
           url: url

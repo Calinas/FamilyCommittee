@@ -51,20 +51,22 @@
 <script>
 import wepy from 'wepy'
 import { connect, getStore } from 'wepy-redux'
-import { setClassChanged } from '../store/actions'
-import { getClassList } from '../api/createClass'
-import { classListObj } from '../utils/normalize'
+import { setClassChanged, getClass } from '../store/actions'
 import { memberInfo } from '../api/user'
 
 @connect({
   classHasChanged(state) {
     return state.zone.classChanged
+  },
+  list(state) {
+    return state.zone.classList
   }
 })
 
 export default class ClassList extends wepy.page {
   config = {
-    navigationBarTitleText: '我的班级'
+    navigationBarTitleText: '我的班级',
+    enablePullDownRefresh: true
   }
   data = {
     memberInfo: {},
@@ -87,13 +89,6 @@ export default class ClassList extends wepy.page {
         card_info: cardInfo
       }, memberInfo)
       wx.setStorageSync('memberInfo', info)
-    })
-  }
-  getClassList() {
-    getClassList().then(res => {
-      let list = res.data.list
-      this.list = list.map(classListObj)
-      this.$apply()
     })
   }
   onShareAppMessage(res) {
@@ -130,7 +125,7 @@ export default class ClassList extends wepy.page {
   onShow() {
     if (this.classHasChanged) {
       this.classInfo = wx.getStorageSync('classInfo')
-      this.getClassList()
+      // this.getClassList()
       setClassChanged(false)
     }
   }
@@ -151,7 +146,8 @@ export default class ClassList extends wepy.page {
         url: `joinClass?classId=${this.classId}&name=${this.name}&key=${this.key}`
       })
     }
-    this.getClassList()
+    if (this.memberInfo && this.memberInfo.member_id === -1) return   //微信测试用户
+    getClass()
     this.$apply()
   }
 }

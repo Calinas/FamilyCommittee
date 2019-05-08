@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions'
 import * as types from '../types/zone'
+import { classListObj } from '../../utils/normalize'
 
 export default handleActions({
   [types.FROM_PUBLISH] (state, action) {
@@ -49,6 +50,12 @@ export default handleActions({
     return {
       ...state,
       classChanged: action.data
+    }
+  },
+  [types.GET_CLASS_LIST](state, action) {
+    return {
+      ...state,
+      classList: action.data.map(classListObj)
     }
   }
 }, {
