@@ -1,1 +1,59 @@
-"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{default:e}}function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _possibleConstructorReturn(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function _inherits(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var _createClass=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),_wepy=require("./../npm/wepy/lib/wepy.js"),_wepy2=_interopRequireDefault(_wepy),CurrentModal=function(e){function t(){var e,r,n,o;_classCallCheck(this,t);for(var i=arguments.length,u=Array(i),a=0;a<i;a++)u[a]=arguments[a];return r=n=_possibleConstructorReturn(this,(e=t.__proto__||Object.getPrototypeOf(t)).call.apply(e,[this].concat(u))),n.props={flag:Boolean,title:String,imgSrc:String},n.methods={cancelFn:function(){this.$emit("cancel","showShareFlag",!1)},sureFn:function(){this.$emit("sure","showShareFlag",!1)}},o=r,_possibleConstructorReturn(n,o)}return _inherits(t,e),_createClass(t,[{key:"onLoad",value:function(){}}]),t}(_wepy2.default.component);exports.default=CurrentModal;
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _wepy = require('./../npm/wepy/lib/wepy.js');
+
+var _wepy2 = _interopRequireDefault(_wepy);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CurrentModal = function (_wepy$component) {
+  _inherits(CurrentModal, _wepy$component);
+
+  function CurrentModal() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, CurrentModal);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CurrentModal.__proto__ || Object.getPrototypeOf(CurrentModal)).call.apply(_ref, [this].concat(args))), _this), _this.props = {
+      flag: Boolean,
+      title: String,
+      imgSrc: String
+    }, _this.methods = {
+      cancelFn: function cancelFn() {
+        this.$emit('cancel', 'showShareFlag', false);
+      },
+      sureFn: function sureFn() {
+        this.$emit('sure', 'showShareFlag', false);
+      }
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(CurrentModal, [{
+    key: 'onLoad',
+    value: function onLoad() {}
+  }]);
+
+  return CurrentModal;
+}(_wepy2.default.component);
+
+exports.default = CurrentModal;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNoYXJlTW9kYWwuanMiXSwibmFtZXMiOlsiQ3VycmVudE1vZGFsIiwicHJvcHMiLCJmbGFnIiwiQm9vbGVhbiIsInRpdGxlIiwiU3RyaW5nIiwiaW1nU3JjIiwibWV0aG9kcyIsImNhbmNlbEZuIiwiJGVtaXQiLCJzdXJlRm4iLCJ3ZXB5IiwiY29tcG9uZW50Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7QUFDQTs7Ozs7Ozs7Ozs7O0lBQ3FCQSxZOzs7Ozs7Ozs7Ozs7OztrTUFDbkJDLEssR0FBUTtBQUNOQyxZQUFNQyxPQURBO0FBRU5DLGFBQU9DLE1BRkQ7QUFHTkMsY0FBUUQ7QUFIRixLLFFBUVJFLE8sR0FBVTtBQUNSQyxjQURRLHNCQUNJO0FBQ1YsYUFBS0MsS0FBTCxDQUFXLFFBQVgsRUFBcUIsZUFBckIsRUFBc0MsS0FBdEM7QUFDRCxPQUhPO0FBSVJDLFlBSlEsb0JBSUU7QUFDUixhQUFLRCxLQUFMLENBQVcsTUFBWCxFQUFtQixlQUFuQixFQUFvQyxLQUFwQztBQUNEO0FBTk8sSzs7Ozs7NkJBSEQsQ0FFUjs7OztFQVJ1Q0UsZUFBS0MsUzs7a0JBQTFCWixZIiwiZmlsZSI6InNoYXJlTW9kYWwuanMiLCJzb3VyY2VzQ29udGVudCI6WyJcbmltcG9ydCB3ZXB5IGZyb20gJ3dlcHknXG5leHBvcnQgZGVmYXVsdCBjbGFzcyBDdXJyZW50TW9kYWwgZXh0ZW5kcyB3ZXB5LmNvbXBvbmVudCB7XG4gIHByb3BzID0ge1xuICAgIGZsYWc6IEJvb2xlYW4sXG4gICAgdGl0bGU6IFN0cmluZyxcbiAgICBpbWdTcmM6IFN0cmluZ1xuICB9XG4gIG9uTG9hZCgpIHtcblxuICB9XG4gIG1ldGhvZHMgPSB7XG4gICAgY2FuY2VsRm4gKCkge1xuICAgICAgdGhpcy4kZW1pdCgnY2FuY2VsJywgJ3Nob3dTaGFyZUZsYWcnLCBmYWxzZSlcbiAgICB9LFxuICAgIHN1cmVGbiAoKSB7XG4gICAgICB0aGlzLiRlbWl0KCdzdXJlJywgJ3Nob3dTaGFyZUZsYWcnLCBmYWxzZSlcbiAgICB9XG4gIH1cbn1cbiJdfQ==

@@ -1,6 +1,42 @@
 
-  <view class="index"><view class="img-mask"><image src="/images/banner.jpg" mode="scaleToFill" class="bg-img"/><view class="caption"><text class="class font-30">{{memberInfo.nickname}}</text></view></view><image src="{{memberInfo.avatar}}" mode="scaleToFill" class="avatar"/><view class="class-list font-grey"><block  wx:if="{{list.length}}"><block wx:if="{{classInfo && classInfo.name}}"><view class="text-center font-bold guide-text font-blue">
+  <view class="index">
+    <!-- 顶部区域 -->
+    <view class="img-mask">
+      <image src="/images/banner.jpg" mode="scaleToFill" class="bg-img"/>
+      <view class="caption">
+        <text class="class font-30">{{memberInfo.nickname}}</text>
+      </view>
+    </view>
+    <image src="{{memberInfo.avatar}}" mode="scaleToFill" class="avatar"/>
+    <!-- 班级列表展示 -->
+    <view class="class-list font-grey">
+      <block  wx:if="{{list.length}}">
+        <block wx:if="{{classInfo && classInfo.name}}">
+          <view class="text-center font-bold guide-text font-blue">
             点击标题直接进入班级
-          </view></block><block wx:if="{{!classInfo}}"><view class="text-center font-bold">
+          </view>
+        </block>
+        <block wx:if="{{!classInfo}}">
+          <view class="text-center font-bold">
             点击班级名直接进入班级家委会
-          </view></block><view class="flex-wrapper center between" wx:for="{{list}}" wx:key="key" wx:for-index="idx" bindtap="setClass" data-wpysetclass-a="{{idx}}"><text>{{item.class.name}}</text><text class="font-bold font-20">点击进入</text></view></block><block  wx:else><text class="no-remind">您还没有绑定班级</text></block></view><view class="fixed-bottom flex-wrapper between"><navigator url="createClass?type=join" open-type="navigate"><view class="weui-btn weui-btn_primary btn">加入班级</view></navigator><navigator url="createClass?type=create" open-type="navigate"><view class="weui-btn weui-btn_primary btn" style="background-color: #4171A5;">创建班级</view></navigator></view></view>
+          </view>
+        </block>
+        <view class="flex-wrapper center between" wx:for="{{list}}" wx:key="key" wx:for-index="idx" bindtap="setClass" data-wpysetclass-a="{{idx}}">
+          <text>{{item.class.name}}</text>
+          <text class="font-bold font-20">点击进入</text>
+        </view>
+      </block>
+      <block  wx:else>
+        <text class="no-remind">您还没有绑定班级</text>
+      </block>
+    </view>
+    <!-- 底部按钮 -->
+    <view class="fixed-bottom flex-wrapper between">
+      <navigator url="createClass?type=join" open-type="navigate">
+        <view class="weui-btn weui-btn_primary btn">加入班级</view>
+      </navigator>
+      <navigator url="createClass?type=create" open-type="navigate">
+        <view class="weui-btn weui-btn_primary btn" style="background-color: #4171A5;">创建班级</view>
+      </navigator>
+    </view>
+  </view>

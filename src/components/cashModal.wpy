@@ -1,6 +1,7 @@
 <template lang="wxml" minapp="wepy">
   <view class="wx-popup" wx:if="{{flag}}">
     <view class='popup-container'>
+      <view class="text-center" style="margin-top: 20rpx;font-size: 28rpx;"><text style="color: #982424;">* </text> 提现的钱，将转到您微信钱包的零钱里。</view>
       <view class="wx-popup-con">
         <input type="digit" placeholder="请输入提现金额" @input="bindInput" value="{{moneyInput}}" cursor-spacing="100" />
       </view>

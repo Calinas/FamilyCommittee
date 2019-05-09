@@ -1,2 +1,26 @@
 
-  <view class="common-container"  wx:if="{{list.length}}"><view class="font-black item" wx:for="{{list}}" wx:key="key"><text>{{item.desc}}元</text><view class="operate-btn flex-wrapper center"><view class="btn-money" style="padding: 14rpx 30rpx">{{item.money}}元</view><view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" bindtap="submit" wx:if="{{item.money > 0}}" data-wpysubmit-a="{{item.id}}" data-wpysubmit-b="{{item.money}}">申请提现</view></view></view></view><view class="common-container common-container-grey"  wx:if="{{!list.length && loadFinished}}"><text class="text-center" style="display: block;">暂无数据</text></view><view class="wx-popup _76865bb"  wx:if="{{$CashModal$flag}}"><view class="popup-container _76865bb"><view class="wx-popup-con _76865bb"><input type="digit" placeholder="请输入提现金额" bindinput="$CashModal$bindInput" value="{{$CashModal$moneyInput}}" cursor-spacing="100" class="_76865bb"/></view><view class="wx-popup-btn _76865bb"><text class="btn-no _76865bb" bindtap="$CashModal$cancelFn">取消</text><text class="btn-ok _76865bb" bindtap="$CashModal$sureFn">确认</text></view></view></view>
+  <view class="common-container"  wx:if="{{list.length}}">
+    <view class="font-black item" wx:for="{{list}}" wx:key="key">
+      <text>{{item.desc}}元</text>
+      <view class="operate-btn flex-wrapper center">
+        <view class="btn-money" style="padding: 14rpx 30rpx">{{item.money}}元</view>
+        <view class="weui-btn weui-btn_primary btn" style="padding: 14rpx 30rpx" bindtap="submit" wx:if="{{item.money > 0}}" data-wpysubmit-a="{{item.id}}" data-wpysubmit-b="{{item.money}}">申请提现</view>
+      </view>
+    </view>
+  </view>
+  <view class="common-container common-container-grey"  wx:if="{{!list.length && loadFinished}}">
+    <text class="text-center" style="display: block;">暂无数据</text>
+  </view>
+  
+  <view class="wx-popup _76865bb"  wx:if="{{$CashModal$flag}}">
+    <view class="popup-container _76865bb">
+      <view class="text-center _76865bb" style="margin-top: 20rpx;font-size: 28rpx;"><text style="color: #982424;" class="_76865bb">* </text> 提现的钱，将转到您微信钱包的零钱里。</view>
+      <view class="wx-popup-con _76865bb">
+        <input type="digit" placeholder="请输入提现金额" bindinput="$CashModal$bindInput" value="{{$CashModal$moneyInput}}" cursor-spacing="100" class="_76865bb"/>
+      </view>
+      <view class="wx-popup-btn _76865bb">
+        <text class="btn-no _76865bb" bindtap="$CashModal$cancelFn">取消</text>
+        <text class="btn-ok _76865bb" bindtap="$CashModal$sureFn">确认</text>
+      </view>
+    </view>
+  </view>

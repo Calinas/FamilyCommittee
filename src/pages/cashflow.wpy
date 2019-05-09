@@ -34,7 +34,7 @@
         <block wx:if="{{item.deleted_at}}">
           <view class="flex-wrapper between" style="margin-bottom: 20rpx;margin-top: 30rpx;">
             <text>{{item.member.class_nickname}}撤销了该记账</text>
-            <text>{{item.deleted_at}}</text>
+            <text class="text-right">{{item.deleted_at}}</text>
           </view>
           <view class="tag-wrapper flex-wrapper no-padding">
             <text class="tag tag-grey">撤销原因：{{item.info.undo_msg}}</text>

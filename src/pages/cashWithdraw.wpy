@@ -35,6 +35,7 @@ export default class CashWithdrawal extends wepy.page {
     navigationBarTitleText: '收款提现'
   }
   data = {
+    isCash: true,
     showSureFlag: false,
     memberInfo: null,
     classInfo: null,

@@ -1,1 +1,47 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.cashflowObj=exports.classListObj=exports.personalCashflowObj=exports.cashWithdrawObj=void 0;var _common=require("./common.js"),cashWithdrawObj=exports.cashWithdrawObj=function(e){return{id:e.app_id,desc:(0,_common.getOnlyDate)(e.created_at)+",您发起了一个收款，共收到"+e.info.total_money,money:e.info.can_withdraw_money,created_at:e.created_at}},personalCashflowObj=exports.personalCashflowObj=function(e){return{class_nickname:e.info.member.class_nickname,money:e.pay_amount,time:e.updated_at}},classListObj=exports.classListObj=function(e){return{class:e.class}},cashflowObj=exports.cashflowObj=function(e){return{member:e.member,app_type:e.app_type,created_at:e.created_at,info:e.info,image:e.image,deleted_at:e.deleted_at}};
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cashflowObj = exports.classListObj = exports.personalCashflowObj = exports.cashWithdrawObj = undefined;
+
+var _common = require('./common.js');
+
+// 收款提现
+var cashWithdrawObj = exports.cashWithdrawObj = function cashWithdrawObj(item) {
+  return {
+    id: item.app_id,
+    desc: (0, _common.getOnlyDate)(item.created_at) + ',' + item.member.class_nickname + '\u53D1\u8D77\u4E86\u4E00\u4E2A\u6536\u6B3E\uFF0C\u5171\u6536\u5230' + item.info.total_money,
+    money: item.info.can_withdraw_money,
+    created_at: item.created_at
+  };
+};
+
+// 个人财务流水
+var personalCashflowObj = exports.personalCashflowObj = function personalCashflowObj(item) {
+  return {
+    class_nickname: item.info.member.class_nickname,
+    money: item.pay_amount,
+    time: item.updated_at
+  };
+};
+
+// 班级列表
+var classListObj = exports.classListObj = function classListObj(item) {
+  return {
+    class: item.class
+  };
+};
+
+// 财务记账
+var cashflowObj = exports.cashflowObj = function cashflowObj(item) {
+  return {
+    member: item.member,
+    app_type: item.app_type,
+    created_at: item.created_at,
+    info: item.info,
+    image: item.image,
+    deleted_at: item.deleted_at
+  };
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vcm1hbGl6ZS5qcyJdLCJuYW1lcyI6WyJjYXNoV2l0aGRyYXdPYmoiLCJpZCIsIml0ZW0iLCJhcHBfaWQiLCJkZXNjIiwiY3JlYXRlZF9hdCIsIm1lbWJlciIsImNsYXNzX25pY2tuYW1lIiwiaW5mbyIsInRvdGFsX21vbmV5IiwibW9uZXkiLCJjYW5fd2l0aGRyYXdfbW9uZXkiLCJwZXJzb25hbENhc2hmbG93T2JqIiwicGF5X2Ftb3VudCIsInRpbWUiLCJ1cGRhdGVkX2F0IiwiY2xhc3NMaXN0T2JqIiwiY2xhc3MiLCJjYXNoZmxvd09iaiIsImFwcF90eXBlIiwiaW1hZ2UiLCJkZWxldGVkX2F0Il0sIm1hcHBpbmdzIjoiOzs7Ozs7O0FBQUE7O0FBRUE7QUFDTyxJQUFNQSw0Q0FBa0IsU0FBbEJBLGVBQWtCO0FBQUEsU0FBUztBQUN0Q0MsUUFBSUMsS0FBS0MsTUFENkI7QUFFdENDLFVBQVMseUJBQVlGLEtBQUtHLFVBQWpCLENBQVQsU0FBeUNILEtBQUtJLE1BQUwsQ0FBWUMsY0FBckQsMEVBQWlGTCxLQUFLTSxJQUFMLENBQVVDLFdBRnJEO0FBR3RDQyxXQUFPUixLQUFLTSxJQUFMLENBQVVHLGtCQUhxQjtBQUl0Q04sZ0JBQVlILEtBQUtHO0FBSnFCLEdBQVQ7QUFBQSxDQUF4Qjs7QUFPUDtBQUNPLElBQU1PLG9EQUFzQixTQUF0QkEsbUJBQXNCO0FBQUEsU0FBUztBQUMxQ0wsb0JBQWdCTCxLQUFLTSxJQUFMLENBQVVGLE1BQVYsQ0FBaUJDLGNBRFM7QUFFMUNHLFdBQU9SLEtBQUtXLFVBRjhCO0FBRzFDQyxVQUFNWixLQUFLYTtBQUgrQixHQUFUO0FBQUEsQ0FBNUI7O0FBTVA7QUFDTyxJQUFNQyxzQ0FBZSxTQUFmQSxZQUFlO0FBQUEsU0FBUztBQUNuQ0MsV0FBT2YsS0FBS2U7QUFEdUIsR0FBVDtBQUFBLENBQXJCOztBQUlQO0FBQ08sSUFBTUMsb0NBQWMsU0FBZEEsV0FBYztBQUFBLFNBQVM7QUFDbENaLFlBQVFKLEtBQUtJLE1BRHFCO0FBRWxDYSxjQUFVakIsS0FBS2lCLFFBRm1CO0FBR2xDZCxnQkFBWUgsS0FBS0csVUFIaUI7QUFJbENHLFVBQU1OLEtBQUtNLElBSnVCO0FBS2xDWSxXQUFPbEIsS0FBS2tCLEtBTHNCO0FBTWxDQyxnQkFBWW5CLEtBQUttQjtBQU5pQixHQUFUO0FBQUEsQ0FBcEIiLCJmaWxlIjoibm9ybWFsaXplLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgZ2V0T25seURhdGUgfSBmcm9tICcuL2NvbW1vbidcblxuLy8g5pS25qy+5o+Q546wXG5leHBvcnQgY29uc3QgY2FzaFdpdGhkcmF3T2JqID0gaXRlbSA9PiAoe1xuICBpZDogaXRlbS5hcHBfaWQsXG4gIGRlc2M6IGAke2dldE9ubHlEYXRlKGl0ZW0uY3JlYXRlZF9hdCl9LCR7aXRlbS5tZW1iZXIuY2xhc3Nfbmlja25hbWV95Y+R6LW35LqG5LiA5Liq5pS25qy+77yM5YWx5pS25YiwJHtpdGVtLmluZm8udG90YWxfbW9uZXl9YCxcbiAgbW9uZXk6IGl0ZW0uaW5mby5jYW5fd2l0aGRyYXdfbW9uZXksXG4gIGNyZWF0ZWRfYXQ6IGl0ZW0uY3JlYXRlZF9hdFxufSlcblxuLy8g5Liq5Lq66LSi5Yqh5rWB5rC0XG5leHBvcnQgY29uc3QgcGVyc29uYWxDYXNoZmxvd09iaiA9IGl0ZW0gPT4gKHtcbiAgY2xhc3Nfbmlja25hbWU6IGl0ZW0uaW5mby5tZW1iZXIuY2xhc3Nfbmlja25hbWUsXG4gIG1vbmV5OiBpdGVtLnBheV9hbW91bnQsXG4gIHRpbWU6IGl0ZW0udXBkYXRlZF9hdFxufSlcblxuLy8g54+t57qn5YiX6KGoXG5leHBvcnQgY29uc3QgY2xhc3NMaXN0T2JqID0gaXRlbSA9PiAoe1xuICBjbGFzczogaXRlbS5jbGFzc1xufSlcblxuLy8g6LSi5Yqh6K6w6LSmXG5leHBvcnQgY29uc3QgY2FzaGZsb3dPYmogPSBpdGVtID0+ICh7XG4gIG1lbWJlcjogaXRlbS5tZW1iZXIsXG4gIGFwcF90eXBlOiBpdGVtLmFwcF90eXBlLFxuICBjcmVhdGVkX2F0OiBpdGVtLmNyZWF0ZWRfYXQsXG4gIGluZm86IGl0ZW0uaW5mbyxcbiAgaW1hZ2U6IGl0ZW0uaW1hZ2UsXG4gIGRlbGV0ZWRfYXQ6IGl0ZW0uZGVsZXRlZF9hdFxufSlcbiJdfQ==

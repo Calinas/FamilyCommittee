@@ -117,7 +117,7 @@ export default class extends wepy.app {
             icon: 'none',
             duration: 2000
           })
-          if (Number(code) === 100010 ) {
+          if (Number(code) === 100010 || Number(code) === 100005) {
             wx.clearStorageSync()
             wx.reLaunch({url: 'login'})
           }
